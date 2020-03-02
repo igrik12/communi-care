@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'date-fns';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
@@ -106,7 +106,7 @@ const SelectMenu = () => {
   React.useEffect(() => {
     getClients();
     setLabelWidth(inputLabel.current.offsetWidth);
-  }, []);
+  }, [getClients]);
 
   return (
     <>
@@ -159,7 +159,9 @@ const SelectMenu = () => {
                   <em>Not Selected</em>
                 </MenuItem>
                 {clients.map(client => (
-                  <MenuItem value={client.id}>{client.name}</MenuItem>
+                  <MenuItem key={client.id} value={client.id}>
+                    {client.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>

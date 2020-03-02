@@ -43,8 +43,8 @@ enum UserType {
 
 enum EntryType {
   normal
-  amber
-  red
+  warning
+  emergency
 }
 
 enum ShiftType {

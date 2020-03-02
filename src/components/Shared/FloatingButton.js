@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStoreActions } from 'easy-peasy';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -29,7 +28,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles(() => ({
   root: {
     position: 'fixed',
     bottom: '5%',
@@ -48,7 +47,7 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-export default function FloatingButton({ props }) {
+export default function FloatingButton() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const classes = useStyle();
   const handleClick = event => {
@@ -67,7 +66,7 @@ export default function FloatingButton({ props }) {
       <StyledMenu id='customized-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <StyledMenuItem
           onClick={() => {
-            saveRecord();
+            saveRecord({ entryType: 'normal' });
             handleClose();
           }}
         >
@@ -76,13 +75,23 @@ export default function FloatingButton({ props }) {
           </ListItemIcon>
           <ListItemText primary='Normal' />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handleClose}>
+        <StyledMenuItem
+          onClick={() => {
+            saveRecord({ entryType: 'warning' });
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <Save color='error' />
           </ListItemIcon>
           <ListItemText primary='Warning' />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handleClose}>
+        <StyledMenuItem
+          onClick={() => {
+            saveRecord({ entryType: 'emergency' });
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <Save color='secondary' />
           </ListItemIcon>

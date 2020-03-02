@@ -1,6 +1,6 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreActions } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';

@@ -14,11 +14,7 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaffs = /* GraphQL */ `
-  query ListStaffs(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -41,11 +37,7 @@ export const getClient = /* GraphQL */ `
   }
 `;
 export const listClients = /* GraphQL */ `
-  query ListClients(
-    $filter: ModelClientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListClients($filter: ModelClientFilterInput, $limit: Int, $nextToken: String) {
     listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -87,13 +79,8 @@ export const getClientRecord = /* GraphQL */ `
     }
   }
 `;
-
 export const listClientRecords = /* GraphQL */ `
-  query ListClientRecords(
-    $filter: ModelClientRecordFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
     listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -130,11 +117,7 @@ export const getEntry = /* GraphQL */ `
   }
 `;
 export const listEntrys = /* GraphQL */ `
-  query ListEntrys(
-    $filter: ModelEntryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListEntrys($filter: ModelEntryFilterInput, $limit: Int, $nextToken: String) {
     listEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -147,6 +130,34 @@ export const listEntrys = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listEntrysWithRecord = /* GraphQL */ `
+  query ListEntrys($filter: ModelEntryFilterInput, $limit: Int, $nextToken: String) {
+    listEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        clientRecord {
+          client {
+            name
+          }
+          shift
+          entryType
+          date
+        }
       }
       nextToken
     }
