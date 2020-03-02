@@ -3,7 +3,8 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { listEntrysWithRecord, listClientRecords } from '../../graphql/queries';
 import MaterialTable from 'material-table';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
+import { Bar } from 'react-chartjs-2';
 
 export default function CareReports() {
   const entries = useStoreState(state => state.clientRecordModel.entries);
@@ -26,7 +27,7 @@ export default function CareReports() {
 
   return (
     <Grid container spacing={1}>
-      <Grid item lg={8} md={8}  sm={12} xs={12}>
+      <Grid item lg={8} md={8} sm={12} xs={12}>
         <MaterialTable
           columns={[
             {
@@ -53,9 +54,50 @@ export default function CareReports() {
           title='Client Report Entries'
         />
       </Grid>
-      <Grid item lg={8} md={8} sm={12} xs={12}>
-        
+      <Grid item lg={4} md={4} sm={12} xs={12}>
+        <Paper style={{height:'100%'}}>
+          <Bar data={dataBar} options={barChartOptions} />
+        </Paper>
       </Grid>
     </Grid>
   );
 }
+
+const dataBar = {
+  labels: ['Emergency', 'Normal', 'Warning'],
+  datasets: [
+    {
+      label: 'Entries by Type',
+      data: [12, 19, 3],
+      backgroundColor: ['rgba(255, 134,159,0.4)', 'rgba(113, 205, 205,0.4)', 'rgba(255, 177, 101,0.4)'],
+      borderWidth: 2,
+      borderColor: ['rgba(255, 134, 159, 1)', 'rgba(113, 205, 205, 1)', 'rgba(255, 177, 101, 1)']
+    }
+  ]
+};
+const barChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    xAxes: [
+      {
+        barPercentage: 1,
+        gridLines: {
+          display: true,
+          color: 'rgba(0, 0, 0, 0.1)'
+        }
+      }
+    ],
+    yAxes: [
+      {
+        gridLines: {
+          display: true,
+          color: 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          beginAtZero: true
+        }
+      }
+    ]
+  }
+};
