@@ -1,6 +1,7 @@
 import { action, thunk } from 'easy-peasy';
 import { createClientRecord, createEntry } from '../graphql/mutations';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { listClients } from '../graphql/queries';
 
 const clientRecordModel = {
   records: [],
@@ -37,7 +38,14 @@ const clientRecordModel = {
       ...entry
     };
     const retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
-    console.log(retEntry);
+  }),
+  clients: [],
+  setClients: action((state, payload) => {
+    state.clients = payload;
+  }),
+  getClients: thunk(async (actions, payload) => {
+    const ret = await API.graphql(graphqlOperation(listClients));
+    actions.setClients(ret.data.listClients.items);
   })
 };
 

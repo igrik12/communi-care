@@ -98,11 +98,13 @@ const SelectMenu = () => {
   const setRecord = useStoreActions(actions => actions.clientRecordModel.setRecord);
   const recordDate = useStoreState(state => state.clientRecordModel.record.recordDate);
   const shift = useStoreState(state => state.clientRecordModel.record.shift);
+  const clients = useStoreState(state => state.clientRecordModel.clients);
   const clientId = useStoreState(state => state.clientRecordModel.record.clientId);
   const inputLabel = React.useRef(null);
-
+  const getClients = useStoreActions(actions => actions.clientRecordModel.getClients);
   const [labelWidth, setLabelWidth] = React.useState(0);
   React.useEffect(() => {
+    getClients();
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
 
@@ -156,9 +158,9 @@ const SelectMenu = () => {
                 <MenuItem value=''>
                   <em>Not Selected</em>
                 </MenuItem>
-                <MenuItem value={1}>John</MenuItem>
-                <MenuItem value={2}>Ben</MenuItem>
-                <MenuItem value={3}>Bob</MenuItem>
+                {clients.map(client => (
+                  <MenuItem value={client.id}>{client.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>

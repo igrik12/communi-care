@@ -21,12 +21,12 @@ export default function CareReports() {
         columns={[
           { title: 'Mood and Interaction', field: 'moodAndInteraction' },
           { title: 'Self Care', field: 'selfCare' },
-          { title: 'Health', field: 'health' },
+          { title: 'Health', field: 'physicalHealth' },
           { title: 'Medication', field: 'medication' },
           { title: 'Leave', field: 'leave' },
           { title: 'Diet and Fluids', field: 'dietAndFluids' },
           { title: 'Living Skills', field: 'livingSkills' },
-          { title: 'Finance', field: 'finance' },
+          { title: 'Finance', field: 'finances' },
           { title: 'Daily Activity Participation', field: 'dailyActivityParticipation' }
         ]}
         data={entries}

@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react';
 import { useStoreState } from 'easy-peasy';
 import { Route, Switch, Redirect } from 'react-router';
-import { withAuthenticator, SignIn, ConfirmSignIn, VerifyContact, ForgotPassword } from 'aws-amplify-react';
+import { withAuthenticator, Greetings, SignIn, ConfirmSignIn, VerifyContact, ForgotPassword } from 'aws-amplify-react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { blue, deepPurple, teal } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
@@ -9,21 +9,10 @@ import ClientRecord from './components/Pages/ClientRecord';
 import CareReports from './components/Pages/CareReports';
 import Layout from './components/Layout';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { listStaffs } from './graphql/queries';
-import { createStaff } from './graphql/mutations';
+import { listStaffs, listClients } from './graphql/queries';
+import { createStaff, createClient } from './graphql/mutations';
 
-const MyTheme = {
-  navBar: {
-    backgroundColor: '#1A2035',
-    borderColor: '#1A2035'
-  }
-};
-
-const signUpConfig = {
-  header: 'My Customized Sign Up',
-  hideAllDefaults: true,
-  defaultCountryCode: '44'
-};
+const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
@@ -57,21 +46,25 @@ function App() {
 
   useEffect(() => {
     const apiCall = async () => {
-      try {
-        const user = Auth.user;
-        const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-        let userType = 'user';
-        if (groups.length === 1 && groups[0] === 'admin') {
-          userType = 'admin';
-        }
-        const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
-        const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
-        if (!result.data.listStaffs.items.length) {
-          const inputDetails = { input: { userName: Auth.user.username, userType: userType } };
-          const created = await API.graphql(graphqlOperation(createStaff, inputDetails));
-        }
-      } catch (error) {
-        throw Error('Failed to add new staff to DB. Error: ', error);
+      const user = Auth.user;
+      const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
+      let userType = 'user';
+      if (groups.length === 1 && groups[0] === 'admin') {
+        userType = 'admin';
+      }
+      const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
+      const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
+      if (!result.data.listStaffs.items.length) {
+        const inputDetails = { input: { userName: Auth.user.username, userType: userType } };
+        const created = await API.graphql(graphqlOperation(createStaff, inputDetails));
+      }
+      // Temp to populate fake clients to DB
+      const res = await API.graphql(graphqlOperation(listClients));
+      if (!res.data.listClients.items.length) {
+        fakeClients.forEach(async client => {
+          const clientDetails = { input: { name: client } };
+          const createdClient = await API.graphql(graphqlOperation(createClient, clientDetails));
+        });
       }
     };
     apiCall();
@@ -91,4 +84,4 @@ function App() {
   );
 }
 
-export default withAuthenticator(App, true, [<SignIn />, <ConfirmSignIn />, <VerifyContact />, <ForgotPassword />]);
+export default withAuthenticator(App, false, [<SignIn />, <ConfirmSignIn />, <VerifyContact />, <ForgotPassword />]);
