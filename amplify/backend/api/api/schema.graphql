@@ -1,0 +1,55 @@
+type Staff @model {
+  id: ID!
+  userName: String!
+  userType: UserType
+  clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
+}
+
+type Client @model {
+  id: ID!
+  name: String!
+  clientRecords: [ClientRecord] @connection(name: "ClientRecords")
+}
+
+type ClientRecord @model {
+  id: ID!
+  staff: Staff @connection(name: "StaffClientRecords")
+  client: Client @connection(name: "ClientRecords")
+  entry: Entry @connection(name: "ClientEntry")
+  date: AWSDateTime!
+  status: String
+  shift: ShiftType
+  entryType: EntryType
+}
+
+type Entry @model {
+  id: ID!
+  moodAndInteraction: String
+  selfCare: String
+  physicalHealth: String
+  medication: String
+  leave: String
+  dietAndFluids: String
+  livingSkills: String
+  finances: String
+  dailyActivityParticipation: String
+  clientRecord: ClientRecord @connection(name: "ClientEntry")
+}
+
+enum UserType {
+  user
+  admin
+}
+
+enum EntryType {
+  normal
+  amber
+  red
+}
+
+enum ShiftType {
+  am
+  pm
+  night
+  ld
+}
