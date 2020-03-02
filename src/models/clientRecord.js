@@ -5,6 +5,9 @@ import { listClients } from '../graphql/queries';
 
 const clientRecordModel = {
   records: [],
+  setRecords: action((state, payload) => {
+    state.records = payload;
+  }),
   addRecord: action((state, payload) => {
     state.records.push(payload);
   }),
@@ -26,18 +29,21 @@ const clientRecordModel = {
   }),
   saveRecord: thunk(async (actions, payload, { getState }) => {
     const { clientId, shift, recordDate, entry } = getState().record;
-    // const recordDetails = {
-    //   staffId: Auth.user.username,
-    //   date: recordDate,
-    //   clientId: clientId,
-    //   shift: shift
-    // };
-    // const record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
+
+    const recordDetails = {
+      clientRecordStaffId: 'b1306676-38ac-4ea8-bc82-df58d46050ca',
+      date: recordDate,
+      clientRecordClientId: clientId,
+      shift: shift
+    };
+    const record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
+    console.log(record);
     const entryDetails = {
-      entryClientRecordId: '7653e45e-6d0f-4e35-a186-18633edfa625',
+      entryClientRecordId: record.data.createClientRecord.id,
       ...entry
     };
     const retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
+    console.log(retEntry);
   }),
   clients: [],
   setClients: action((state, payload) => {

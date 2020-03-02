@@ -87,6 +87,7 @@ export const getClientRecord = /* GraphQL */ `
     }
   }
 `;
+
 export const listClientRecords = /* GraphQL */ `
   query ListClientRecords(
     $filter: ModelClientRecordFilterInput
