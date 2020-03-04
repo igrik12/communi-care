@@ -10,7 +10,7 @@ import CareReports from './components/Pages/CareReports';
 import Layout from './components/Layout';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { listStaffs, listClients } from './graphql/queries';
-import { createStaff } from './graphql/mutations';
+import { createStaff, createClient } from './graphql/mutations';
 
 const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 
@@ -64,7 +64,10 @@ function App() {
       // Temp to populate fake clients to DB
       const res = await API.graphql(graphqlOperation(listClients));
       if (!res.data.listClients.items.length) {
-        fakeClients.forEach(async client => {});
+        fakeClients.forEach(async client => {
+          const clientDetails = { input: { name: client } };
+          await API.graphql(graphqlOperation(createClient, clientDetails));
+        });
       }
     };
     apiCall();

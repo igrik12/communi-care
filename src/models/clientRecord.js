@@ -1,5 +1,5 @@
 import { action, thunk } from 'easy-peasy';
-import { createClientRecord, createEntry } from '../graphql/mutations';
+import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
 
@@ -7,6 +7,10 @@ const clientRecordModel = {
   records: [],
   setRecords: action((state, payload) => {
     state.records = payload;
+  }),
+  selectedRecord: undefined,
+  setSelectedRecord: action((state, payload) => {
+    state.selectedRecord = payload;
   }),
   addRecord: action((state, payload) => {
     state.records.push(payload);
@@ -37,12 +41,19 @@ const clientRecordModel = {
       shift: shift,
       entryType: payload.entryType
     };
+
     const record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
     const entryDetails = {
       entryClientRecordId: record.data.createClientRecord.id,
       ...entry
     };
+
     const retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
+    const recordUpdate = {
+      id: record.data.createClientRecord.id,
+      clientRecordEntryId: retEntry.data.createEntry.id
+    };
+    await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
   }),
   clients: [],
   setClients: action((state, payload) => {

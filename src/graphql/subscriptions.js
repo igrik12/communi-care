@@ -8,6 +8,13 @@ export const onCreateStaff = /* GraphQL */ `
       userName
       userType
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -20,6 +27,13 @@ export const onUpdateStaff = /* GraphQL */ `
       userName
       userType
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -32,6 +46,13 @@ export const onDeleteStaff = /* GraphQL */ `
       userName
       userType
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -43,6 +64,13 @@ export const onCreateClient = /* GraphQL */ `
       id
       name
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -54,6 +82,13 @@ export const onUpdateClient = /* GraphQL */ `
       id
       name
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -65,6 +100,13 @@ export const onDeleteClient = /* GraphQL */ `
       id
       name
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
@@ -78,10 +120,16 @@ export const onCreateClientRecord = /* GraphQL */ `
         id
         userName
         userType
+        clientRecords {
+          nextToken
+        }
       }
       client {
         id
         name
+        clientRecords {
+          nextToken
+        }
       }
       entry {
         id
@@ -94,6 +142,13 @@ export const onCreateClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+        clientRecord {
+          id
+          date
+          status
+          shift
+          entryType
+        }
       }
       date
       status
@@ -110,10 +165,16 @@ export const onUpdateClientRecord = /* GraphQL */ `
         id
         userName
         userType
+        clientRecords {
+          nextToken
+        }
       }
       client {
         id
         name
+        clientRecords {
+          nextToken
+        }
       }
       entry {
         id
@@ -126,6 +187,13 @@ export const onUpdateClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+        clientRecord {
+          id
+          date
+          status
+          shift
+          entryType
+        }
       }
       date
       status
@@ -142,10 +210,16 @@ export const onDeleteClientRecord = /* GraphQL */ `
         id
         userName
         userType
+        clientRecords {
+          nextToken
+        }
       }
       client {
         id
         name
+        clientRecords {
+          nextToken
+        }
       }
       entry {
         id
@@ -158,6 +232,13 @@ export const onDeleteClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+        clientRecord {
+          id
+          date
+          status
+          shift
+          entryType
+        }
       }
       date
       status
@@ -181,6 +262,27 @@ export const onCreateEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
+        staff {
+          id
+          userName
+          userType
+        }
+        client {
+          id
+          name
+        }
+        entry {
+          id
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+        }
         date
         status
         shift
@@ -204,6 +306,27 @@ export const onUpdateEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
+        staff {
+          id
+          userName
+          userType
+        }
+        client {
+          id
+          name
+        }
+        entry {
+          id
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+        }
         date
         status
         shift
@@ -227,6 +350,27 @@ export const onDeleteEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
+        staff {
+          id
+          userName
+          userType
+        }
+        client {
+          id
+          name
+        }
+        entry {
+          id
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+        }
         date
         status
         shift

@@ -1,63 +1,83 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listEntrysWithRecord, listClientRecords } from '../../graphql/queries';
-import MaterialTable from 'material-table';
+import { listClientRecordsWithClient } from '../../graphql/queries';
+import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
+import Summary from './Summary';
+
+const options = {
+  filter: true,
+  filterType: 'checkbox',
+  rowsPerPage: 5,
+  rowsPerPageOptions: [5, 10, 100]
+};
 
 export default function CareReports() {
-  const entries = useStoreState(state => state.clientRecordModel.entries);
   const records = useStoreState(state => state.clientRecordModel.records);
   const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
-  const setEntries = useStoreActions(actions => actions.clientRecordModel.setEntries);
-  console.log(entries);
+  const setSelectedRecord = useStoreActions(actions => actions.clientRecordModel.setSelectedRecord);
   useEffect(() => {
     const query = async () => {
-      // Ret records and then modify table retrieval mechanism
-      const ret = await API.graphql(graphqlOperation(listClientRecords));
+      const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient));
       setRecords(ret.data.listClientRecords.items);
-
-      const ret2 = await API.graphql(graphqlOperation(listEntrysWithRecord));
-      console.log(ret2);
-      setEntries(ret2.data.listEntrys.items);
+      setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
     query();
   }, []);
-
   return (
     <Grid container spacing={1}>
       <Grid item lg={8} md={8} sm={12} xs={12}>
-        <MaterialTable
+        <MUIDataTable
           columns={[
             {
-              title: 'Client Name',
-              render: rowData => rowData.clientRecord.client.name
-            },
-            {
-              title: 'Date and Time',
-              type: 'datetime',
-              render: rowData => {
-                return new Date(rowData.clientRecord.date).toLocaleString();
+              name: 'client.name',
+              label: 'Client Name',
+              options: {
+                customBodyRender: (value, tableMeta, updateValue) => value
               }
             },
             {
-              title: 'Shift',
-              render: rowData => rowData.clientRecord.shift.toUpperCase()
+              name: 'date',
+              label: 'Date',
+              options: {
+                filter: true,
+                sort: true,
+                customBodyRender: (value, tableMeta, updateValue) => new Date(value).toLocaleDateString()
+              }
             },
             {
-              title: 'Entry Type',
-              render: rowData => rowData.clientRecord.entryType
+              name: 'shift',
+              label: 'Shift',
+              options: {
+                filter: true,
+                sort: true,
+                customBodyRender: (value, tableMeta, updateValue) => value.toUpperCase()
+              }
+            },
+            {
+              name: 'entryType',
+              label: 'Entry Type',
+              options: {
+                filter: true,
+                sort: true,
+                customBodyRender: (value, tableMeta, updateValue) => value || 'normal'
+              }
             }
           ]}
-          data={entries}
+          data={records}
+          options={options}
           title='Client Report Entries'
         />
       </Grid>
       <Grid item lg={4} md={4} sm={12} xs={12}>
-        <Paper style={{height:'100%'}}>
+        <Paper style={{ minHeight: '100%' }}>
           <Bar data={dataBar} options={barChartOptions} />
         </Paper>
+      </Grid>
+      <Grid item lg={12}>
+        <Summary />
       </Grid>
     </Grid>
   );
