@@ -1,35 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import TextField from '@material-ui/core/TextField';
+import {
+  Grid,
+  ExpansionPanel,
+  Typography,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Divider,
+  ExpansionPanelActions,
+  Button
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getEntry } from '../../graphql/queries';
+import { getPlainEntry } from '../../graphql/customQueries';
 import { useStoreState } from 'easy-peasy';
+import _ from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper
+    width: '100%'
   },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)'
+  heading: {
+    fontSize: theme.typography.pxToRem(18),
+    textAlign: 'center'
   },
-  title: {
-    color: theme.palette.primary.light
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(18),
+    textAlign: 'center'
   },
-  titleBar: {
-    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)'
+  icon: {
+    verticalAlign: 'bottom',
+    height: 20,
+    width: 20
+  },
+  details: {
+    alignItems: 'center'
+  },
+  textField: { width: '100%' },
+  column: {
+    flexBasis: '33.33%',
+    marginLeft: 10
+  },
+  helper: {
+    borderLeft: `2px solid ${theme.palette.divider}`,
+    padding: theme.spacing(1, 2)
+  },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 }));
-
 export default function Summary() {
   const classes = useStyles();
   const [entries, setEntries] = useState([]);
@@ -38,33 +62,75 @@ export default function Summary() {
   useEffect(() => {
     if (selectedRecord) {
       const fetchEntries = async () => {
-        const ret = await API.graphql(graphqlOperation(getEntry, { id: selectedRecord.entry.id }));
-        setEntries()
+        const ret = await API.graphql(graphqlOperation(getPlainEntry, { id: selectedRecord.entry.id }));
+        const mappedEntries = [];
+        _.forIn(ret.data.getEntry, (value, key) => {
+          if (key === 'id') {
+            mappedEntries.push({ title: key, content: value });
+            return;
+          }
+          const newKey = key
+            .replace(/^\w/, c => c.toUpperCase())
+            .split(/(?=[A-Z])/)
+            .join(' ');
+          mappedEntries.push({ title: newKey, content: value });
+        });
+        setEntries(mappedEntries);
       };
       fetchEntries();
     }
   }, [selectedRecord]);
 
+  if (!selectedRecord) return null;
+
   return (
     <div className={classes.root}>
-      {/* <GridList className={classes.gridList} cols={2.5}>
-        {entries.map((tile, index) => (
-          <GridListTile key={index}>
-            <GridListTileBar
-              title={tile.title}
-              classes={{
-                root: classes.titleBar,
-                title: classes.title
-              }}
-              actionIcon={
-                <IconButton aria-label={`star ${tile.title}`}>
-                  <StarBorderIcon className={classes.title} />
-                </IconButton>
-              }
-            />
-          </GridListTile>
-        ))}
-      </GridList> */}
+      <DataPanel name={selectedRecord.client.name} date={selectedRecord.date} entryType={selectedRecord.entryType}>
+        <Grid container spacing={2}>
+          {entries
+            .filter(unit => unit.title !== 'id')
+            .map((entry, index) => (
+              <Grid key={entry.title} item lg={4} md={4} sm={6} xs={12}>
+                <TextField
+                  className={classes.textField}
+                  id='outlined-multiline-static'
+                  label={entry.title}
+                  multiline
+                  rows='6'
+                  variant='outlined'
+                  value={entry.content}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      </DataPanel>
     </div>
   );
 }
+
+const DataPanel = ({ children, name, date, entryType }) => {
+  const classes = useStyles();
+  return (
+    <ExpansionPanel elevation={3} defaultExpanded>
+      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <div className={classes.column}>
+          <Typography className={classes.heading}>{name}</Typography>
+        </div>
+        <div className={classes.column}>
+          <Typography className={classes.secondaryHeading}>{new Date(date).toDateString()}</Typography>
+        </div>
+        <div className={classes.column}>
+          <Typography className={classes.secondaryHeading}>{entryType.replace(/^\w/, c => c.toUpperCase())}</Typography>
+        </div>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails className={classes.details}>{children}</ExpansionPanelDetails>
+      <Divider />
+      <ExpansionPanelActions>
+        <Button size='small'>Reset</Button>
+        <Button variant='outlined' size='small' color='primary'>
+          Save
+        </Button>
+      </ExpansionPanelActions>
+    </ExpansionPanel>
+  );
+};
