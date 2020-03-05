@@ -1,10 +1,20 @@
 import React from 'react';
 import 'date-fns';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
-import { Paper, Grid, FormControl, InputLabel, Input, InputAdornment, Select, MenuItem } from '@material-ui/core';
+import {
+  Paper,
+  Grid,
+  FormControl,
+  InputLabel,
+  Input,
+  InputAdornment,
+  Select,
+  MenuItem,
+  Snackbar
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import TextEntry from '../Shared/TextEntry';
@@ -24,19 +34,46 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
 export default function ClientRecord() {
   return (
-    <Grid container spacing={1} direction='column'>
-      <Grid item>
-        <SelectMenu />
+    <>
+      <Grid container spacing={1} direction='column'>
+        <Grid item>
+          <SelectMenu />
+        </Grid>
+        <Grid item>
+          <TextEntries />
+        </Grid>
+        <FloatingButton />
       </Grid>
-      <Grid item>
-        <TextEntries />
-      </Grid>
-      <FloatingButton />
-    </Grid>
+      <ToastAlert />
+    </>
   );
 }
+
+const ToastAlert = () => {
+  const alertOpen = useStoreState(state => state.clientRecordModel.alertOpen);
+  const setAlertOpen = useStoreActions(actions => actions.clientRecordModel.setAlertOpen);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+  return (
+    <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity='success'>
+        Successfully added record!
+      </Alert>
+    </Snackbar>
+  );
+};
 
 const textFields = [
   {
@@ -78,14 +115,12 @@ const textFields = [
 ];
 
 const TextEntries = () => {
-  const setRecord = useStoreActions(actions => actions.clientRecordModel.setEntry);
-  const onChange = entry => setRecord(entry);
   return (
     <Grid container spacing={1}>
       {textFields.map((field, index) => {
         return (
           <Grid key={index} item lg={4} md={6} sm={12} xs={12}>
-            <TextEntry onChange={onChange} field={field} />
+            <TextEntry field={field} />
           </Grid>
         );
       })}

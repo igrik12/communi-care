@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStoreActions } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -58,9 +58,10 @@ export default function FloatingButton() {
     setAnchorEl(null);
   };
   const saveRecord = useStoreActions(actions => actions.clientRecordModel.saveRecord);
+  const saveRecordDisabled = useStoreState(state => state.clientRecordModel.saveRecordDisabled);
   return (
     <div className={classes.root}>
-      <Fab variant='round' color='primary' onClick={handleClick}>
+      <Fab disabled={saveRecordDisabled} variant='round' color='primary' onClick={handleClick}>
         <Save />
       </Fab>
       <StyledMenu id='customized-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

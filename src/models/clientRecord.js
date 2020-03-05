@@ -1,12 +1,20 @@
-import { action, thunk } from 'easy-peasy';
+import { action, thunk, computed } from 'easy-peasy';
 import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
+import _ from 'lodash';
 
 const clientRecordModel = {
   records: [],
   setRecords: action((state, payload) => {
     state.records = payload;
+  }),
+  alertOpen: false,
+  setAlertOpen: action((state, payload) => {
+    state.alertOpen = payload;
+  }),
+  saveRecordDisabled: computed(state => {
+    return !state.record.clientId || !state.record.shift || Object.keys(state.record.entry).length < 9;
   }),
   selectedRecord: undefined,
   setSelectedRecord: action((state, payload) => {
@@ -25,6 +33,12 @@ const clientRecordModel = {
     shift: '',
     entry: {}
   },
+  resetRecord: action((state, payload) => {
+    state.record.recordDate = new Date();
+    state.record.clientId = '';
+    state.record.shift = '';
+    state.record.entry = {};
+  }),
   setRecord: action((state, payload) => {
     state.record[payload.fieldId] = payload.value;
   }),
@@ -54,6 +68,8 @@ const clientRecordModel = {
       clientRecordEntryId: retEntry.data.createEntry.id
     };
     await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
+    actions.resetRecord();
+    actions.setAlertOpen(true);
   }),
   clients: [],
   setClients: action((state, payload) => {
