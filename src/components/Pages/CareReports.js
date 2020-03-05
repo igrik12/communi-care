@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listClientRecordsWithClient } from '../../graphql/queries';
+import { listClientRecordsWithClient } from '../../graphql/customQueries';
 import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper } from '@material-ui/core';

@@ -8,18 +8,32 @@ export const getStaff = /* GraphQL */ `
       userName
       userType
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
   }
 `;
 export const listStaffs = /* GraphQL */ `
-  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+  query ListStaffs(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         userName
         userType
+        clientRecords {
+          nextToken
+        }
       }
       nextToken
     }
@@ -31,17 +45,31 @@ export const getClient = /* GraphQL */ `
       id
       name
       clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
         nextToken
       }
     }
   }
 `;
 export const listClients = /* GraphQL */ `
-  query ListClients($filter: ModelClientFilterInput, $limit: Int, $nextToken: String) {
+  query ListClients(
+    $filter: ModelClientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
+        clientRecords {
+          nextToken
+        }
       }
       nextToken
     }
@@ -55,10 +83,16 @@ export const getClientRecord = /* GraphQL */ `
         id
         userName
         userType
+        clientRecords {
+          nextToken
+        }
       }
       client {
         id
         name
+        clientRecords {
+          nextToken
+        }
       }
       entry {
         id
@@ -71,6 +105,13 @@ export const getClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+        clientRecord {
+          id
+          date
+          status
+          shift
+          entryType
+        }
       }
       date
       status
@@ -80,10 +121,35 @@ export const getClientRecord = /* GraphQL */ `
   }
 `;
 export const listClientRecords = /* GraphQL */ `
-  query ListClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
+  query ListClientRecords(
+    $filter: ModelClientRecordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        staff {
+          id
+          userName
+          userType
+        }
+        client {
+          id
+          name
+        }
+        entry {
+          id
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+        }
         date
         status
         shift
@@ -108,6 +174,27 @@ export const getEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
+        staff {
+          id
+          userName
+          userType
+        }
+        client {
+          id
+          name
+        }
+        entry {
+          id
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+        }
         date
         status
         shift
@@ -117,27 +204,11 @@ export const getEntry = /* GraphQL */ `
   }
 `;
 export const listEntrys = /* GraphQL */ `
-  query ListEntrys($filter: ModelEntryFilterInput, $limit: Int, $nextToken: String) {
-    listEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      nextToken
-    }
-  }
-`;
-
-export const listEntrysWithRecord = /* GraphQL */ `
-  query ListEntrys($filter: ModelEntryFilterInput, $limit: Int, $nextToken: String) {
+  query ListEntrys(
+    $filter: ModelEntryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -151,35 +222,14 @@ export const listEntrysWithRecord = /* GraphQL */ `
         finances
         dailyActivityParticipation
         clientRecord {
-          client {
-            name
-          }
+          id
+          date
+          status
           shift
           entryType
-          date
         }
       }
       nextToken
     }
   }
-`;
-
-export const listClientRecordsWithClient = `
-query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
-  listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      date
-      shift
-      entryType
-      client {
-        name
-        id
-      }
-      entry {
-        id
-      }
-    }
-    nextToken
-  }
-}
 `;

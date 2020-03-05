@@ -80,7 +80,7 @@ function App() {
         <Layout>
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
-          <Redirect exact from='/' to='/record' />
+          <Route exact path='/record' component={ClientRecord} />
         </Layout>
       </Switch>
     </MuiThemeProvider>
