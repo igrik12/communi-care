@@ -14,7 +14,12 @@ const clientRecordModel = {
     state.alertOpen = payload;
   }),
   saveRecordDisabled: computed(state => {
-    return !state.record.clientId || !state.record.shift || Object.keys(state.record.entry).length < 9;
+    return (
+      !state.record.clientId ||
+      !state.record.shift ||
+      Object.keys(state.record.entry).length < 9 ||
+      Object.values(state.record.entry).some(entry => !entry)
+    );
   }),
   selectedRecord: undefined,
   setSelectedRecord: action((state, payload) => {
