@@ -17,6 +17,15 @@ export const onCreateStaff = /* GraphQL */ `
         }
         nextToken
       }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
+      }
     }
   }
 `;
@@ -36,6 +45,15 @@ export const onUpdateStaff = /* GraphQL */ `
         }
         nextToken
       }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
+      }
     }
   }
 `;
@@ -54,6 +72,15 @@ export const onDeleteStaff = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
       }
     }
   }
@@ -123,6 +150,10 @@ export const onCreateClientRecord = /* GraphQL */ `
         clientRecords {
           nextToken
         }
+        permissions {
+          title
+          value
+        }
       }
       client {
         id
@@ -168,6 +199,10 @@ export const onUpdateClientRecord = /* GraphQL */ `
         clientRecords {
           nextToken
         }
+        permissions {
+          title
+          value
+        }
       }
       client {
         id
@@ -212,6 +247,10 @@ export const onDeleteClientRecord = /* GraphQL */ `
         userType
         clientRecords {
           nextToken
+        }
+        permissions {
+          title
+          value
         }
       }
       client {
@@ -375,6 +414,66 @@ export const onDeleteEntry = /* GraphQL */ `
         status
         shift
         entryType
+      }
+    }
+  }
+`;
+export const onCreatePermission = /* GraphQL */ `
+  subscription OnCreatePermission {
+    onCreatePermission {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
+      }
+    }
+  }
+`;
+export const onUpdatePermission = /* GraphQL */ `
+  subscription OnUpdatePermission {
+    onUpdatePermission {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
+      }
+    }
+  }
+`;
+export const onDeletePermission = /* GraphQL */ `
+  subscription OnDeletePermission {
+    onDeletePermission {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
       }
     }
   }

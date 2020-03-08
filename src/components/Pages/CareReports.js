@@ -13,7 +13,7 @@ export default function CareReports() {
   const setSelectedRecord = useStoreActions(actions => actions.clientRecordModel.setSelectedRecord);
   useEffect(() => {
     const query = async () => {
-      const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient));
+      const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
       setRecords(ret.data.listClientRecords.items);
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
@@ -38,7 +38,6 @@ export default function CareReports() {
     <Grid container spacing={1}>
       <Grid item lg={8} md={8} sm={12} xs={12}>
         <MUIDataTable
-          style={{ minHeight: '100%' }}
           columns={[
             {
               name: 'client.name',

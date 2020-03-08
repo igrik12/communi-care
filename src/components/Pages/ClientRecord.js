@@ -18,7 +18,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import TextEntry from '../Shared/TextEntry';
-import FloatingButton from '../Shared/FloatingButton';
+import SaveConfirmDialog from '../Shared/SaveConfirmDialog';
 import { Auth } from 'aws-amplify';
 
 const useStyles = makeStyles(theme => ({
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
+  return <MuiAlert elevation={3} variant='filled' {...props} />;
 }
 
 export default function ClientRecord() {
@@ -48,7 +48,7 @@ export default function ClientRecord() {
         <Grid item>
           <TextEntries />
         </Grid>
-        <FloatingButton />
+        <SaveConfirmDialog />
       </Grid>
       <ToastAlert />
     </>
@@ -64,12 +64,12 @@ const ToastAlert = () => {
       return;
     }
 
-    setAlertOpen(false);
+    setAlertOpen({ open: false });
   };
   return (
-    <Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleClose}>
-      <Alert onClose={handleClose} severity='success'>
-        Successfully added record!
+    <Snackbar open={alertOpen.open} autoHideDuration={3000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity={alertOpen.success ? 'success' : 'error'}>
+        {alertOpen.message}
       </Alert>
     </Snackbar>
   );
@@ -138,6 +138,7 @@ const SelectMenu = () => {
   const inputLabel = React.useRef(null);
   const getClients = useStoreActions(actions => actions.clientRecordModel.getClients);
   const [labelWidth, setLabelWidth] = React.useState(0);
+  
   React.useEffect(() => {
     getClients();
     setLabelWidth(inputLabel.current.offsetWidth);
@@ -145,7 +146,7 @@ const SelectMenu = () => {
 
   return (
     <>
-      <Paper elevation={2} className={classes.menu}>
+      <Paper elevation={3} className={classes.menu}>
         <Grid container justify='flex-start' alignItems='center' spacing={3}>
           <Grid item sm={6} xs={6} md={3} lg={3}>
             <FormControl required className={classes.margin}>

@@ -19,6 +19,7 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
 }
 `;
 
+
 export const getPlainEntry = /* GraphQL */ `
   query GetEntry($id: ID!) {
     getEntry(id: $id) {
@@ -32,6 +33,26 @@ export const getPlainEntry = /* GraphQL */ `
       livingSkills
       finances
       dailyActivityParticipation
+    }
+  }
+`;
+
+export const getStaffByUsername = /* GraphQL */ `
+  query GetStaff($userName: String!) {
+    getStaff(userName: $userName) {
+      id
+      userName
+      userType
+      clientRecords {
+        items {
+          id
+          date
+          status
+          shift
+          entryType
+        }
+        nextToken
+      }
     }
   }
 `;

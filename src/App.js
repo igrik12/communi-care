@@ -17,8 +17,20 @@ const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const getStaff = useStoreActions(actions => actions.getStaff);
+
   const theme = useMemo(() => {
     return createMuiTheme({
+      overrides: {
+        MUIDataTable: {
+          paper: {
+            height: '100%'
+          },
+          responsiveScroll: {
+            maxHeight: 'none',
+            height: 'calc(100% - 128px)'
+          }
+        }
+      },
       toolBar: {
         dark: deepPurple[800],
         light: blue[500]
@@ -26,18 +38,13 @@ function App() {
       palette: {
         type: themeColor,
         primary: {
-          // light: will be calculated from palette.primary.main,
           main: blue[600],
           dark: blue[800],
           light: blue[300]
-
-          // dark: will be calculated from palette.primary.main,
-          // contrastText: will be calculated to contrast with palette.primary.main
         },
         secondary: {
           light: '#DB2828',
           main: '#DB2828',
-          // dark: will be calculated from palette.secondary.main,
           contrastText: '#ffcc00'
         },
         fontFamily: ['Roboto', 'sans-serif']
@@ -48,7 +55,6 @@ function App() {
   useEffect(() => {
     const apiCall = async () => {
       const user = Auth.user;
-      // Fetch the staff data at the start up
       getStaff(Auth.user.username);
       const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
       let userType = 'user';
@@ -63,6 +69,7 @@ function App() {
       }
       // Temp to populate fake clients to DB
       const res = await API.graphql(graphqlOperation(listClients));
+      console.log(res);
       if (!res.data.listClients.items.length) {
         fakeClients.forEach(async client => {
           const clientDetails = { input: { name: client } };

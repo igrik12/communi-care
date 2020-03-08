@@ -17,6 +17,15 @@ export const getStaff = /* GraphQL */ `
         }
         nextToken
       }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
+      }
     }
   }
 `;
@@ -33,6 +42,10 @@ export const listStaffs = /* GraphQL */ `
         userType
         clientRecords {
           nextToken
+        }
+        permissions {
+          title
+          value
         }
       }
       nextToken
@@ -85,6 +98,10 @@ export const getClientRecord = /* GraphQL */ `
         userType
         clientRecords {
           nextToken
+        }
+        permissions {
+          title
+          value
         }
       }
       client {
@@ -227,6 +244,46 @@ export const listEntrys = /* GraphQL */ `
           status
           shift
           entryType
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const getPermission = /* GraphQL */ `
+  query GetPermission($id: ID!) {
+    getPermission(id: $id) {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
+      }
+    }
+  }
+`;
+export const listPermissions = /* GraphQL */ `
+  query ListPermissions(
+    $filter: ModelPermissionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPermissions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
         }
       }
       nextToken

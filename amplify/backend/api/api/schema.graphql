@@ -1,8 +1,11 @@
+
+
 type Staff @model {
   id: ID!
   userName: String!
   userType: UserType
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
+  permissions: Permission @connection(name: "StaffPermissions")
 }
 
 type Client @model {
@@ -34,6 +37,12 @@ type Entry @model {
   finances: String
   dailyActivityParticipation: String
   clientRecord: ClientRecord @connection(name: "ClientEntry")
+}
+
+type Permission @model {
+  title: String!
+  value: String!
+  staff: Staff @connection(name: "StaffPermissions")
 }
 
 enum UserType {

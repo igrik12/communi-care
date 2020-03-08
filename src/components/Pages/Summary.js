@@ -12,10 +12,14 @@ import {
   Button
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { getPlainEntry } from '../../graphql/customQueries';
 import { useStoreState } from 'easy-peasy';
 import _ from 'lodash';
+import { hasPermissions } from '../../utils/permissions';
+import permissions from '../../utils/permissions.json';
+
+const has = hasPermissions(permissions);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,6 +62,7 @@ export default function Summary() {
   const classes = useStyles();
   const [entries, setEntries] = useState([]);
   const selectedRecord = useStoreState(state => state.clientRecordModel.selectedRecord);
+  const staff = useStoreState(state => state.staff);
 
   useEffect(() => {
     if (selectedRecord) {
@@ -83,6 +88,8 @@ export default function Summary() {
 
   if (!selectedRecord) return null;
 
+  const hasPerm = has({ userName: staff.userName, userType: staff.userType }, 'editRecordSummary');
+
   return (
     <div className={classes.root}>
       <DataPanel name={selectedRecord.client.name} date={selectedRecord.date} entryType={selectedRecord.entryType}>
@@ -93,7 +100,8 @@ export default function Summary() {
               <Grid key={entry.title} item lg={4} md={4} sm={6} xs={12}>
                 <TextField
                   className={classes.textField}
-                  id='outlined-multiline-static'
+                  disabled={!hasPerm}
+                  id={`entry-summary-${entry.title}`}
                   label={entry.title}
                   multiline
                   rows='6'
@@ -109,6 +117,8 @@ export default function Summary() {
 }
 
 const DataPanel = ({ children, name, date, entryType }) => {
+  const staff = useStoreState(state => state.staff);
+  const hasPerm = has({ userName: staff.userName, userType: staff.userType }, 'saveRecordSummary');
   const classes = useStyles();
   return (
     <ExpansionPanel elevation={3} defaultExpanded>
@@ -127,7 +137,7 @@ const DataPanel = ({ children, name, date, entryType }) => {
       <Divider />
       <ExpansionPanelActions>
         <Button size='small'>Reset</Button>
-        <Button variant='outlined' size='small' color='primary'>
+        <Button disabled={!hasPerm} variant='outlined' size='small' color='primary'>
           Save
         </Button>
       </ExpansionPanelActions>

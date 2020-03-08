@@ -20,6 +20,15 @@ export const createStaff = /* GraphQL */ `
         }
         nextToken
       }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
+      }
     }
   }
 `;
@@ -42,6 +51,15 @@ export const updateStaff = /* GraphQL */ `
         }
         nextToken
       }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
+      }
     }
   }
 `;
@@ -63,6 +81,15 @@ export const deleteStaff = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      permissions {
+        title
+        value
+        staff {
+          id
+          userName
+          userType
+        }
       }
     }
   }
@@ -144,6 +171,10 @@ export const createClientRecord = /* GraphQL */ `
         clientRecords {
           nextToken
         }
+        permissions {
+          title
+          value
+        }
       }
       client {
         id
@@ -192,6 +223,10 @@ export const updateClientRecord = /* GraphQL */ `
         clientRecords {
           nextToken
         }
+        permissions {
+          title
+          value
+        }
       }
       client {
         id
@@ -239,6 +274,10 @@ export const deleteClientRecord = /* GraphQL */ `
         userType
         clientRecords {
           nextToken
+        }
+        permissions {
+          title
+          value
         }
       }
       client {
@@ -411,6 +450,75 @@ export const deleteEntry = /* GraphQL */ `
         status
         shift
         entryType
+      }
+    }
+  }
+`;
+export const createPermission = /* GraphQL */ `
+  mutation CreatePermission(
+    $input: CreatePermissionInput!
+    $condition: ModelPermissionConditionInput
+  ) {
+    createPermission(input: $input, condition: $condition) {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
+      }
+    }
+  }
+`;
+export const updatePermission = /* GraphQL */ `
+  mutation UpdatePermission(
+    $input: UpdatePermissionInput!
+    $condition: ModelPermissionConditionInput
+  ) {
+    updatePermission(input: $input, condition: $condition) {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
+      }
+    }
+  }
+`;
+export const deletePermission = /* GraphQL */ `
+  mutation DeletePermission(
+    $input: DeletePermissionInput!
+    $condition: ModelPermissionConditionInput
+  ) {
+    deletePermission(input: $input, condition: $condition) {
+      title
+      value
+      staff {
+        id
+        userName
+        userType
+        clientRecords {
+          nextToken
+        }
+        permissions {
+          title
+          value
+        }
       }
     }
   }

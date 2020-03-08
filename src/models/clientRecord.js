@@ -9,7 +9,7 @@ const clientRecordModel = {
   setRecords: action((state, payload) => {
     state.records = payload;
   }),
-  alertOpen: false,
+  alertOpen: { open: false, success: true, message: null },
   setAlertOpen: action((state, payload) => {
     state.alertOpen = payload;
   }),
@@ -24,9 +24,6 @@ const clientRecordModel = {
   selectedRecord: undefined,
   setSelectedRecord: action((state, payload) => {
     state.selectedRecord = payload;
-  }),
-  addRecord: action((state, payload) => {
-    state.records.push(payload);
   }),
   entries: [],
   setEntries: action((state, payload) => {
@@ -60,21 +57,47 @@ const clientRecordModel = {
       shift: shift,
       entryType: payload.entryType
     };
+    let record;
+    try {
+      record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
+    } catch (error) {
+      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
+      console.error(error);
+      return;
+    }
 
-    const record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
+    console.log('Created record', record.data);
+
     const entryDetails = {
       entryClientRecordId: record.data.createClientRecord.id,
       ...entry
     };
+    let retEntry;
 
-    const retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
+    try {
+      retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
+    } catch (error) {
+      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
+      console.error(error);
+      return;
+    }
+
+    console.log('Created entry', retEntry.data);
+
+
     const recordUpdate = {
       id: record.data.createClientRecord.id,
       clientRecordEntryId: retEntry.data.createEntry.id
     };
-    await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
-    actions.resetRecord();
-    actions.setAlertOpen(true);
+    try {
+      await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
+      actions.resetRecord();
+      actions.setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
+    } catch (error) {
+      actions.setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
+      console.error(error);
+      return;
+    }
   }),
   clients: [],
   setClients: action((state, payload) => {
