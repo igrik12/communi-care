@@ -1,23 +1,36 @@
 import React, { useMemo, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { Route, Switch, Redirect } from 'react-router';
-import { withAuthenticator, SignIn, ConfirmSignIn, VerifyContact, ForgotPassword } from 'aws-amplify-react';
+import {
+  withAuthenticator,
+  SignIn,
+  ConfirmSignIn,
+  VerifyContact,
+  ForgotPassword,
+  RequireNewPassword
+} from 'aws-amplify-react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { blue, deepPurple } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
 import ClientRecord from './components/Pages/ClientRecord';
 import CareReports from './components/Pages/CareReports';
+import Management from './components/Pages/Management';
 import Layout from './components/Layout';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
 import { listStaffs, listClients } from './graphql/queries';
 import { createStaff, createClient } from './graphql/mutations';
 
 const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 
+const isDeveloper = () => {
+  const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
+  return groups.includes('developer');
+};
+
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const getStaff = useStoreActions(actions => actions.getStaff);
-
+  console.log('Calling');
   const theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
@@ -52,33 +65,33 @@ function App() {
     });
   }, [themeColor]);
 
-  useEffect(() => {
-    const apiCall = async () => {
-      const user = Auth.user;
-      getStaff(Auth.user.username);
-      const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-      let userType = 'user';
-      if (groups.length === 1 && groups[0] === 'admin') {
-        userType = 'admin';
-      }
-      const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
-      const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
-      if (!result.data.listStaffs.items.length) {
-        const inputDetails = { input: { userName: Auth.user.username, userType: userType } };
-        await API.graphql(graphqlOperation(createStaff, inputDetails));
-      }
-      // Temp to populate fake clients to DB
-      const res = await API.graphql(graphqlOperation(listClients));
-      console.log(res);
-      if (!res.data.listClients.items.length) {
-        fakeClients.forEach(async client => {
-          const clientDetails = { input: { name: client } };
-          await API.graphql(graphqlOperation(createClient, clientDetails));
-        });
-      }
-    };
-    apiCall();
-  }, []);
+  // This is temporary hack for development user management
+  // useEffect(() => {
+  //   const apiCall = async () => {
+  //     const user = Auth.user;
+  //     getStaff(Auth.user.username);
+  //     const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
+  //     let userType = 'user';
+  //     if (groups.length === 1 && groups[0] === 'developer') {
+  //       userType = 'developer';
+  //     }
+  //     const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
+  //     const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
+  //     if (!result.data.listStaffs.items.length) {
+  //       const inputDetails = { input: { userName: Auth.user.username, userType: userType } };
+  //       await API.graphql(graphqlOperation(createStaff, inputDetails));
+  //     }
+  //     // Temp to populate fake clients to DB
+  //     const res = await API.graphql(graphqlOperation(listClients));
+  //     if (!res.data.listClients.items.length) {
+  //       fakeClients.forEach(async client => {
+  //         const clientDetails = { input: { name: client } };
+  //         await API.graphql(graphqlOperation(createClient, clientDetails));
+  //       });
+  //     }
+  //   };
+  //   apiCall();
+  // }, []);
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -87,6 +100,7 @@ function App() {
         <Layout>
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
+          {isDeveloper() && <Route path='/management' component={Management} />}
           <Redirect from='/' to='/record' />
         </Layout>
       </Switch>
@@ -94,4 +108,10 @@ function App() {
   );
 }
 
-export default withAuthenticator(App, false, [<SignIn />, <ConfirmSignIn />, <VerifyContact />, <ForgotPassword />]);
+export default withAuthenticator(App, false, [
+  <SignIn />,
+  <ConfirmSignIn />,
+  <VerifyContact />,
+  <ForgotPassword />,
+  <RequireNewPassword />
+]);

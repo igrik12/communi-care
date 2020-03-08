@@ -1,6 +1,52 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getCompany = /* GraphQL */ `
+  query GetCompany($id: ID!) {
+    getCompany(id: $id) {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const listCompanys = /* GraphQL */ `
+  query ListCompanys(
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;
 export const getStaff = /* GraphQL */ `
   query GetStaff($id: ID!) {
     getStaff(id: $id) {
@@ -26,6 +72,17 @@ export const getStaff = /* GraphQL */ `
           userType
         }
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -47,6 +104,11 @@ export const listStaffs = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       nextToken
     }
@@ -67,6 +129,17 @@ export const getClient = /* GraphQL */ `
         }
         nextToken
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -82,6 +155,11 @@ export const listClients = /* GraphQL */ `
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       nextToken
@@ -103,12 +181,22 @@ export const getClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -265,6 +353,11 @@ export const getPermission = /* GraphQL */ `
         permissions {
           title
           value
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
     }

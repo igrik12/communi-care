@@ -62,6 +62,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const isDeveloper = () => {
+  const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
+  return groups.includes('developer');
+};
+
 function ResponsiveDrawer(props) {
   const { container, children } = props;
   const classes = useStyles();
@@ -84,12 +89,21 @@ function ResponsiveDrawer(props) {
 
       <Divider />
       <List>
-        {['Records', 'Reports', 'Clients', 'Help'].map((text, index) => (
-          <ListItem component={Link} to={index === 0 ? '/record' : '/reports'} button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        {[
+          { title: 'Records', value: '/record', authorised: () => true },
+          { title: 'Reports', value: '/reports', authorised: () => true },
+          { title: 'Clients', value: '/clients', authorised: () => true },
+          { title: 'Management', value: '/management', authorised: () => isDeveloper() }
+        ].map((item, index) => {
+          return (
+            item.authorised() && (
+              <ListItem component={Link} to={item.value} button key={item.title}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItem>
+            )
+          );
+        })}
       </List>
       <Divider />
       <List>

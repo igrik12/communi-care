@@ -5,7 +5,7 @@ import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
-import Summary from './Summary';
+import Summary from '../Shared/Summary';
 
 export default function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);

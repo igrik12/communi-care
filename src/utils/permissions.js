@@ -1,5 +1,5 @@
 const hasPermissions = permissions => ({ userName, userType }, className) => {
-  if (userType === 'admin') return true;
+  if (userType === 'admin' || userType === 'developer') return true;
 
   const userFound = permissions.find(perm => perm.username === userName);
 

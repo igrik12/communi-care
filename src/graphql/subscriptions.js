@@ -1,6 +1,78 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateCompany = /* GraphQL */ `
+  subscription OnCreateCompany {
+    onCreateCompany {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const onUpdateCompany = /* GraphQL */ `
+  subscription OnUpdateCompany {
+    onUpdateCompany {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const onDeleteCompany = /* GraphQL */ `
+  subscription OnDeleteCompany {
+    onDeleteCompany {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
 export const onCreateStaff = /* GraphQL */ `
   subscription OnCreateStaff {
     onCreateStaff {
@@ -24,6 +96,17 @@ export const onCreateStaff = /* GraphQL */ `
           id
           userName
           userType
+        }
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
         }
       }
     }
@@ -54,6 +137,17 @@ export const onUpdateStaff = /* GraphQL */ `
           userType
         }
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -82,6 +176,17 @@ export const onDeleteStaff = /* GraphQL */ `
           userType
         }
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -99,6 +204,17 @@ export const onCreateClient = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
       }
     }
   }
@@ -118,6 +234,17 @@ export const onUpdateClient = /* GraphQL */ `
         }
         nextToken
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -135,6 +262,17 @@ export const onDeleteClient = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
       }
     }
   }
@@ -154,12 +292,22 @@ export const onCreateClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -203,12 +351,22 @@ export const onUpdateClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -252,12 +410,22 @@ export const onDeleteClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -434,6 +602,11 @@ export const onCreatePermission = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
     }
   }
@@ -454,6 +627,11 @@ export const onUpdatePermission = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
     }
   }
@@ -473,6 +651,11 @@ export const onDeletePermission = /* GraphQL */ `
         permissions {
           title
           value
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
     }

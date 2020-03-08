@@ -1,4 +1,10 @@
-
+type Company @model {
+  id: ID!
+  name: String!
+  companyLogoUrl: String!
+  staff: [Staff]! @connection(name: "CompanyStaff")
+  client: [Client]! @connection(name: "CompanyClients")
+}
 
 type Staff @model {
   id: ID!
@@ -6,12 +12,14 @@ type Staff @model {
   userType: UserType
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
   permissions: Permission @connection(name: "StaffPermissions")
+  company: Company @connection(name: "CompanyStaff")
 }
 
 type Client @model {
   id: ID!
   name: String!
   clientRecords: [ClientRecord] @connection(name: "ClientRecords")
+  company: Company @connection(name: "CompanyClients")
 }
 
 type ClientRecord @model {

@@ -1,6 +1,87 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createCompany = /* GraphQL */ `
+  mutation CreateCompany(
+    $input: CreateCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    createCompany(input: $input, condition: $condition) {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const updateCompany = /* GraphQL */ `
+  mutation UpdateCompany(
+    $input: UpdateCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    updateCompany(input: $input, condition: $condition) {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const deleteCompany = /* GraphQL */ `
+  mutation DeleteCompany(
+    $input: DeleteCompanyInput!
+    $condition: ModelCompanyConditionInput
+  ) {
+    deleteCompany(input: $input, condition: $condition) {
+      id
+      name
+      companyLogoUrl
+      staff {
+        items {
+          id
+          userName
+          userType
+        }
+        nextToken
+      }
+      client {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
 export const createStaff = /* GraphQL */ `
   mutation CreateStaff(
     $input: CreateStaffInput!
@@ -27,6 +108,17 @@ export const createStaff = /* GraphQL */ `
           id
           userName
           userType
+        }
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
         }
       }
     }
@@ -60,6 +152,17 @@ export const updateStaff = /* GraphQL */ `
           userType
         }
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -91,6 +194,17 @@ export const deleteStaff = /* GraphQL */ `
           userType
         }
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -111,6 +225,17 @@ export const createClient = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
       }
     }
   }
@@ -133,6 +258,17 @@ export const updateClient = /* GraphQL */ `
         }
         nextToken
       }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
+      }
     }
   }
 `;
@@ -153,6 +289,17 @@ export const deleteClient = /* GraphQL */ `
           entryType
         }
         nextToken
+      }
+      company {
+        id
+        name
+        companyLogoUrl
+        staff {
+          nextToken
+        }
+        client {
+          nextToken
+        }
       }
     }
   }
@@ -175,12 +322,22 @@ export const createClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -227,12 +384,22 @@ export const updateClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -279,12 +446,22 @@ export const deleteClientRecord = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
       client {
         id
         name
         clientRecords {
           nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
       entry {
@@ -473,6 +650,11 @@ export const createPermission = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
     }
   }
@@ -496,6 +678,11 @@ export const updatePermission = /* GraphQL */ `
           title
           value
         }
+        company {
+          id
+          name
+          companyLogoUrl
+        }
       }
     }
   }
@@ -518,6 +705,11 @@ export const deletePermission = /* GraphQL */ `
         permissions {
           title
           value
+        }
+        company {
+          id
+          name
+          companyLogoUrl
         }
       }
     }
