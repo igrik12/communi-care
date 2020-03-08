@@ -1,4 +1,5 @@
 import React from 'react';
+import { useStoreState, useStoreActions } from 'easy-peasy';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -74,10 +75,33 @@ export default function Create() {
 }
 
 const CompanyEditType = ({ type }) => {
+  const company = useStoreState(state => state.managementModel.company);
+  const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
+
+  const handleChange = param => event => {
+    setCompany({ [param]: event.target.value });
+  };
+
   return (
     <div>
       {type === 'new' ? (
-        <TextField id='create-new' label='Name' variant='outlined' />
+        <FormControl>
+          <TextField
+            id='name'
+            label='Company name'
+            variant='outlined'
+            onChange={handleChange('name')}
+            value={company.name}
+          />
+          <TextField
+            style={{ marginTop: 10 }}
+            id='companyLogoUrl'
+            label='Logo URL'
+            variant='outlined'
+            onChange={handleChange('companyLogoUrl')}
+            value={company.companyLogoUrl}
+          />
+        </FormControl>
       ) : (
         <CompanySelect
           options={[
@@ -122,9 +146,32 @@ const useStaffStyles = makeStyles(theme => ({
 const AddStaff = () => {
   const classes = useStaffStyles();
   const [open, setOpen] = React.useState(false);
+  const [permissions, setPermissions] = React.useState([]);
+  const [userType, setUserType] = React.useState('user');
+  const [userName, setUsername] = React.useState('');
+  const addStaff = useStoreActions(actions => actions.managementModel.addStaff);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAdd = () => {
+    addStaff({ userName, userType, persmissions: permissions });
+    setOpen(false);
+  };
 
   const handleChange = event => {
-    setPermission(event.target.value);
+    setPermissions(event.target.value);
+  };
+  const handleTypeChange = event => {
+    setUserType(event.target.value);
+  };
+  const handleUsernameChange = event => {
+    setUsername(event.target.value);
   };
 
   function getStyles(name, permission, theme) {
@@ -144,42 +191,10 @@ const AddStaff = () => {
     }
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [permission, setPermission] = React.useState([]);
-
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ];
-
-  const persmission = [
+  const mockPermissions = [
     { title: 'Edit Record Summary', value: 'editRecordSummary' },
     { title: 'Save Record Summary', value: 'saveRecordSummary' }
   ];
-
-  const [type, setType] = React.useState('user');
-  const [userName, setUsername] = React.useState('');
-  const handleTypeChange = event => {
-    setType(event.target.value);
-  };
-  const handleUsernameChange = event => {
-    setUsername(event.target.value);
-  };
 
   const valid = userName && userName.length >= 6;
 
@@ -207,7 +222,7 @@ const AddStaff = () => {
             <Grid item lg={6} md={6} sm={6} xs={6}>
               <FormControl className={classes.formControl}>
                 <InputLabel id='user-type-label'>User Type</InputLabel>
-                <Select labelId='user-type-label' id='user-type' value={type} onChange={handleTypeChange}>
+                <Select labelId='user-type-label' id='user-type' value={userType} onChange={handleTypeChange}>
                   <MenuItem value={'user'}>User</MenuItem>
                   <MenuItem value={'admin'}>Admin</MenuItem>
                 </Select>
@@ -220,12 +235,12 @@ const AddStaff = () => {
                   labelId='permission-label'
                   id='permission'
                   multiple
-                  value={permission}
+                  value={permissions}
                   onChange={handleChange}
                   input={<Input />}
                   MenuProps={MenuProps}
                 >
-                  {persmission.map(permission => (
+                  {mockPermissions.map(permission => (
                     <MenuItem
                       key={permission.value}
                       value={permission.value}
@@ -243,7 +258,7 @@ const AddStaff = () => {
           <Button onClick={handleClose} color='primary'>
             Cancel
           </Button>
-          <Button onClick={handleClose} disabled={!valid} color='primary'>
+          <Button onClick={handleAdd} disabled={!valid} color='primary'>
             Add
           </Button>
         </DialogActions>
@@ -255,10 +270,11 @@ const AddStaff = () => {
 const AddClient = () => {
   const classes = useStaffStyles();
   const [open, setOpen] = React.useState(false);
-  const [age, setAge] = React.useState('');
+  const [name, setName] = React.useState('');
+  const addClient = useStoreActions(actions => actions.managementModel.addClient);
 
-  const handleChange = event => {
-    setAge(Number(event.target.value) || '');
+  const handleNameChange = event => {
+    setName(event.target.value);
   };
 
   const handleClickOpen = () => {
@@ -267,6 +283,12 @@ const AddClient = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAddClient = () => {
+    addClient({ name });
+    setOpen(false);
+    setName('');
   };
 
   return (
@@ -278,34 +300,16 @@ const AddClient = () => {
         <DialogTitle>Fill the form</DialogTitle>
         <DialogContent>
           <Grid container spacing={1}>
-            <Grid item lg={6} md={6} sm={6} xs={6}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor='demo-dialog-native'>Age</InputLabel>
-                <Select native value={age} onChange={handleChange} input={<Input id='demo-dialog-native' />}>
-                  <option value='' />
-                  <option value={10}>Ten</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item lg={6} md={6} sm={6} xs={6}>
-              <FormControl className={classes.formControl}>
-                <InputLabel id='demo-dialog-select-label'>Age</InputLabel>
-                <Select
-                  labelId='demo-dialog-select-label'
-                  id='demo-dialog-select'
-                  value={age}
-                  onChange={handleChange}
-                  input={<Input />}
-                >
-                  <MenuItem value=''>
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
+                <TextField
+                  error={!name}
+                  label='Name'
+                  variant='outlined'
+                  onChange={handleNameChange}
+                  value={name}
+                  fullWidth
+                />
               </FormControl>
             </Grid>
           </Grid>
@@ -314,8 +318,8 @@ const AddClient = () => {
           <Button onClick={handleClose} color='primary'>
             Cancel
           </Button>
-          <Button onClick={handleClose} color='primary'>
-            Ok
+          <Button onClick={handleAddClient} color='primary'>
+            Add
           </Button>
         </DialogActions>
       </Dialog>
