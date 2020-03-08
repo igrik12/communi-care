@@ -27,6 +27,7 @@ function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
   const userGroups = useStoreState(state => state.userGroups);
+  const getStaff = useStoreActions(actions => actions.getStaff);
   const theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
@@ -64,6 +65,7 @@ function App() {
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
     setUserGroups(groups);
+    getStaff(Auth.user.username);
   }, []);
 
   // This is temporary hack for development user management
@@ -101,7 +103,7 @@ function App() {
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
           {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/management' />
+          <Redirect from='/' to='/record' />
         </Layout>
       </Switch>
     </MuiThemeProvider>
