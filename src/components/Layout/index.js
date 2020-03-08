@@ -1,6 +1,6 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
-import { useStoreActions } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -23,6 +23,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import HealingIcon from '@material-ui/icons/Healing';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { isDeveloper } from '../../utils/permissions';
 
 const drawerWidth = 240;
 
@@ -62,15 +63,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const isDeveloper = () => {
-  const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
-  return groups.includes('developer');
-};
-
 function ResponsiveDrawer(props) {
-  const { container, children } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const { container, children } = props;
+  const userGroups = useStoreState(state => state.userGroups);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -93,7 +90,7 @@ function ResponsiveDrawer(props) {
           { title: 'Records', value: '/record', authorised: () => true },
           { title: 'Reports', value: '/reports', authorised: () => true },
           { title: 'Clients', value: '/clients', authorised: () => true },
-          { title: 'Management', value: '/management', authorised: () => isDeveloper() }
+          { title: 'Management', value: '/management', authorised: () => isDeveloper(userGroups) }
         ].map((item, index) => {
           return (
             item.authorised() && (

@@ -14,23 +14,19 @@ import { blue, deepPurple } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
 import ClientRecord from './components/Pages/ClientRecord';
 import CareReports from './components/Pages/CareReports';
-import Management from './components/Pages/Management';
+import Management from './components/Pages/Management/Management';
 import Layout from './components/Layout';
+import { isDeveloper } from './utils/permissions';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
 import { listStaffs, listClients } from './graphql/queries';
 import { createStaff, createClient } from './graphql/mutations';
 
 const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 
-const isDeveloper = () => {
-  const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
-  return groups.includes('developer');
-};
-
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
-  const getStaff = useStoreActions(actions => actions.getStaff);
-  console.log('Calling');
+  const setUserGroups = useStoreActions(actions => actions.setUserGroups);
+  const userGroups = useStoreState(state => state.userGroups);
   const theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
@@ -65,6 +61,11 @@ function App() {
     });
   }, [themeColor]);
 
+  useEffect(() => {
+    const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
+    setUserGroups(groups);
+  }, []);
+
   // This is temporary hack for development user management
   // useEffect(() => {
   //   const apiCall = async () => {
@@ -92,7 +93,6 @@ function App() {
   //   };
   //   apiCall();
   // }, []);
-
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseLine />
@@ -100,8 +100,8 @@ function App() {
         <Layout>
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
-          {isDeveloper() && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/record' />
+          {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
+          <Redirect from='/' to='/management' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

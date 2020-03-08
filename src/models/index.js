@@ -1,5 +1,7 @@
 import clientRecordModel from './clientRecord';
 import layoutModel from './layout';
+import managementModel from './management';
+
 import { action, thunk } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listStaffs } from '../graphql/queries';
@@ -17,8 +19,13 @@ const mainModel = {
       actions.setStaff(staffList[0]);
     }
   }),
+  userGroups: [],
+  setUserGroups: action((state, payload) => {
+    state.userGroups = payload;
+  }),
   clientRecordModel,
-  layoutModel
+  layoutModel,
+  managementModel
 };
 
 export default mainModel;

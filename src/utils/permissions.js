@@ -8,6 +8,11 @@ const hasPermissions = permissions => ({ userName, userType }, className) => {
   return userFound.permissions.includes(className);
 };
 
+const isDeveloper = groups => {
+  return groups.includes('developer');
+};
+
 module.exports = {
-  hasPermissions
+  hasPermissions,
+  isDeveloper
 };

@@ -1,18 +1,14 @@
 import React from 'react';
-import { Auth } from 'aws-amplify';
-
-const isDeveloper = () => {
-  const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
-  console.log(groups);
-  return groups.includes('developer');
-};
+import { useStoreState } from 'easy-peasy';
+import { isDeveloper } from '../../utils/permissions';
 
 function PrivateRoute({ children, ...rest }) {
+  const userGroups = useStoreState(state => state.userGroups);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        isDeveloper() ? (
+        isDeveloper(userGroups) ? (
           children
         ) : (
           <Redirect
@@ -26,3 +22,5 @@ function PrivateRoute({ children, ...rest }) {
     />
   );
 }
+
+export default PrivateRoute;
