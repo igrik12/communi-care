@@ -41,7 +41,6 @@ export default function Management() {
 const Summary = () => {
   const classes = useStyles();
   const data = useStoreState(state => state.managementModel.data);
-  console.log(Object.entries(data));
   return (
     <Paper className={classes.summary}>
       <List>

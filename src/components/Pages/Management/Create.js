@@ -1,5 +1,7 @@
 import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import { Auth } from 'aws-amplify';
+
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -148,7 +150,10 @@ const AddStaff = () => {
   const [open, setOpen] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
   const [userType, setUserType] = React.useState('user');
-  const [userName, setUsername] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [number, setNumber] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const addStaff = useStoreActions(actions => actions.managementModel.addStaff);
 
   const handleClickOpen = () => {
@@ -159,8 +164,14 @@ const AddStaff = () => {
     setOpen(false);
   };
 
-  const handleAdd = () => {
-    addStaff({ userName, userType, persmissions: permissions });
+  const handleAdd = async () => {
+    // addStaff({ userName, userType, persmissions: permissions });
+    try {
+      const success = await Auth.signUp({ username, password, attributes: { email, phone_number: number } });
+      console.log('Happened', success);
+    } catch (error) {
+      console.log('Error signing up!', error);
+    }
     setOpen(false);
   };
 
@@ -196,7 +207,7 @@ const AddStaff = () => {
     { title: 'Save Record Summary', value: 'saveRecordSummary' }
   ];
 
-  const valid = userName && userName.length >= 6;
+  const valid = username && username.length >= 6;
 
   const theme = useTheme();
   return (
@@ -215,7 +226,42 @@ const AddStaff = () => {
                   label='Username'
                   variant='outlined'
                   onChange={handleUsernameChange}
-                  value={userName}
+                  value={username}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  error={!valid}
+                  type='password'
+                  label='Password'
+                  variant='outlined'
+                  onChange={e => setPassword(e.target.value)}
+                  value={password}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  error={!valid}
+                  label='Phone number'
+                  variant='outlined'
+                  onChange={e => setNumber(e.target.value)}
+                  value={number}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  error={!valid}
+                  type='email'
+                  label='Email'
+                  variant='outlined'
+                  onChange={e => setEmail(e.target.value)}
+                  value={email}
                 />
               </FormControl>
             </Grid>

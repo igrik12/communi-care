@@ -7,7 +7,8 @@ import {
   ConfirmSignIn,
   VerifyContact,
   ForgotPassword,
-  RequireNewPassword
+  RequireNewPassword,
+  ConfirmSignUp
 } from 'aws-amplify-react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { blue, deepPurple } from '@material-ui/core/colors';
@@ -72,8 +73,9 @@ function App() {
   useEffect(() => {
     const apiCall = async () => {
       const user = Auth.user;
+
       const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-      let userType = groups[0];
+      let userType = groups ? groups[0] : 'user';
 
       const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
       const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
@@ -116,5 +118,6 @@ export default withAuthenticator(App, false, [
   <ConfirmSignIn />,
   <VerifyContact />,
   <ForgotPassword />,
-  <RequireNewPassword />
+  <RequireNewPassword />,
+  <ConfirmSignUp />
 ]);

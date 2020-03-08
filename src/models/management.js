@@ -14,10 +14,10 @@ const managementModel = {
   }),
   company: { name: '', companyLogoUrl: '' },
   setCompany: action((state, payload) => {
-    if (payload.name) {
+    if (payload.name !== undefined) {
       state.company.name = payload.name;
     }
-    if (payload.companyLogoUrl) {
+    if (payload.companyLogoUrl !== undefined) {
       state.company.companyLogoUrl = payload.companyLogoUrl;
     }
   }),

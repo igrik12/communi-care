@@ -35,5 +35,43 @@
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
 		}
+	},
+	"function": {
+		"communicare": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "communicarec17db351",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "api",
+					"resourceName": "api",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				},
+				{
+					"category": "hosting",
+					"resourceName": "S3AndCloudFront",
+					"attributes": [
+						"HostingBucketName"
+					]
+				},
+				{
+					"category": "storage",
+					"resourceName": "ccstorage",
+					"attributes": [
+						"BucketName"
+					]
+				}
+			]
+		}
 	}
 }

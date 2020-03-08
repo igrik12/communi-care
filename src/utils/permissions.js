@@ -9,7 +9,7 @@ const hasPermissions = permissions => ({ userName, userType }, className) => {
 };
 
 const isDeveloper = groups => {
-  return groups.includes('developer');
+  return groups && groups.includes('developer');
 };
 
 module.exports = {
