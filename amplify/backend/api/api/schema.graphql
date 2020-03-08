@@ -56,6 +56,7 @@ type Permission @model {
 enum UserType {
   user
   admin
+  developer
 }
 
 enum EntryType {
