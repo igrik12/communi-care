@@ -1,5 +1,7 @@
 import React from 'react';
-import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useStoreState } from 'easy-peasy';
+
+// Material-UI imports
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Selection from './Selection';

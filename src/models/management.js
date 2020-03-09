@@ -1,9 +1,13 @@
-import { action, thunk, computed, debug } from 'easy-peasy';
+import { action, computed } from 'easy-peasy';
 
 const managementModel = {
   editModeOn: false,
   setEditModeOn: action((state, payload) => {
     state.editModeOn = payload;
+  }),
+  editType: 'new',
+  setEditType: action((state, payload) => {
+    state.editType = payload;
   }),
   data: computed(state => {
     const company = state.company;
@@ -36,6 +40,10 @@ const managementModel = {
   addClient: action((state, payload) => {
     if (state.clients.some(client => client.name === payload.name)) return;
     state.clients.push(payload);
+  }),
+  openSignUpConfirm: false,
+  setOpenSignUpConfirm: action((state, payload) => {
+    state.openSignUpConfirm = payload;
   })
 };
 

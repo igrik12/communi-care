@@ -15,11 +15,11 @@ import { blue, deepPurple } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
 import ClientRecord from './components/Pages/ClientRecord';
 import CareReports from './components/Pages/CareReports';
-import Management from './components/Pages/Management/Management';
+import Management from './components/Pages/Management';
 import Layout from './components/Layout';
 import { isDeveloper } from './utils/permissions';
 import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
-import { listStaffs, listClients, getStaff } from './graphql/queries';
+import { listStaffs, listClients } from './graphql/queries';
 import { createStaff, createClient } from './graphql/mutations';
 
 const fakeClients = ['Bob', 'John', 'George', 'Amy'];
@@ -73,18 +73,29 @@ function App() {
   useEffect(() => {
     const apiCall = async () => {
       const user = Auth.user;
+      const { username } = Auth.user;
 
       const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
       let userType = groups ? groups[0] : 'user';
 
-      const filterCondition = { filter: { userName: { eq: Auth.user.username } } };
-      const result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
+      const filterCondition = { filter: { userName: { eq: username } } };
+      let result;
+      try {
+        result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
+      } catch (error) {
+        throw Error('Failed to retrieve staff list!', error);
+      }
+
       if (!result.data.listStaffs.items.length) {
-        const inputDetails = { input: { userName: Auth.user.username, userType: userType } };
-        const ret = await API.graphql(graphqlOperation(createStaff, inputDetails));
-        setStaff(ret.data.createStaff);
+        const inputDetails = { input: { username, userType } };
+        try {
+          const ret = await API.graphql(graphqlOperation(createStaff, inputDetails));
+          setStaff(ret.data.createStaff);
+        } catch (error) {
+          throw Error('Failed to create new staff!', error);
+        }
       } else {
-        getStaff(Auth.user.username);
+        getStaff({ username, userType });
       }
 
       // Temp to populate fake clients to DB

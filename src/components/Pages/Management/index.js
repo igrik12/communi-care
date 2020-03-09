@@ -1,17 +1,15 @@
 import React from 'react';
-import { useStoreState } from 'easy-peasy';
-import { Grid, Paper, List, ListItem } from '@material-ui/core';
+
+// Material-UI imports
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Hero from './Hero';
+import Summary from './Summary';
 import CreateEdit from './CreateEdit';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
-  },
-  summary: {
-    minWidth: '100%',
-    minHeight: 260
   }
 }));
 
@@ -37,25 +35,3 @@ export default function Management() {
     </div>
   );
 }
-
-const Summary = () => {
-  const classes = useStyles();
-  const data = useStoreState(state => state.managementModel.data);
-  return (
-    <Paper className={classes.summary}>
-      <List>
-        <ListItem>Company name: {data['company'].name}</ListItem>
-        <ListItem>Company Logo URL: {data['company'].companyLogoUrl}</ListItem>
-
-        {data['staff'].map((item, index) => (
-          <>
-            <ListItem>
-              Staff ({index}) username {item.userName}
-            </ListItem>
-            <ListItem>Staff type {item.userType}</ListItem>
-          </>
-        ))}
-      </List>
-    </Paper>
-  );
-};
