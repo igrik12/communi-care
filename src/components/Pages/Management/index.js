@@ -23,10 +23,10 @@ export default function Management() {
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Grid container spacing={1}>
-            <Grid item lg={5} md={5} sm={6} xs={6}>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
               <CreateEdit />
             </Grid>
-            <Grid item lg={7} md={7} sm={6} xs={6}>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
               <Summary />
             </Grid>
           </Grid>

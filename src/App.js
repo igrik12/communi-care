@@ -10,15 +10,15 @@ import {
   RequireNewPassword,
   ConfirmSignUp
 } from 'aws-amplify-react';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { blue, deepPurple } from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
 import ClientRecord from './components/Pages/ClientRecord';
 import CareReports from './components/Pages/CareReports';
 import Management from './components/Pages/Management';
 import Layout from './components/Layout';
 import { isDeveloper } from './utils/permissions';
-import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
+import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { listStaffs, listClients } from './graphql/queries';
 import { createStaff, createClient } from './graphql/mutations';
 
@@ -30,7 +30,8 @@ function App() {
   const userGroups = useStoreState(state => state.userGroups);
   const setStaff = useStoreActions(actions => actions.setStaff);
   const getStaff = useStoreActions(actions => actions.getStaff);
-  const theme = useMemo(() => {
+
+  let theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
         MUIDataTable: {
@@ -42,10 +43,6 @@ function App() {
             height: 'calc(100% - 128px)'
           }
         }
-      },
-      toolBar: {
-        dark: deepPurple[800],
-        light: blue[500]
       },
       palette: {
         type: themeColor,
@@ -59,10 +56,26 @@ function App() {
           main: '#DB2828',
           contrastText: '#ffcc00'
         },
-        fontFamily: ['Roboto', 'sans-serif']
+
+        typography: {
+          fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"'
+          ].join(',')
+        }
       }
     });
   }, [themeColor]);
+
+  theme = responsiveFontSizes(theme);
 
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
@@ -117,7 +130,7 @@ function App() {
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
           {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/record' />
+          <Redirect from='/' to='/management' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

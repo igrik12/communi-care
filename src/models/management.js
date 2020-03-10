@@ -18,12 +18,7 @@ const managementModel = {
   }),
   company: { name: '', companyLogoUrl: '' },
   setCompany: action((state, payload) => {
-    if (payload.name !== undefined) {
-      state.company.name = payload.name;
-    }
-    if (payload.companyLogoUrl !== undefined) {
-      state.company.companyLogoUrl = payload.companyLogoUrl;
-    }
+    state.company = payload;
   }),
   staff: [],
   setStaff: action((state, payload) => {
