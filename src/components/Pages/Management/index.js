@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useStoreActions } from 'easy-peasy';
 
 // Material-UI imports
 import Grid from '@material-ui/core/Grid';
@@ -15,6 +16,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function Management() {
   const classes = useStyles();
+  const getCompanies = useStoreActions(actions => actions.managementModel.getCompanies);
+  useEffect(() => {
+    getCompanies();
+  }, []);
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>
@@ -23,10 +28,10 @@ export default function Management() {
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Grid container spacing={1}>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={8} md={8} sm={12} xs={12}>
               <CreateEdit />
             </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={4} md={4} sm={12} xs={12}>
               <Summary />
             </Grid>
           </Grid>

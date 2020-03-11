@@ -1,4 +1,6 @@
-import { action, computed } from 'easy-peasy';
+import { action, computed, thunk, actionOn } from 'easy-peasy';
+import { API, graphqlOperation } from 'aws-amplify';
+import { listCompanys } from '../graphql/queries';
 
 const managementModel = {
   editModeOn: false,
@@ -20,6 +22,14 @@ const managementModel = {
   setCompany: action((state, payload) => {
     state.company = payload;
   }),
+  companies: [],
+  setCompanies: action((state, payload) => {
+    state.companies = payload;
+  }),
+  getCompanies: thunk(async (actions, payload) => {
+    const ret = await API.graphql(graphqlOperation(listCompanys));
+    actions.setCompanies(ret.data.listCompanys.items);
+  }),
   staff: [],
   setStaff: action((state, payload) => {
     state.staff = payload;
@@ -36,9 +46,11 @@ const managementModel = {
     if (state.clients.some(client => client.name === payload.name)) return;
     state.clients.push(payload);
   }),
-  openSignUpConfirm: false,
-  setOpenSignUpConfirm: action((state, payload) => {
-    state.openSignUpConfirm = payload;
+  formData: computed(state => {
+    const company = state.company;
+    const clients = state.clients;
+    const staff = state.staff;
+    return { company, clients, staff };
   })
 };
 

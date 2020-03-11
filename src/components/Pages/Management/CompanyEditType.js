@@ -14,15 +14,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 const filter = createFilterOptions();
 
-const companies = [
-  { name: 'Company A', url: 'www.s3.companyA.logo' },
-  { name: 'Company B', url: 'www.s3.companyB.logo' }
-];
-
 export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
   const [open, toggleOpen] = React.useState(false);
   const onSubmit = data => console.log(data);
+  const companies = useStoreState(state => state.managementModel.companies);
 
   const handleClose = () => {
     setDialogValue({
@@ -44,7 +40,6 @@ export default function CompanyEditType() {
         value={value}
         onChange={(event, newValue) => {
           if (typeof newValue === 'string') {
-            // timeout to avoid instant validation of the dialog's form.
             setTimeout(() => {
               toggleOpen(true);
               setDialogValue({

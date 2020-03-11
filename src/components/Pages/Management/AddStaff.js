@@ -10,9 +10,10 @@ import { ButtonGroup } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import Typography from '@material-ui/core/Typography';
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+const checkedIcon = <CheckBoxIcon fontSize='small' />;
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -32,17 +33,21 @@ const useStyles = makeStyles(theme => ({
 const AddStaff = () => {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
-  const [] = useState([]);
+  const [permissions, setPermissions] = useState([]);
   const mockPermissions = [
     { title: 'Edit Record Summary', value: 'editRecordSummary' },
     { title: 'Save Record Summary', value: 'saveRecordSummary' }
   ];
   const onSubmit = data => {
+    data['permissions'] = permissions;
     console.log(data);
   };
 
   return (
     <>
+      <Typography gutterBottom variant='h6' component='h2'>
+        Staff
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
           inputRef={register({ required: true, minLength: 5 })}
@@ -93,22 +98,10 @@ const AddStaff = () => {
           options={mockPermissions}
           multiple
           disableCloseOnSelect
-          renderOption={(option, { selected }) => (
-            <React.Fragment>
-              <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
-              {option.title}
-            </React.Fragment>
-          )}
+          onChange={(evt, obj) => setPermissions(obj)}
+          renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
           getOptionLabel={option => option.title}
-          renderInput={params => (
-            <TextField
-              {...params}
-              inputRef={register({ required: true })}
-              name='permission'
-              label='Permission'
-              variant='outlined'
-            />
-          )}
+          renderInput={params => <TextField {...params} name='permission' label='Permission' variant='outlined' />}
         />
         <ButtonGroup fullWidth className={classes.buttonGroup}>
           <Button color='primary'>Reset</Button>
