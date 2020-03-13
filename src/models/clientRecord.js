@@ -2,7 +2,6 @@ import { action, thunk, computed } from 'easy-peasy';
 import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
-import _ from 'lodash';
 
 const clientRecordModel = {
   records: [],

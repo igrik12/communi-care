@@ -17,7 +17,6 @@ const filter = createFilterOptions();
 export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
   const [open, toggleOpen] = React.useState(false);
-  const onSubmit = data => console.log(data);
   const companies = useStoreState(state => state.managementModel.companies);
 
   const handleClose = () => {
@@ -29,7 +28,7 @@ export default function CompanyEditType() {
     toggleOpen(false);
   };
 
-  const [dialogValue, setDialogValue] = React.useState({
+  const [, setDialogValue] = React.useState({
     name: '',
     url: ''
   });
@@ -96,7 +95,7 @@ export default function CompanyEditType() {
 }
 
 const AddNewCompany = ({ open, handleClose }) => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const onSubmit = data => {
     setCompany(data);
@@ -106,11 +105,10 @@ const AddNewCompany = ({ open, handleClose }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle id='form-dialog-title'>Add a new film</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Add a new company</DialogTitle>
         <DialogContent>
-          <DialogContentText>Did you miss any film in our list? Please, add it!</DialogContentText>
-          <TextField autoFocus margin='dense' name='name' inputRef={register} label='Company Name' type='text' />
-          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL' />
+          <TextField autoFocus margin='dense' name='name' inputRef={register} label='Company Name' type='text' autoComplete='off' />
+          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL'  autoComplete='off'/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>

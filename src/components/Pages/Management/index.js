@@ -19,7 +19,7 @@ export default function Management() {
   const getCompanies = useStoreActions(actions => actions.managementModel.getCompanies);
   useEffect(() => {
     getCompanies();
-  }, []);
+  }, [getCompanies]);
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>
@@ -28,10 +28,10 @@ export default function Management() {
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Grid container spacing={1}>
-            <Grid item lg={8} md={8} sm={12} xs={12}>
+            <Grid item lg={8} md={12} sm={12} xs={12}>
               <CreateEdit />
             </Grid>
-            <Grid item lg={4} md={4} sm={12} xs={12}>
+            <Grid item lg={4} md={12} sm={12} xs={12}>
               <Summary />
             </Grid>
           </Grid>

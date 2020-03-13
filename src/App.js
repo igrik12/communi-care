@@ -80,7 +80,7 @@ function App() {
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
     setUserGroups(groups);
-  }, []);
+  }, [setUserGroups]);
 
   //This is temporary hack for development user management
   useEffect(() => {
@@ -121,7 +121,7 @@ function App() {
       }
     };
     apiCall();
-  }, []);
+  }, [getStaff, setStaff]);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseLine />

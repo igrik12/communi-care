@@ -12,7 +12,7 @@ import {
   Button
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { getPlainEntry } from '../../graphql/customQueries';
 import { useStoreState } from 'easy-peasy';
 import _ from 'lodash';
