@@ -59,7 +59,7 @@ export default function Summary() {
   const classes = useStyles();
   const [entries, setEntries] = useState([]);
   const selectedRecord = useStoreState(state => state.clientRecordModel.selectedRecord);
-  const staff = useStoreState(state => state.staff);
+  const user = useStoreState(state => state.user);
 
   useEffect(() => {
     if (selectedRecord) {
@@ -84,8 +84,7 @@ export default function Summary() {
   }, [selectedRecord]);
 
   if (!selectedRecord) return null;
-
-  const hasPerm = hasPermissions(staff, 'editRecordSummary');
+  const hasPerm = hasPermissions(user, 'editRecordSummary');
 
   return (
     <div className={classes.root}>
@@ -118,8 +117,8 @@ export default function Summary() {
 }
 
 const DataPanel = ({ children, name, createdAt, entryType }) => {
-  const staff = useStoreState(state => state.staff);
-  const hasPerm = hasPermissions(staff, 'saveRecordSummary');
+  const user = useStoreState(state => state.user);
+  const hasPerm = hasPermissions(user, 'saveRecordSummary');
   const classes = useStyles();
   return (
     <ExpansionPanel elevation={3} defaultExpanded>

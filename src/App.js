@@ -133,7 +133,7 @@ function App() {
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
           {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/management' />
+          <Redirect from='/' to='/record' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

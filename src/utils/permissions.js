@@ -1,8 +1,6 @@
 const hasPermissions = ({ userType, permissions }, className) => {
-  console.log(userType)
-  console.log(permissions)
   if (userType === 'admin' || userType === 'developer') return true;
-  return permissions.includes(className);
+  return Array.isArray(className) && permissions.includes(className);
 };
 
 const isDeveloper = groups => {
