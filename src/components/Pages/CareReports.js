@@ -3,11 +3,11 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { listClientRecordsWithClient } from '../../graphql/customQueries';
 import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, Paper, withWidth } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 import Summary from '../Shared/Summary';
 
-export default function CareReports() {
+function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);
   const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
   const setSelectedRecord = useStoreActions(actions => actions.clientRecordModel.setSelectedRecord);
@@ -36,7 +36,7 @@ export default function CareReports() {
 
   return (
     <Grid container spacing={1}>
-      <Grid item lg={8} md={8} sm={12} xs={12}>
+      <Grid item lg={12} md={12} sm={12} xs={12}>
         <MUIDataTable
           columns={[
             {
@@ -79,13 +79,13 @@ export default function CareReports() {
           title='Client Records'
         />
       </Grid>
-      <Grid item lg={4} md={4} sm={12} xs={12}>
+      <Grid item lg={12} md={12} sm={12} xs={12}>
+        <Summary />
+      </Grid>
+      <Grid item lg={12} md={12} sm={12} xs={12}>
         <Paper elevation={3} style={{ minHeight: '100%' }}>
           <Bar height={400} data={dataBar(count)} options={barChartOptions} />
         </Paper>
-      </Grid>
-      <Grid item lg={12} md={12} sm={12} xs={12}>
-        <Summary />
       </Grid>
     </Grid>
   );
@@ -129,3 +129,5 @@ const barChartOptions = {
     ]
   }
 };
+
+export default withWidth()(CareReports);

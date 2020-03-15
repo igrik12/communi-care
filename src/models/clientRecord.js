@@ -42,9 +42,9 @@ const clientRecordModel = {
   setEntry: action((state, payload) => {
     state.record.entry[payload.fieldId] = payload.value;
   }),
-  saveRecord: thunk(async (actions, payload, { getState, getStoreState }) => {
+  saveRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
     const { clientId, shift, recordDate, entry } = getState().record;
-
+    const setAlertOpen = getStoreActions().setAlertOpen;
     const recordDetails = {
       clientRecordStaffId: getStoreState().staff.id,
       clientRecordClientId: clientId,
@@ -56,7 +56,7 @@ const clientRecordModel = {
     try {
       record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
       console.error(error);
       return;
     }
@@ -70,7 +70,7 @@ const clientRecordModel = {
     try {
       retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
       console.error(error);
       return;
     }
@@ -82,9 +82,9 @@ const clientRecordModel = {
     try {
       await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
       actions.resetRecord();
-      actions.setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
+      setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
       console.error(error);
       return;
     }

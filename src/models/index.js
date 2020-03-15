@@ -45,7 +45,7 @@ const mainModel = {
   fetchStaff: thunk(async (actions, payload) => {
     try {
       const ret = await API.graphql(graphqlOperation(listStaffs));
-      actions.setStaff(ret.data.listStaffs.items);
+      actions.setStaff(ret.data.listStaffs.items || []);
     } catch (error) {
       console.error(`Failed to retrieve all staff. ${error}`);
     }
