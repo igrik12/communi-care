@@ -1,8 +1,11 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
+import { isDeveloper } from '../../utils/permissions';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link } from 'react-router-dom';
+import ToastAlert from '../Shared/ToastAlert';
 
+// MUI imports
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -23,7 +26,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import HealingIcon from '@material-ui/icons/Healing';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { isDeveloper } from '../../utils/permissions';
 
 const drawerWidth = 240;
 
@@ -83,7 +85,6 @@ function ResponsiveDrawer(props) {
         </ListItemIcon>
         <Typography variant={'h6'}>Company A&B</Typography>
       </ListItem>
-
       <Divider />
       <List>
         {[
@@ -111,6 +112,7 @@ function ResponsiveDrawer(props) {
           </ListItem>
         ))}
       </List>
+      <ToastAlert />
     </div>
   );
 
@@ -185,10 +187,6 @@ function ResponsiveDrawer(props) {
 }
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   container: PropTypes.any
 };
 

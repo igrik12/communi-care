@@ -10,8 +10,11 @@ export const getCompany = /* GraphQL */ `
       staff {
         items {
           id
-          userName
+          username
           userType
+          email
+          phone_number
+          permissions
         }
         nextToken
       }
@@ -51,26 +54,19 @@ export const getStaff = /* GraphQL */ `
   query GetStaff($id: ID!) {
     getStaff(id: $id) {
       id
-      userName
+      username
       userType
+      email
+      phone_number
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
         nextToken
-      }
-      permissions {
-        title
-        value
-        staff {
-          id
-          userName
-          userType
-        }
       }
       company {
         id
@@ -83,6 +79,7 @@ export const getStaff = /* GraphQL */ `
           nextToken
         }
       }
+      permissions
     }
   }
 `;
@@ -95,20 +92,19 @@ export const listStaffs = /* GraphQL */ `
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        userName
+        username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
-        }
-        permissions {
-          title
-          value
         }
         company {
           id
           name
           companyLogoUrl
         }
+        permissions
       }
       nextToken
     }
@@ -122,7 +118,7 @@ export const getClient = /* GraphQL */ `
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
@@ -172,20 +168,19 @@ export const getClientRecord = /* GraphQL */ `
       id
       staff {
         id
-        userName
+        username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
-        }
-        permissions {
-          title
-          value
         }
         company {
           id
           name
           companyLogoUrl
         }
+        permissions
       }
       client {
         id
@@ -212,13 +207,13 @@ export const getClientRecord = /* GraphQL */ `
         dailyActivityParticipation
         clientRecord {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
       }
-      date
+      createdAt
       status
       shift
       entryType
@@ -236,8 +231,11 @@ export const listClientRecords = /* GraphQL */ `
         id
         staff {
           id
-          userName
+          username
           userType
+          email
+          phone_number
+          permissions
         }
         client {
           id
@@ -255,7 +253,7 @@ export const listClientRecords = /* GraphQL */ `
           finances
           dailyActivityParticipation
         }
-        date
+        createdAt
         status
         shift
         entryType
@@ -281,8 +279,11 @@ export const getEntry = /* GraphQL */ `
         id
         staff {
           id
-          userName
+          username
           userType
+          email
+          phone_number
+          permissions
         }
         client {
           id
@@ -300,7 +301,7 @@ export const getEntry = /* GraphQL */ `
           finances
           dailyActivityParticipation
         }
-        date
+        createdAt
         status
         shift
         entryType
@@ -328,7 +329,7 @@ export const listEntrys = /* GraphQL */ `
         dailyActivityParticipation
         clientRecord {
           id
-          date
+          createdAt
           status
           shift
           entryType
@@ -343,23 +344,6 @@ export const getPermission = /* GraphQL */ `
     getPermission(id: $id) {
       title
       value
-      staff {
-        id
-        userName
-        userType
-        clientRecords {
-          nextToken
-        }
-        permissions {
-          title
-          value
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-        }
-      }
     }
   }
 `;
@@ -373,11 +357,6 @@ export const listPermissions = /* GraphQL */ `
       items {
         title
         value
-        staff {
-          id
-          userName
-          userType
-        }
       }
       nextToken
     }

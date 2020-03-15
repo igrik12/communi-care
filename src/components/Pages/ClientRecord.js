@@ -2,19 +2,8 @@ import React from 'react';
 import 'date-fns';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  Paper,
-  Grid,
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  Select,
-  MenuItem,
-  Snackbar
-} from '@material-ui/core';
+import { Paper, Grid, FormControl, InputLabel, Input, InputAdornment, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import TextEntry from '../Shared/TextEntry';
@@ -34,9 +23,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={3} variant='filled' {...props} />;
-}
 
 export default function ClientRecord() {
   return (
@@ -50,30 +36,9 @@ export default function ClientRecord() {
         </Grid>
         <SaveConfirmDialog />
       </Grid>
-      <ToastAlert />
     </>
   );
 }
-
-const ToastAlert = () => {
-  const alertOpen = useStoreState(state => state.clientRecordModel.alertOpen);
-  const setAlertOpen = useStoreActions(actions => actions.clientRecordModel.setAlertOpen);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setAlertOpen({ open: false });
-  };
-  return (
-    <Snackbar open={alertOpen.open} autoHideDuration={3000} onClose={handleClose}>
-      <Alert onClose={handleClose} severity={alertOpen.success ? 'success' : 'error'}>
-        {alertOpen.message}
-      </Alert>
-    </Snackbar>
-  );
-};
 
 const textFields = [
   {
@@ -138,7 +103,7 @@ const SelectMenu = () => {
   const inputLabel = React.useRef(null);
   const getClients = useStoreActions(actions => actions.clientRecordModel.getClients);
   const [labelWidth, setLabelWidth] = React.useState(0);
-  
+
   React.useEffect(() => {
     getClients();
     setLabelWidth(inputLabel.current.offsetWidth);

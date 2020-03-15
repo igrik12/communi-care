@@ -8,11 +8,13 @@ type Company @model {
 
 type Staff @model {
   id: ID!
-  userName: String!
+  username: String!
   userType: UserType
+  email: AWSEmail!
+  phone_number: AWSPhone!
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
-  permissions: Permission @connection(name: "StaffPermissions")
   company: Company @connection(name: "CompanyStaff")
+  permissions: [String]
 }
 
 type Client @model {
@@ -27,7 +29,7 @@ type ClientRecord @model {
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
   entry: Entry @connection(name: "ClientEntry")
-  date: AWSDateTime!
+  createdAt: AWSDateTime!
   status: String
   shift: ShiftType
   entryType: EntryType
@@ -50,7 +52,6 @@ type Entry @model {
 type Permission @model {
   title: String!
   value: String!
-  staff: Staff @connection(name: "StaffPermissions")
 }
 
 enum UserType {

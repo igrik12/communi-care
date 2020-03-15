@@ -9,21 +9,15 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 
 const filter = createFilterOptions();
 
-const companies = [
-  { name: 'Company A', url: 'www.s3.companyA.logo' },
-  { name: 'Company B', url: 'www.s3.companyB.logo' }
-];
-
 export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
   const [open, toggleOpen] = React.useState(false);
-  const onSubmit = data => console.log(data);
-
+  const companies = useStoreState(state => state.managementModel.companies);
+  const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const handleClose = () => {
     setDialogValue({
       name: '',
@@ -33,7 +27,7 @@ export default function CompanyEditType() {
     toggleOpen(false);
   };
 
-  const [dialogValue, setDialogValue] = React.useState({
+  const [, setDialogValue] = React.useState({
     name: '',
     url: ''
   });
@@ -44,7 +38,6 @@ export default function CompanyEditType() {
         value={value}
         onChange={(event, newValue) => {
           if (typeof newValue === 'string') {
-            // timeout to avoid instant validation of the dialog's form.
             setTimeout(() => {
               toggleOpen(true);
               setDialogValue({
@@ -66,10 +59,10 @@ export default function CompanyEditType() {
           }
 
           setValue(newValue);
+          setCompany(findCompany(companies, newValue));
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
@@ -93,15 +86,23 @@ export default function CompanyEditType() {
         }}
         renderOption={option => option.name}
         freeSolo
-        renderInput={params => <TextField name='company-name' {...params} label='Company name' variant='outlined' />}
+        renderInput={params => (
+          <TextField required name='company-name' {...params} label='Company name' variant='outlined' />
+        )}
       />
       <AddNewCompany open={open} handleClose={handleClose} />
     </>
   );
 }
 
+const findCompany = (companies, inputCompany) => {
+  console.log(inputCompany)
+  console.log(companies)
+  return companies.find(company => company.name === inputCompany.name);
+};
+
 const AddNewCompany = ({ open, handleClose }) => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const onSubmit = data => {
     setCompany(data);
@@ -111,11 +112,18 @@ const AddNewCompany = ({ open, handleClose }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle id='form-dialog-title'>Add a new film</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Add a new company</DialogTitle>
         <DialogContent>
-          <DialogContentText>Did you miss any film in our list? Please, add it!</DialogContentText>
-          <TextField autoFocus margin='dense' name='name' inputRef={register} label='Company Name' type='text' />
-          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL' />
+          <TextField
+            autoFocus
+            margin='dense'
+            name='name'
+            inputRef={register}
+            label='Company Name'
+            type='text'
+            autoComplete='off'
+          />
+          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL' autoComplete='off' />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>

@@ -2,16 +2,11 @@ import { action, thunk, computed } from 'easy-peasy';
 import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
-import _ from 'lodash';
 
 const clientRecordModel = {
   records: [],
   setRecords: action((state, payload) => {
     state.records = payload;
-  }),
-  alertOpen: { open: false, success: true, message: null },
-  setAlertOpen: action((state, payload) => {
-    state.alertOpen = payload;
   }),
   saveRecordDisabled: computed(state => {
     return (
@@ -53,7 +48,7 @@ const clientRecordModel = {
     const recordDetails = {
       clientRecordStaffId: getStoreState().staff.id,
       clientRecordClientId: clientId,
-      date: recordDate,
+      createdAt: recordDate,
       shift: shift,
       entryType: payload.entryType
     };
@@ -65,8 +60,6 @@ const clientRecordModel = {
       console.error(error);
       return;
     }
-
-    console.log('Created record', record.data);
 
     const entryDetails = {
       entryClientRecordId: record.data.createClientRecord.id,
@@ -81,9 +74,6 @@ const clientRecordModel = {
       console.error(error);
       return;
     }
-
-    console.log('Created entry', retEntry.data);
-
 
     const recordUpdate = {
       id: record.data.createClientRecord.id,

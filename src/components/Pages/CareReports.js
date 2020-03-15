@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClientRecordsWithClient } from '../../graphql/customQueries';
 import MUIDataTable from 'mui-datatables';
@@ -18,7 +18,7 @@ export default function CareReports() {
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
     query();
-  }, []);
+  }, [setRecords, setSelectedRecord]);
 
   const options = {
     filter: true,
@@ -43,16 +43,16 @@ export default function CareReports() {
               name: 'client.name',
               label: 'Client Name',
               options: {
-                customBodyRender: (value, tableMeta, updateValue) => value
+                customBodyRender: value => value
               }
             },
             {
-              name: 'date',
+              name: 'createdAt',
               label: 'Date',
               options: {
                 filter: true,
                 sort: true,
-                customBodyRender: (value, tableMeta, updateValue) => new Date(value).toLocaleDateString()
+                customBodyRender: value => new Date(value).toLocaleDateString()
               }
             },
             {
@@ -61,7 +61,7 @@ export default function CareReports() {
               options: {
                 filter: true,
                 sort: true,
-                customBodyRender: (value, tableMeta, updateValue) => value.toUpperCase()
+                customBodyRender: value => value.toUpperCase()
               }
             },
             {
@@ -70,7 +70,7 @@ export default function CareReports() {
               options: {
                 filter: true,
                 sort: true,
-                customBodyRender: (value, tableMeta, updateValue) => value || 'normal'
+                customBodyRender: value => value || 'normal'
               }
             }
           ]}

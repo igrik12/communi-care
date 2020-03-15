@@ -11,10 +11,11 @@ import Edit from './Edit';
 const useStyles = makeStyles(theme => ({
   root: {
     minWidth: '100%',
-    minHeight: '500px'
+    minHeight: '100%'
   },
   menu: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2), 
+    height:'100%'
   }
 }));
 
