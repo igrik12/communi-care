@@ -16,10 +16,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function Management() {
   const classes = useStyles();
-  const getCompanies = useStoreActions(actions => actions.managementModel.getCompanies);
+  const fetchCompanies = useStoreActions(actions => actions.managementModel.fetchCompanies);
+  const fetchStaff = useStoreActions(actions => actions.fetchStaff);
   useEffect(() => {
-    getCompanies();
-  }, [getCompanies]);
+    fetchCompanies();
+    fetchStaff();
+  }, [fetchCompanies, fetchStaff]);
 
   return (
     <div className={classes.root}>

@@ -56,3 +56,37 @@ export const getStaffByUsername = /* GraphQL */ `
     }
   }
 `;
+
+export const listCompanysWithStaffAndClients = /* GraphQL */ `
+  query ListCompanys(
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        companyLogoUrl
+        staff {
+          items {
+            username
+            userType
+            permissions
+            id
+          }
+          nextToken
+        }
+        name
+        client {
+          items {
+            id
+            name
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;

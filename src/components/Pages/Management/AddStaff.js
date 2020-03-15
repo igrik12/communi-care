@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 
@@ -30,9 +30,8 @@ const AddStaff = () => {
   const [allPermissions, setAllPermissions] = React.useState([]);
   const { register, handleSubmit, setValue, reset, errors } = useForm();
   const addStaff = useStoreActions(actions => actions.managementModel.addStaff);
-  const getStaff = useStoreActions(actions => actions.managementModel.getStaff);
   const permissions = useStoreState(state => state.permissions);
-  const staff = useStoreState(state => state.managementModel.staff);
+  const staff = useStoreState(state => state.staff);
 
   const onSubmit = data => {
     addStaff(data);
@@ -49,14 +48,18 @@ const AddStaff = () => {
     setAllPermissions([]);
   };
 
-  useEffect(() => {
-    getStaff();
-  }, []);
-
   React.useEffect(() => {
     register({ name: 'permissions' });
     setValue('permissions', []);
   }, [register, setValue]);
+
+  const validateUsername = value => {
+    return !staff.some(st => st.username.toLowerCase() === value.toLowerCase());
+  };
+
+  const validateEmail = value => {
+    return !staff.some(st => st.email.toLowerCase() === value.toLowerCase());
+  };
 
   return (
     <>
@@ -68,16 +71,18 @@ const AddStaff = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               required
+              error={errors.username}
               inputRef={register({
                 required: true,
                 minLength: 5,
-                validate: value => !staff.some(st => st.username === value)
+                validate: validateUsername
               })}
               className={classes.textField}
               name='username'
               label='Username'
               variant='outlined'
               autoComplete='off'
+              helperText={errors.username && 'User already exists!'}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -106,13 +111,15 @@ const AddStaff = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               required
-              inputRef={register({ required: true })}
+              error={errors.email}
+              inputRef={register({ required: true, validate: validateEmail })}
               className={classes.textField}
               name='email'
               type='email'
               label='Email'
               variant='outlined'
               autoComplete='off'
+              helperText={errors.email && 'Email already in use!'}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>

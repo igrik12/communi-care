@@ -15,6 +15,8 @@ export const createCompany = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         nextToken
@@ -43,6 +45,8 @@ export const updateCompany = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         nextToken
@@ -71,6 +75,8 @@ export const deleteCompany = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         nextToken
@@ -94,6 +100,8 @@ export const createStaff = /* GraphQL */ `
       id
       username
       userType
+      email
+      phone_number
       clientRecords {
         items {
           id
@@ -128,6 +136,8 @@ export const updateStaff = /* GraphQL */ `
       id
       username
       userType
+      email
+      phone_number
       clientRecords {
         items {
           id
@@ -162,6 +172,8 @@ export const deleteStaff = /* GraphQL */ `
       id
       username
       userType
+      email
+      phone_number
       clientRecords {
         items {
           id
@@ -294,6 +306,8 @@ export const createClientRecord = /* GraphQL */ `
         id
         username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
         }
@@ -353,6 +367,8 @@ export const updateClientRecord = /* GraphQL */ `
         id
         username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
         }
@@ -412,6 +428,8 @@ export const deleteClientRecord = /* GraphQL */ `
         id
         username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
         }
@@ -482,6 +500,8 @@ export const createEntry = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         client {
@@ -530,6 +550,8 @@ export const updateEntry = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         client {
@@ -578,6 +600,8 @@ export const deleteEntry = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         client {

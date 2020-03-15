@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 const AddClient = () => {
   const classes = useStyles();
   const addClient = useStoreActions(actions => actions.managementModel.addClient);
-  const { register, errors, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const onHandleSubmit = data => {
     addClient({ name: data.name });

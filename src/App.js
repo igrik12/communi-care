@@ -28,8 +28,8 @@ function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
   const userGroups = useStoreState(state => state.userGroups);
-  const setStaff = useStoreActions(actions => actions.setStaff);
-  const getStaff = useStoreActions(actions => actions.getStaff);
+  const setUser = useStoreActions(actions => actions.setUser);
+  const getUser = useStoreActions(actions => actions.getUser);
   const getPermissions = useStoreActions(actions => actions.getPermissions);
 
   let theme = useMemo(() => {
@@ -89,6 +89,7 @@ function App() {
     const apiCall = async () => {
       const user = Auth.user;
       const { username } = Auth.user;
+      const { email, phone_number } = Auth.user.attributes;
 
       const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
       let userType = groups ? groups[0] : 'user';
@@ -98,19 +99,19 @@ function App() {
       try {
         result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
       } catch (error) {
-        throw Error(`Failed to retrieve staff with username ${username}!`, error);
+        throw Error(`Failed to retrieve staff with username ${username}!. Error: ${error}`);
       }
 
       if (!result.data.listStaffs.items.length) {
-        const inputDetails = { input: { username, userType } };
+        const inputDetails = { input: { username, userType, email, phone_number } };
         try {
           const ret = await API.graphql(graphqlOperation(createStaff, inputDetails));
-          setStaff(ret.data.createStaff);
+          setUser(ret.data.createStaff);
         } catch (error) {
-          throw Error('Failed to create new staff!', error);
+          throw Error(`Failed to create new staff! Error: ${error}`);
         }
       } else {
-        getStaff({ username, userType });
+        getUser({ username, userType });
       }
 
       // Temp to populate fake clients to DB
@@ -123,7 +124,7 @@ function App() {
       }
     };
     apiCall();
-  }, [getStaff, setStaff]);
+  }, [getUser, setUser]);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseLine />

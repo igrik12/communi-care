@@ -10,6 +10,8 @@ type Staff @model {
   id: ID!
   username: String!
   userType: UserType
+  email: AWSEmail!
+  phone_number: AWSPhone!
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
   company: Company @connection(name: "CompanyStaff")
   permissions: [String]

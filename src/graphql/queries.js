@@ -12,6 +12,8 @@ export const getCompany = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         nextToken
@@ -54,6 +56,8 @@ export const getStaff = /* GraphQL */ `
       id
       username
       userType
+      email
+      phone_number
       clientRecords {
         items {
           id
@@ -90,6 +94,8 @@ export const listStaffs = /* GraphQL */ `
         id
         username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
         }
@@ -164,6 +170,8 @@ export const getClientRecord = /* GraphQL */ `
         id
         username
         userType
+        email
+        phone_number
         clientRecords {
           nextToken
         }
@@ -225,6 +233,8 @@ export const listClientRecords = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         client {
@@ -271,6 +281,8 @@ export const getEntry = /* GraphQL */ `
           id
           username
           userType
+          email
+          phone_number
           permissions
         }
         client {

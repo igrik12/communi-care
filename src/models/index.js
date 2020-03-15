@@ -8,23 +8,27 @@ import { listStaffs, listPermissions } from '../graphql/queries';
 import { updateStaff } from '../graphql/mutations';
 
 const mainModel = {
-  staff: {},
-  setStaff: action((state, payload) => {
-    state.staff = payload;
+  user: {},
+  setUser: action((state, payload) => {
+    state.user = payload;
   }),
-  getStaff: thunk(async (actions, { username, userType }) => {
+  getUser: thunk(async (actions, { username, userType }) => {
     const filter = { filter: { username: { eq: username } } };
     const ret = await API.graphql(graphqlOperation(listStaffs, filter));
     const staffList = ret.data.listStaffs.items;
     if (listStaffs.length) {
       const staff = staffList[0];
       if (staff.userType === userType) {
-        actions.setStaff(staffList[0]);
+        actions.setUser(staffList[0]);
       } else {
         const updateDetails = { input: { id: staff.id, userType } };
         await API.graphql(graphqlOperation(updateStaff, updateDetails));
       }
     }
+  }),
+  alertOpen: { open: false, success: true, message: null },
+  setAlertOpen: action((state, payload) => {
+    state.alertOpen = payload;
   }),
   userGroups: [],
   setUserGroups: action((state, payload) => {
@@ -33,6 +37,18 @@ const mainModel = {
   permissions: [],
   setPermissions: action((state, payload) => {
     state.permissions = payload;
+  }),
+  staff: [],
+  setStaff: action((state, payload) => {
+    state.staff = payload;
+  }),
+  fetchStaff: thunk(async (actions, payload) => {
+    try {
+      const ret = await API.graphql(graphqlOperation(listStaffs));
+      actions.setStaff(ret.data.listStaffs.items);
+    } catch (error) {
+      console.error(`Failed to retrieve all staff. ${error}`);
+    }
   }),
   getPermissions: thunk(async (actions, payload) => {
     try {

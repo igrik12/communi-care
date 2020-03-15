@@ -8,10 +8,6 @@ const clientRecordModel = {
   setRecords: action((state, payload) => {
     state.records = payload;
   }),
-  alertOpen: { open: false, success: true, message: null },
-  setAlertOpen: action((state, payload) => {
-    state.alertOpen = payload;
-  }),
   saveRecordDisabled: computed(state => {
     return (
       !state.record.clientId ||

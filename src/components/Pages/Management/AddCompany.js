@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 
 const filter = createFilterOptions();
@@ -96,8 +95,10 @@ export default function CompanyEditType() {
   );
 }
 
-const findCompany = (companies, company) => {
-  return companies.find(company => company.name === company.name);
+const findCompany = (companies, inputCompany) => {
+  console.log(inputCompany)
+  console.log(companies)
+  return companies.find(company => company.name === inputCompany.name);
 };
 
 const AddNewCompany = ({ open, handleClose }) => {
