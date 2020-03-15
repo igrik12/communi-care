@@ -26,7 +26,8 @@ export default function CreateEdit() {
   return (
     <div className={classes.root}>
       <Paper className={classes.menu}>
-        <Selection />
+        {/* Enable when added edit functionality*/}
+        {/* <Selection /> */}
         {Current}
       </Paper>
     </div>

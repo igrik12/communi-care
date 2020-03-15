@@ -4,6 +4,7 @@ import { isDeveloper } from '../../utils/permissions';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 import ToastAlert from '../Shared/ToastAlert';
+import _ from 'lodash';
 
 // MUI imports
 import PropTypes from 'prop-types';
@@ -26,8 +27,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import HealingIcon from '@material-ui/icons/Healing';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { Avatar } from '@material-ui/core';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,9 +72,9 @@ function ResponsiveDrawer(props) {
   const theme = useTheme();
   const { container, children } = props;
   const userGroups = useStoreState(state => state.userGroups);
+  const companyData = useStoreState(state => state.companyData);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -81,9 +83,9 @@ function ResponsiveDrawer(props) {
     <div>
       <ListItem>
         <ListItemIcon>
-          <HealingIcon />
+          <Avatar src={_.get(companyData, 'company.companyLogoUrl')} />
         </ListItemIcon>
-        <Typography variant={'h6'}>Company A&B</Typography>
+        <Typography variant={'h6'}>{_.get(companyData, 'company.name')}</Typography>
       </ListItem>
       <Divider />
       <List>

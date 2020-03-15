@@ -18,20 +18,15 @@ import CareReports from './components/Pages/CareReports';
 import Management from './components/Pages/Management';
 import Layout from './components/Layout';
 import { isDeveloper } from './utils/permissions';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listClients } from './graphql/queries';
-import { createStaff, createClient } from './graphql/mutations';
+import { Auth } from 'aws-amplify';
 
-const fakeClients = ['Bob', 'John', 'George', 'Amy'];
 
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
   const userGroups = useStoreState(state => state.userGroups);
-  const setUser = useStoreActions(actions => actions.setUser);
   const getUser = useStoreActions(actions => actions.getUser);
-  const getPermissions = useStoreActions(actions => actions.getPermissions);
-
+  const fetchAll = useStoreActions(actions => actions.fetchAll);
   let theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
@@ -81,50 +76,17 @@ function App() {
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
     setUserGroups(groups);
-    getPermissions();
-  }, [setUserGroups, getPermissions]);
+    fetchAll();
+  }, [setUserGroups, fetchAll]);
 
-  //This is temporary hack for development user management
   useEffect(() => {
-    const apiCall = async () => {
-      const user = Auth.user;
-      const { username } = Auth.user;
-      const { email, phone_number } = Auth.user.attributes;
+    const user = Auth.user;
+    const { username } = Auth.user;
+    const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
+    let userType = groups ? groups[0] : 'user';
+    getUser({ username, userType });
+  }, [getUser]);
 
-      const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-      let userType = groups ? groups[0] : 'user';
-
-      const filterCondition = { filter: { username: { eq: username } } };
-      let result;
-      try {
-        result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
-      } catch (error) {
-        throw Error(`Failed to retrieve staff with username ${username}!. Error: ${error}`);
-      }
-
-      if (!result.data.listStaffs.items.length) {
-        const inputDetails = { input: { username, userType, email, phone_number } };
-        try {
-          const ret = await API.graphql(graphqlOperation(createStaff, inputDetails));
-          setUser(ret.data.createStaff);
-        } catch (error) {
-          throw Error(`Failed to create new staff! Error: ${error}`);
-        }
-      } else {
-        getUser({ username, userType });
-      }
-
-      // Temp to populate fake clients to DB
-      const res = await API.graphql(graphqlOperation(listClients));
-      if (!res.data.listClients.items.length) {
-        fakeClients.forEach(async client => {
-          const clientDetails = { input: { name: client } };
-          await API.graphql(graphqlOperation(createClient, clientDetails));
-        });
-      }
-    };
-    apiCall();
-  }, [getUser, setUser]);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseLine />
@@ -133,7 +95,7 @@ function App() {
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
           {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/record' />
+          <Redirect from='/' to='/management' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

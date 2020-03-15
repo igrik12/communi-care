@@ -1,10 +1,11 @@
 import clientRecordModel from './clientRecord';
 import layoutModel from './layout';
 import managementModel from './management';
+import _ from 'lodash';
 
-import { action, thunk } from 'easy-peasy';
+import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listPermissions } from '../graphql/queries';
+import { listStaffs, listPermissions, listCompanys, listClients } from '../graphql/queries';
 import { updateStaff } from '../graphql/mutations';
 
 const mainModel = {
@@ -26,37 +27,87 @@ const mainModel = {
       }
     }
   }),
-  alertOpen: { open: false, success: true, message: null },
-  setAlertOpen: action((state, payload) => {
-    state.alertOpen = payload;
+  companyData: computed(state => {
+    const user = state.user;
+    const companies = state.companies;
+    const id = _.get(user, 'company.id');
+    if (id) {
+      const company = companies.find(company => company.id === id);
+      return { company };
+    }
+    return {};
   }),
   userGroups: [],
   setUserGroups: action((state, payload) => {
     state.userGroups = payload;
   }),
-  permissions: [],
-  setPermissions: action((state, payload) => {
-    state.permissions = payload;
+  alertOpen: { open: false, success: true, message: null },
+  setAlertOpen: action((state, payload) => {
+    state.alertOpen = payload;
   }),
+  companies: [],
+  addCompany: action((state, payload) => {
+    state.companies.push(payload);
+  }),
+  setCompanies: action((state, payload) => {
+    state.companies = payload;
+  }),
+  fetchCompanies: thunkOn(
+    actions => actions.fetchAll,
+    async actions => {
+      try {
+        const ret = await API.graphql(graphqlOperation(listCompanys));
+        actions.setCompanies(ret.data.listCompanys.items);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  ),
+  fetchAll: action(() => {}),
   staff: [],
   setStaff: action((state, payload) => {
     state.staff = payload;
   }),
-  fetchStaff: thunk(async (actions, payload) => {
-    try {
-      const ret = await API.graphql(graphqlOperation(listStaffs));
-      actions.setStaff(ret.data.listStaffs.items || []);
-    } catch (error) {
-      console.error(`Failed to retrieve all staff. ${error}`);
+  fetchStaff: thunkOn(
+    actions => actions.fetchAll,
+    async (actions) => {
+      try {
+        const ret = await API.graphql(graphqlOperation(listStaffs));
+        actions.setStaff(ret.data.listStaffs.items || []);
+      } catch (error) {
+        console.error(`Failed to retrieve all staff. ${error}`);
+      }
     }
+  ),
+  clients: [],
+  setClients: action((state, payload) => {
+    state.clients = payload;
   }),
-  getPermissions: thunk(async (actions, payload) => {
-    try {
-      const result = await API.graphql(graphqlOperation(listPermissions));
-      actions.setPermissions(result.data.listPermissions.items);
-    } catch (error) {
-      console.error(`Failed to retrieve permissions. Error: ${error}`);
+  fetchClients: thunkOn(
+    actions => actions.fetchAll,
+    async (actions) => {
+      try {
+        const ret = await API.graphql(graphqlOperation(listClients));
+        actions.setClients(ret.data.listClients.items || []);
+      } catch (error) {
+        console.error(`Failed to retrieve all clients. ${error}`);
+      }
     }
+  ),
+  getPermissions: thunkOn(
+    actions => actions.fetchAll,
+    async (actions) => {
+      try {
+        const result = await API.graphql(graphqlOperation(listPermissions));
+        actions.setPermissions(result.data.listPermissions.items);
+      } catch (error) {
+        console.error(`Failed to retrieve permissions. Error: ${error}`);
+      }
+    }
+  ),
+  permissions: [],
+  setPermissions: action((state, payload) => {
+    state.permissions = payload;
   }),
   clientRecordModel,
   layoutModel,

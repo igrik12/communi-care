@@ -1,6 +1,5 @@
 import { action, computed, thunk } from 'easy-peasy';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { listCompanys } from '../graphql/queries';
 import { createCompany, createStaff, createClient } from '../graphql/mutations';
 
 const managementModel = {
@@ -22,21 +21,6 @@ const managementModel = {
   company: { name: '', companyLogoUrl: '' },
   setCompany: action((state, payload) => {
     state.company = payload;
-  }),
-  companies: [],
-  addCompany: action((state, payload) => {
-    state.companies.push(payload);
-  }),
-  setCompanies: action((state, payload) => {
-    state.companies = payload;
-  }),
-  fetchCompanies: thunk(async actions => {
-    try {
-      const ret = await API.graphql(graphqlOperation(listCompanys));
-      actions.setCompanies(ret.data.listCompanys.items);
-    } catch (error) {
-      console.log(error);
-    }
   }),
   staff: [],
   setStaff: action((state, payload) => {
@@ -60,14 +44,14 @@ const managementModel = {
     const staff = state.staff;
     return { company, clients, staff };
   }),
-  submitFormData: thunk(async (actions, payload, { getState, getStoreActions }) => {
+  submitFormData: thunk(async (actions, payload, { getState, getStoreActions, getStoreState }) => {
     // 1. Check if company exist
     const { company, clients, staff } = getState().formData;
-    let newCompany = companyExists(company, getState().companies);
+    let newCompany = companyExists(company, getStoreState().companies);
     if (!newCompany) {
       newCompany = await createNewCompany(company);
       if (newCompany) {
-        actions.addCompany(company);
+        getStoreActions().addCompany(company);
       }
     }
 

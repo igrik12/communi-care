@@ -16,7 +16,7 @@ const filter = createFilterOptions();
 export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
   const [open, toggleOpen] = React.useState(false);
-  const companies = useStoreState(state => state.managementModel.companies);
+  const companies = useStoreState(state => state.companies);
   const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const handleClose = () => {
     setDialogValue({

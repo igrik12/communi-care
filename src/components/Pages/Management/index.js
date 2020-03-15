@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useStoreActions } from 'easy-peasy';
+import React from 'react';
 
 // Material-UI imports
 import Grid from '@material-ui/core/Grid';
@@ -8,7 +7,7 @@ import Hero from './Hero';
 import Summary from './Summary';
 import CreateEdit from './CreateEdit';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1
   }
