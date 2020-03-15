@@ -1,5 +1,5 @@
 import React from 'react';
-import CompanyEditType from './CompanyEditType';
+import AddCompany from './AddCompany';
 import AddStaff from './AddStaff';
 import AddClient from './AddClient';
 
@@ -25,7 +25,7 @@ function Create({ width }) {
     <div className={classes.root}>
       <Grid container justify='space-around' spacing={2}>
         <Grid item lg={12} md={12} sm={12} xs={12}>
-          <CompanyEditType />
+          <AddCompany />
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Divider />

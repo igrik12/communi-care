@@ -30,6 +30,7 @@ function App() {
   const userGroups = useStoreState(state => state.userGroups);
   const setStaff = useStoreActions(actions => actions.setStaff);
   const getStaff = useStoreActions(actions => actions.getStaff);
+  const getPermissions = useStoreActions(actions => actions.getPermissions);
 
   let theme = useMemo(() => {
     return createMuiTheme({
@@ -80,7 +81,8 @@ function App() {
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
     setUserGroups(groups);
-  }, [setUserGroups]);
+    getPermissions();
+  }, [setUserGroups, getPermissions]);
 
   //This is temporary hack for development user management
   useEffect(() => {
@@ -91,12 +93,12 @@ function App() {
       const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
       let userType = groups ? groups[0] : 'user';
 
-      const filterCondition = { filter: { userName: { eq: username } } };
+      const filterCondition = { filter: { username: { eq: username } } };
       let result;
       try {
         result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
       } catch (error) {
-        throw Error('Failed to retrieve staff list!', error);
+        throw Error(`Failed to retrieve staff with username ${username}!`, error);
       }
 
       if (!result.data.listStaffs.items.length) {

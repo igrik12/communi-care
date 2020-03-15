@@ -18,7 +18,7 @@ export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
   const [open, toggleOpen] = React.useState(false);
   const companies = useStoreState(state => state.managementModel.companies);
-
+  const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const handleClose = () => {
     setDialogValue({
       name: '',
@@ -60,10 +60,10 @@ export default function CompanyEditType() {
           }
 
           setValue(newValue);
+          setCompany(findCompany(companies, newValue));
         }}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
@@ -87,12 +87,18 @@ export default function CompanyEditType() {
         }}
         renderOption={option => option.name}
         freeSolo
-        renderInput={params => <TextField name='company-name' {...params} label='Company name' variant='outlined' />}
+        renderInput={params => (
+          <TextField required name='company-name' {...params} label='Company name' variant='outlined' />
+        )}
       />
       <AddNewCompany open={open} handleClose={handleClose} />
     </>
   );
 }
+
+const findCompany = (companies, company) => {
+  return companies.find(company => company.name === company.name);
+};
 
 const AddNewCompany = ({ open, handleClose }) => {
   const { register, handleSubmit } = useForm();
@@ -107,8 +113,16 @@ const AddNewCompany = ({ open, handleClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle id='form-dialog-title'>Add a new company</DialogTitle>
         <DialogContent>
-          <TextField autoFocus margin='dense' name='name' inputRef={register} label='Company Name' type='text' autoComplete='off' />
-          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL'  autoComplete='off'/>
+          <TextField
+            autoFocus
+            margin='dense'
+            name='name'
+            inputRef={register}
+            label='Company Name'
+            type='text'
+            autoComplete='off'
+          />
+          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL' autoComplete='off' />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>

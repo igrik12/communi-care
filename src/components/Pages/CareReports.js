@@ -47,7 +47,7 @@ export default function CareReports() {
               }
             },
             {
-              name: 'date',
+              name: 'createdAt',
               label: 'Date',
               options: {
                 filter: true,

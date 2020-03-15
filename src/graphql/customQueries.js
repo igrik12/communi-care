@@ -3,7 +3,7 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
   listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      date
+      createdAt
       shift
       entryType
       client {
@@ -38,15 +38,15 @@ export const getPlainEntry = /* GraphQL */ `
 `;
 
 export const getStaffByUsername = /* GraphQL */ `
-  query GetStaff($userName: String!) {
-    getStaff(userName: $userName) {
+  query GetStaff($username: String!) {
+    getStaff(username: $username) {
       id
-      userName
+      username
       userType
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType

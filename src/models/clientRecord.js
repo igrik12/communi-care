@@ -52,7 +52,7 @@ const clientRecordModel = {
     const recordDetails = {
       clientRecordStaffId: getStoreState().staff.id,
       clientRecordClientId: clientId,
-      date: recordDate,
+      createdAt: recordDate,
       shift: shift,
       entryType: payload.entryType
     };
@@ -64,8 +64,6 @@ const clientRecordModel = {
       console.error(error);
       return;
     }
-
-    console.log('Created record', record.data);
 
     const entryDetails = {
       entryClientRecordId: record.data.createClientRecord.id,
@@ -80,9 +78,6 @@ const clientRecordModel = {
       console.error(error);
       return;
     }
-
-    console.log('Created entry', retEntry.data);
-
 
     const recordUpdate = {
       id: record.data.createClientRecord.id,

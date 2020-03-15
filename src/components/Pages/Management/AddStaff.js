@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useStoreActions } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,33 +27,36 @@ const useStyles = makeStyles(theme => ({
 
 const AddStaff = () => {
   const classes = useStyles();
-  const [permissions, setPermissions] = React.useState([]);
-  const { register, handleSubmit, setValue, reset, getValues } = useForm();
+  const [allPermissions, setAllPermissions] = React.useState([]);
+  const { register, handleSubmit, setValue, reset, errors } = useForm();
   const addStaff = useStoreActions(actions => actions.managementModel.addStaff);
-  const mockPermissions = [
-    { title: 'Edit Record Summary', value: 'editRecordSummary' },
-    { title: 'Save Record Summary', value: 'saveRecordSummary' }
-  ];
+  const getStaff = useStoreActions(actions => actions.managementModel.getStaff);
+  const permissions = useStoreState(state => state.permissions);
+  const staff = useStoreState(state => state.managementModel.staff);
+
   const onSubmit = data => {
     addStaff(data);
     reset();
     setValue('permissions', []);
     setValue('userType', null);
-    setPermissions([]);
+    setAllPermissions([]);
   };
 
   const onReset = () => {
     reset();
     setValue('permissions', []);
     setValue('userType', null);
-    setPermissions([]);
+    setAllPermissions([]);
   };
+
+  useEffect(() => {
+    getStaff();
+  }, []);
 
   React.useEffect(() => {
     register({ name: 'permissions' });
     setValue('permissions', []);
-    console.log(getValues().permissions);
-  }, [register]);
+  }, [register, setValue]);
 
   return (
     <>
@@ -65,7 +68,11 @@ const AddStaff = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               required
-              inputRef={register({ required: true, minLength: 5 })}
+              inputRef={register({
+                required: true,
+                minLength: 5,
+                validate: value => !staff.some(st => st.username === value)
+              })}
               className={classes.textField}
               name='username'
               label='Username'
@@ -112,7 +119,7 @@ const AddStaff = () => {
             <Autocomplete
               required
               className={classes.textField}
-              options={['user', 'admin']}
+              options={['user', 'admin', 'developer']}
               getOptionLabel={option => option}
               renderInput={params => (
                 <TextField
@@ -128,14 +135,14 @@ const AddStaff = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Autocomplete
               className={classes.textField}
-              options={mockPermissions}
+              options={permissions}
               multiple
               disableCloseOnSelect
               onChange={(e, data) => {
                 setValue('permissions', data);
-                setPermissions(data);
+                setAllPermissions(data);
               }}
-              value={permissions}
+              value={allPermissions}
               renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
               getOptionLabel={option => option.title}
               renderInput={params => <TextField {...params} name='permissions' label='Permission' variant='outlined' />}

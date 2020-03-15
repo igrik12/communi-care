@@ -13,8 +13,9 @@ export const createCompany = /* GraphQL */ `
       staff {
         items {
           id
-          userName
+          username
           userType
+          permissions
         }
         nextToken
       }
@@ -40,8 +41,9 @@ export const updateCompany = /* GraphQL */ `
       staff {
         items {
           id
-          userName
+          username
           userType
+          permissions
         }
         nextToken
       }
@@ -67,8 +69,9 @@ export const deleteCompany = /* GraphQL */ `
       staff {
         items {
           id
-          userName
+          username
           userType
+          permissions
         }
         nextToken
       }
@@ -89,26 +92,17 @@ export const createStaff = /* GraphQL */ `
   ) {
     createStaff(input: $input, condition: $condition) {
       id
-      userName
+      username
       userType
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
         nextToken
-      }
-      permissions {
-        title
-        value
-        staff {
-          id
-          userName
-          userType
-        }
       }
       company {
         id
@@ -121,6 +115,7 @@ export const createStaff = /* GraphQL */ `
           nextToken
         }
       }
+      permissions
     }
   }
 `;
@@ -131,26 +126,17 @@ export const updateStaff = /* GraphQL */ `
   ) {
     updateStaff(input: $input, condition: $condition) {
       id
-      userName
+      username
       userType
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
         nextToken
-      }
-      permissions {
-        title
-        value
-        staff {
-          id
-          userName
-          userType
-        }
       }
       company {
         id
@@ -163,6 +149,7 @@ export const updateStaff = /* GraphQL */ `
           nextToken
         }
       }
+      permissions
     }
   }
 `;
@@ -173,26 +160,17 @@ export const deleteStaff = /* GraphQL */ `
   ) {
     deleteStaff(input: $input, condition: $condition) {
       id
-      userName
+      username
       userType
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
         nextToken
-      }
-      permissions {
-        title
-        value
-        staff {
-          id
-          userName
-          userType
-        }
       }
       company {
         id
@@ -205,6 +183,7 @@ export const deleteStaff = /* GraphQL */ `
           nextToken
         }
       }
+      permissions
     }
   }
 `;
@@ -219,7 +198,7 @@ export const createClient = /* GraphQL */ `
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
@@ -251,7 +230,7 @@ export const updateClient = /* GraphQL */ `
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
@@ -283,7 +262,7 @@ export const deleteClient = /* GraphQL */ `
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
@@ -313,20 +292,17 @@ export const createClientRecord = /* GraphQL */ `
       id
       staff {
         id
-        userName
+        username
         userType
         clientRecords {
           nextToken
-        }
-        permissions {
-          title
-          value
         }
         company {
           id
           name
           companyLogoUrl
         }
+        permissions
       }
       client {
         id
@@ -353,13 +329,13 @@ export const createClientRecord = /* GraphQL */ `
         dailyActivityParticipation
         clientRecord {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
       }
-      date
+      createdAt
       status
       shift
       entryType
@@ -375,20 +351,17 @@ export const updateClientRecord = /* GraphQL */ `
       id
       staff {
         id
-        userName
+        username
         userType
         clientRecords {
           nextToken
-        }
-        permissions {
-          title
-          value
         }
         company {
           id
           name
           companyLogoUrl
         }
+        permissions
       }
       client {
         id
@@ -415,13 +388,13 @@ export const updateClientRecord = /* GraphQL */ `
         dailyActivityParticipation
         clientRecord {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
       }
-      date
+      createdAt
       status
       shift
       entryType
@@ -437,20 +410,17 @@ export const deleteClientRecord = /* GraphQL */ `
       id
       staff {
         id
-        userName
+        username
         userType
         clientRecords {
           nextToken
-        }
-        permissions {
-          title
-          value
         }
         company {
           id
           name
           companyLogoUrl
         }
+        permissions
       }
       client {
         id
@@ -477,13 +447,13 @@ export const deleteClientRecord = /* GraphQL */ `
         dailyActivityParticipation
         clientRecord {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
       }
-      date
+      createdAt
       status
       shift
       entryType
@@ -510,8 +480,9 @@ export const createEntry = /* GraphQL */ `
         id
         staff {
           id
-          userName
+          username
           userType
+          permissions
         }
         client {
           id
@@ -529,7 +500,7 @@ export const createEntry = /* GraphQL */ `
           finances
           dailyActivityParticipation
         }
-        date
+        createdAt
         status
         shift
         entryType
@@ -557,8 +528,9 @@ export const updateEntry = /* GraphQL */ `
         id
         staff {
           id
-          userName
+          username
           userType
+          permissions
         }
         client {
           id
@@ -576,7 +548,7 @@ export const updateEntry = /* GraphQL */ `
           finances
           dailyActivityParticipation
         }
-        date
+        createdAt
         status
         shift
         entryType
@@ -604,8 +576,9 @@ export const deleteEntry = /* GraphQL */ `
         id
         staff {
           id
-          userName
+          username
           userType
+          permissions
         }
         client {
           id
@@ -623,7 +596,7 @@ export const deleteEntry = /* GraphQL */ `
           finances
           dailyActivityParticipation
         }
-        date
+        createdAt
         status
         shift
         entryType
@@ -639,23 +612,6 @@ export const createPermission = /* GraphQL */ `
     createPermission(input: $input, condition: $condition) {
       title
       value
-      staff {
-        id
-        userName
-        userType
-        clientRecords {
-          nextToken
-        }
-        permissions {
-          title
-          value
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-        }
-      }
     }
   }
 `;
@@ -667,23 +623,6 @@ export const updatePermission = /* GraphQL */ `
     updatePermission(input: $input, condition: $condition) {
       title
       value
-      staff {
-        id
-        userName
-        userType
-        clientRecords {
-          nextToken
-        }
-        permissions {
-          title
-          value
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-        }
-      }
     }
   }
 `;
@@ -695,23 +634,6 @@ export const deletePermission = /* GraphQL */ `
     deletePermission(input: $input, condition: $condition) {
       title
       value
-      staff {
-        id
-        userName
-        userType
-        clientRecords {
-          nextToken
-        }
-        permissions {
-          title
-          value
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-        }
-      }
     }
   }
 `;

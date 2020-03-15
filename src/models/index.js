@@ -4,7 +4,7 @@ import managementModel from './management';
 
 import { action, thunk } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs } from '../graphql/queries';
+import { listStaffs, listPermissions } from '../graphql/queries';
 import { updateStaff } from '../graphql/mutations';
 
 const mainModel = {
@@ -13,7 +13,7 @@ const mainModel = {
     state.staff = payload;
   }),
   getStaff: thunk(async (actions, { username, userType }) => {
-    const filter = { filter: { userName: { eq: username } } };
+    const filter = { filter: { username: { eq: username } } };
     const ret = await API.graphql(graphqlOperation(listStaffs, filter));
     const staffList = ret.data.listStaffs.items;
     if (listStaffs.length) {
@@ -29,6 +29,18 @@ const mainModel = {
   userGroups: [],
   setUserGroups: action((state, payload) => {
     state.userGroups = payload;
+  }),
+  permissions: [],
+  setPermissions: action((state, payload) => {
+    state.permissions = payload;
+  }),
+  getPermissions: thunk(async (actions, payload) => {
+    try {
+      const result = await API.graphql(graphqlOperation(listPermissions));
+      actions.setPermissions(result.data.listPermissions.items);
+    } catch (error) {
+      console.error(`Failed to retrieve permissions. Error: ${error}`);
+    }
   }),
   clientRecordModel,
   layoutModel,

@@ -20,6 +20,7 @@ export default function Management() {
   useEffect(() => {
     getCompanies();
   }, [getCompanies]);
+
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>

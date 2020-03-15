@@ -17,9 +17,6 @@ import { getPlainEntry } from '../../graphql/customQueries';
 import { useStoreState } from 'easy-peasy';
 import _ from 'lodash';
 import { hasPermissions } from '../../utils/permissions';
-import permissions from '../../utils/permissions.json';
-
-const has = hasPermissions(permissions);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -88,11 +85,15 @@ export default function Summary() {
 
   if (!selectedRecord) return null;
 
-  const hasPerm = has({ userName: staff.userName, userType: staff.userType }, 'editRecordSummary');
+  const hasPerm = hasPermissions(staff, 'editRecordSummary');
 
   return (
     <div className={classes.root}>
-      <DataPanel name={selectedRecord.client.name} date={selectedRecord.date} entryType={selectedRecord.entryType}>
+      <DataPanel
+        name={selectedRecord.client.name}
+        createdAt={selectedRecord.createdAt}
+        entryType={selectedRecord.entryType}
+      >
         <Grid container spacing={2}>
           {entries
             .filter(unit => unit.title !== 'id')
@@ -116,9 +117,9 @@ export default function Summary() {
   );
 }
 
-const DataPanel = ({ children, name, date, entryType }) => {
+const DataPanel = ({ children, name, createdAt, entryType }) => {
   const staff = useStoreState(state => state.staff);
-  const hasPerm = has({ userName: staff.userName, userType: staff.userType }, 'saveRecordSummary');
+  const hasPerm = hasPermissions(staff, 'saveRecordSummary');
   const classes = useStyles();
   return (
     <ExpansionPanel elevation={3} defaultExpanded>
@@ -127,7 +128,7 @@ const DataPanel = ({ children, name, date, entryType }) => {
           <Typography className={classes.heading}>{name}</Typography>
         </div>
         <div className={classes.column}>
-          <Typography className={classes.secondaryHeading}>{new Date(date).toDateString()}</Typography>
+          <Typography className={classes.secondaryHeading}>{new Date(createdAt).toDateString()}</Typography>
         </div>
         <div className={classes.column}>
           <Typography className={classes.secondaryHeading}>{entryType.replace(/^\w/, c => c.toUpperCase())}</Typography>

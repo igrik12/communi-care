@@ -1,7 +1,6 @@
 import React from 'react';
-import { useStoreState } from 'easy-peasy';
+import { useStoreState, useStoreActions } from 'easy-peasy';
 
-import MUIDataTable from 'mui-datatables';
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -34,6 +33,12 @@ const useStyles = makeStyles(theme => ({
 const Summary = () => {
   const classes = useStyles();
   const data = useStoreState(state => state.managementModel.formData);
+  const submitFormData = useStoreActions(actions => actions.managementModel.submitFormData);
+
+  const handleSubmit = () => {
+    submitFormData();
+  };
+
   return (
     <Paper className={classes.root}>
       <Typography className={classes.title} variant='h4' component='h2'>
@@ -43,38 +48,26 @@ const Summary = () => {
         <Grid item lg={6} md={6}>
           <Grid container spacing={2} direction='column'>
             <Grid item>
-              <Typography>
-                <Box fontWeight='fontWeightLight'>Company name</Box>
-              </Typography>
+              <Box fontWeight='fontWeightLight'>Company name</Box>
             </Grid>
             <Grid item>
-              <Typography>
-                <Box fontWeight='fontWeightLight'>Company Logo URL</Box>
-              </Typography>
+              <Box fontWeight='fontWeightLight'>Company Logo URL</Box>
             </Grid>
           </Grid>
         </Grid>
         <Grid item lg={6} md={6}>
           <Grid container spacing={2} direction='column'>
             <Grid item>
-              <Typography className={classes.rightItem}>
-                <Box fontWeight='fontWeightLight'>{data['company'].name}</Box>
-              </Typography>
+              <Box fontWeight='fontWeightLight'>{data['company'].name}</Box>
             </Grid>
             <Grid item>
-              <Typography className={classes.rightItem}>
-                <Box fontWeight='fontWeightLight'>{data['company'].companyLogoUrl}</Box>
-              </Typography>
+              <Box fontWeight='fontWeightLight'>{data['company'].companyLogoUrl}</Box>
             </Grid>
           </Grid>
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Divider className={classes.divider} />
-          {data.staff.length ? (
-            <Typography variant='h6' component='h2'>
-              <Box fontWeight='fontWeightLight'>Staff</Box>
-            </Typography>
-          ) : null}
+          {data.staff.length ? <Box fontWeight='fontWeightLight'>Staff</Box> : null}
           <List className={classes.list} component='nav'>
             {data.staff &&
               data.staff.map((item, index) => (
@@ -84,11 +77,7 @@ const Summary = () => {
               ))}
           </List>
           <Divider className={classes.divider} />
-          {data.clients.length ? (
-            <Typography variant='h6' component='h2'>
-              <Box fontWeight='fontWeightLight'>Clients</Box>
-            </Typography>
-          ) : null}
+          {data.clients.length ? <Box fontWeight='fontWeightLight'>Clients</Box> : null}
           <List className={classes.list} component='nav'>
             {data.clients &&
               data.clients.map((client, index) => (
@@ -101,7 +90,9 @@ const Summary = () => {
         <Grid item style={{ marginLeft: 'auto' }}>
           <ButtonGroup>
             <Button color='secondary'>Reset</Button>
-            <Button color='primary'>Submit</Button>
+            <Button onClick={handleSubmit} color='primary'>
+              Submit
+            </Button>
           </ButtonGroup>
         </Grid>
       </Grid>

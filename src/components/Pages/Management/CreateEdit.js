@@ -14,7 +14,8 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100%'
   },
   menu: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2), 
+    height:'100%'
   }
 }));
 
