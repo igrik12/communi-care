@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useStoreState } from 'easy-peasy';
+import { useStoreState, useStoreActions } from 'easy-peasy';
+import EditEntity from './EditEntity';
 
+// MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Box, Grid } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -13,6 +15,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteButton from '@material-ui/icons/Delete';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
+import { STAFF, COMPANY, CLIENT } from 'utils/constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,7 +61,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function Hero() {
   const classes = useStyles();
-
   const staff = useStoreState(state => state.staff);
   const clients = useStoreState(state => state.clients);
   const companies = useStoreState(state => state.companies);
@@ -109,6 +120,7 @@ export default function Hero() {
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
+        <EditEntityDialog />
       </div>
     </>
   );
@@ -116,11 +128,17 @@ export default function Hero() {
 
 const ClientList = ({ clients }) => {
   const classes = useStyles();
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
   return (
     <List className={classes.list}>
       {clients.map((client, index) => {
         return (
-          <ListItem key={client.name + index} alignItems='flex-start'>
+          <ListItem
+            onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
+            button
+            key={client.name + index}
+            alignItems='flex-start'
+          >
             <ListItemAvatar>
               <Avatar />
             </ListItemAvatar>
@@ -134,11 +152,17 @@ const ClientList = ({ clients }) => {
 
 const StaffList = ({ staff }) => {
   const classes = useStyles();
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
   return (
     <List className={classes.list}>
       {staff.map((st, index) => {
         return (
-          <ListItem key={st.username + index} alignItems='flex-start'>
+          <ListItem
+            onClick={() => setEditOpen({ open: true, type: STAFF, id: st.id })}
+            button
+            key={st.username + index}
+            alignItems='flex-start'
+          >
             <ListItemAvatar>
               <Avatar />
             </ListItemAvatar>
@@ -163,11 +187,18 @@ const StaffList = ({ staff }) => {
 
 const CompanyList = ({ companies }) => {
   const classes = useStyles();
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const deleteCompany = useStoreActions(actions => actions.managementModel.deleteCompany);
   return (
     <List className={classes.list}>
       {companies.map((company, index) => {
         return (
-          <ListItem key={company.name + index} alignItems='flex-start'>
+          <ListItem
+            onClick={() => setEditOpen({ open: true, type: COMPANY, id: company.id })}
+            button
+            key={company.name + index}
+            alignItems='flex-start'
+          >
             <ListItemAvatar>
               <Avatar src={company.companyLogoUrl} />
             </ListItemAvatar>
@@ -185,6 +216,28 @@ const CompanyList = ({ companies }) => {
         );
       })}
     </List>
+  );
+};
+
+const EditEntityDialog = () => {
+  const editOpen = useStoreState(state => state.managementModel.editOpen);
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const handleClose = () => {
+    setEditOpen({ open: false, type: '', id: '' });
+  };
+  return (
+    <Dialog open={editOpen.open} onClose={handleClose}>
+      <DialogTitle>{''}</DialogTitle>
+      <DialogContent>{editOpen.open && <EditEntity />}</DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color='primary'>
+          Disagree
+        </Button>
+        <Button onClick={handleClose} color='primary' autoFocus>
+          Agree
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

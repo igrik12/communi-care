@@ -96,8 +96,7 @@ export default function CompanyEditType() {
 }
 
 const findCompany = (companies, inputCompany) => {
-  console.log(inputCompany)
-  console.log(companies)
+  if (!inputCompany || !companies || !companies.length) return [];
   return companies.find(company => company.name === inputCompany.name);
 };
 

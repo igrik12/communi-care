@@ -19,7 +19,6 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
 }
 `;
 
-
 export const getPlainEntry = /* GraphQL */ `
   query GetEntry($id: ID!) {
     getEntry(id: $id) {
@@ -57,12 +56,35 @@ export const getStaffByUsername = /* GraphQL */ `
   }
 `;
 
+export const getCompanyWithDependencyIds = `
+query GetCompany($id: ID!) {
+  getCompany(id: $id) {
+    id
+    name
+    companyLogoUrl
+    staff {
+      items {
+        id
+        username
+        userType
+        email
+        phone_number
+        permissions
+      }
+      nextToken
+    }
+    client {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+}`;
+
 export const listCompanysWithStaffAndClients = /* GraphQL */ `
-  query ListCompanys(
-    $filter: ModelCompanyFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListCompanys($filter: ModelCompanyFilterInput, $limit: Int, $nextToken: String) {
     listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
