@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Management({ width }) {
+function CrateEditManagement({ width }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -54,4 +54,4 @@ function Management({ width }) {
     </div>
   );
 }
-export default withWidth()(Management);
+export default withWidth()(CrateEditManagement);

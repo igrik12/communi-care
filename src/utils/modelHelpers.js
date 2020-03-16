@@ -54,21 +54,57 @@ export const deleteCompanyAsync = async id => {
   await API.graphql(graphqlOperation(deleteCompany, details));
 };
 
-export const deleteCompanyDependencies = company => {
-  const clientIds = company.client.items.map(client => ({
-    input: {
-      id: client.id
+export const deleteStaffAsync = async id => {
+  const details = { input: { id } };
+  await API.graphql(graphqlOperation(deleteStaff, details));
+};
+
+export const deleteClientAsync = async id => {
+  const details = { input: { id } };
+  await API.graphql(graphqlOperation(deleteClient, details));
+};
+
+export const deleteCompanyDependencies = (company, removeStaff, removeClients) => {
+  const clientIds = company.client.items.map(client => client.id);
+  const staffIds = company.staff.items.map(st => st.id);
+
+  async.each(
+    staffIds,
+    function(id, callback) {
+      try {
+        deleteStaffAsync(id);
+        removeStaff(id);
+        callback();
+      } catch (error) {
+        callback(error);
+      }
+    },
+    function(err) {
+      if (err) {
+        console.error(`Failed to delete staff ${err}`);
+      } else {
+        console.log('All staff have been successfully deleted!');
+      }
     }
-  }));
-  const staffIds = company.staff.items.map(st => ({
-    input: {
-      id: st.id
+  );
+
+  async.each(
+    clientIds,
+    function(id, callback) {
+      try {
+        deleteClientAsync(id);
+        removeClients(id);
+        callback();
+      } catch (error) {
+        callback(error);
+      }
+    },
+    function(err) {
+      if (err) {
+        console.error(`Failed to delete client ${err}`);
+      } else {
+        console.log('All clients have been successfully deleted!');
+      }
     }
-  }));
-  async.each(clientIds, deleteClient, function(err) {
-    console.log(err);
-  });
-  async.each(staffIds, deleteStaff, function(err) {
-    console.log(err);
-  });
+  );
 };

@@ -20,7 +20,6 @@ import Layout from './components/Layout';
 import { isDeveloper } from './utils/permissions';
 import { Auth } from 'aws-amplify';
 
-
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);

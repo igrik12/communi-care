@@ -72,6 +72,12 @@ const mainModel = {
   setStaff: action((state, payload) => {
     state.staff = payload;
   }),
+  addStaff: action((state, payload) => {
+    state.staff.push(payload);
+  }),
+  removeStaff: action((state, payload) => {
+    _.remove(state.staff, staff => staff.id === payload);
+  }),
   fetchStaff: thunkOn(
     actions => actions.fetchAll,
     async actions => {
@@ -86,6 +92,12 @@ const mainModel = {
   clients: [],
   setClients: action((state, payload) => {
     state.clients = payload;
+  }),
+  addClient: action((state, payload) => {
+    state.clients.push(payload);
+  }),
+  removeClient: action((state, payload) => {
+    _.remove(state.clients, client => client.id === payload);
   }),
   fetchClients: thunkOn(
     actions => actions.fetchAll,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import EditEntity from './EditEntity';
+import { STAFF, COMPANY, CLIENT } from 'utils/constants';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,7 +25,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
-import { STAFF, COMPANY, CLIENT } from 'utils/constants';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Tooltip from '@material-ui/core/Tooltip';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,6 +61,14 @@ const useStyles = makeStyles(theme => ({
   titleRoot: {
     marginBottom: theme.spacing(1),
     marginLeft: theme.spacing(2)
+  },
+  logoText: {
+    margin: theme.spacing(1),
+    display: 'inline-block',
+    width: 250,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden !important',
+    textOverflow: 'ellipsis'
   }
 }));
 
@@ -153,69 +166,159 @@ const ClientList = ({ clients }) => {
 const StaffList = ({ staff }) => {
   const classes = useStyles();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const [openDelete, setOpenDelete] = useState({ open: false, type: STAFF, id: '' });
   return (
-    <List className={classes.list}>
-      {staff.map((st, index) => {
-        return (
-          <ListItem
-            onClick={() => setEditOpen({ open: true, type: STAFF, id: st.id })}
-            button
-            key={st.username + index}
-            alignItems='flex-start'
-          >
-            <ListItemAvatar>
-              <Avatar />
-            </ListItemAvatar>
-            <ListItemText
-              primary={st.username}
-              secondary={
-                <>
-                  <Typography component='span' variant='body2' className={classes.inline} color='textPrimary'>
-                    Email: {st.email}
-                  </Typography>
-                  <br />
-                  Phone Number: {st.phone_number}
-                </>
-              }
-            />
-          </ListItem>
-        );
-      })}
-    </List>
+    <>
+      <List className={classes.list}>
+        {staff.map((st, index) => {
+          return (
+            <ListItem
+              onClick={() => setEditOpen({ open: true, type: STAFF, id: st.id })}
+              button
+              key={st.username + index}
+              alignItems='flex-start'
+            >
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText
+                primary={st.username}
+                secondary={
+                  <>
+                    <Typography component='span' variant='body2' className={classes.inline} color='textPrimary'>
+                      Email: {st.email}
+                    </Typography>
+                    <br />
+                    Phone Number: {st.phone_number}
+                  </>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: STAFF, id: st.id })}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+      <ConfirmStaffDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+    </>
+  );
+};
+
+const ConfirmStaffDelete = ({ openDelete, setOpenDelete }) => {
+  const [checked, setChecked] = React.useState(false);
+  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
+
+  const handleChange = event => {
+    setChecked(event.target.checked);
+  };
+  const handleClose = () => {
+    setOpenDelete({ open: false });
+  };
+  const handleDelete = () => {
+    deleteEntity({ type: STAFF, id: openDelete.id });
+    setOpenDelete({ open: false });
+  };
+  return (
+    <>
+      <Dialog onClose={handleClose} open={openDelete.open}>
+        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete staff?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} color='primary'>
+            No
+          </Button>
+          <Button onClick={handleDelete} color='primary' autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
 const CompanyList = ({ companies }) => {
   const classes = useStyles();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
-  const deleteCompany = useStoreActions(actions => actions.managementModel.deleteCompany);
+  const [openDelete, setOpenDelete] = useState({ open: false, type: COMPANY, id: '' });
   return (
-    <List className={classes.list}>
-      {companies.map((company, index) => {
-        return (
-          <ListItem
-            onClick={() => setEditOpen({ open: true, type: COMPANY, id: company.id })}
-            button
-            key={company.name + index}
-            alignItems='flex-start'
-          >
-            <ListItemAvatar>
-              <Avatar src={company.companyLogoUrl} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={company.name}
-              secondary={
-                <>
-                  <Typography component='span' variant='body2' className={classes.inline} color='textSecondary'>
-                    Company Logo URL: {company.companyLogoUrl}
-                  </Typography>
-                </>
-              }
-            />
-          </ListItem>
-        );
-      })}
-    </List>
+    <>
+      <List className={classes.list}>
+        {companies.map((company, index) => {
+          return (
+            <ListItem
+              onClick={() => setEditOpen({ open: true, type: COMPANY, id: company.id })}
+              button
+              key={company.name + index}
+              alignItems='flex-start'
+            >
+              <ListItemAvatar>
+                <Avatar src={company.companyLogoUrl} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={company.name}
+                secondary={
+                  <Tooltip title={company.companyLogoUrl}>
+                    <Typography
+                      component='span'
+                      variant='body2'
+                      className={clsx(classes.inline, classes.logoText)}
+                      color='textPrimary'
+                    >
+                      Company Logo URL: {company.companyLogoUrl}
+                    </Typography>
+                  </Tooltip>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: COMPANY, id: company.id })}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+      <ConfirmCompanyDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+    </>
+  );
+};
+
+const ConfirmCompanyDelete = ({ openDelete, setOpenDelete }) => {
+  const [checked, setChecked] = React.useState(false);
+  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
+
+  const handleChange = event => {
+    setChecked(event.target.checked);
+  };
+  const handleClose = () => {
+    setOpenDelete({ open: false });
+  };
+  const handleDelete = () => {
+    deleteEntity({ type: COMPANY, id: openDelete.id, deleteDependencies: checked });
+    setOpenDelete({ open: false });
+  };
+  return (
+    <>
+      <Dialog onClose={handleClose} open={openDelete.open}>
+        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete company?</DialogTitle>
+        <DialogContent>
+          <FormControlLabel
+            control={<Checkbox checked={checked} onChange={handleChange} color='primary' />}
+            label='Delete all clients/staff?'
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color='primary'>
+            No
+          </Button>
+          <Button onClick={handleDelete} color='primary' autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
@@ -231,10 +334,10 @@ const EditEntityDialog = () => {
       <DialogContent>{editOpen.open && <EditEntity />}</DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color='primary'>
-          Disagree
+          Cancel
         </Button>
         <Button onClick={handleClose} color='primary' autoFocus>
-          Agree
+          Save
         </Button>
       </DialogActions>
     </Dialog>

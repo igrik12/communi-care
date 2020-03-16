@@ -6,7 +6,9 @@ import {
   createNewStaff,
   signUpUser,
   deleteCompanyAsync,
-  deleteCompanyDependencies
+  deleteCompanyDependencies,
+  deleteStaffAsync,
+  deleteClientAsync
 } from 'utils/modelHelpers';
 import { CLIENT, STAFF, COMPANY } from 'utils/constants';
 
@@ -79,6 +81,7 @@ const managementModel = {
 
     try {
       staff.forEach(await createNewStaff(companyId, setAlertOpen));
+      // staff.forEach(st => getStoreActions.addStaff(st));
     } catch (error) {
       console.error(`Failed to create staff. Error: ${JSON.stringify(error)}`);
       setAlertOpen({
@@ -99,6 +102,7 @@ const managementModel = {
     // 3. Create every client
     try {
       clients.forEach(await createNewClient(companyId));
+      // clients.forEach(client => getStoreActions.addClient(client));
     } catch (error) {
       console.error(`Failed to create client. Error: ${JSON.stringify(error)}`);
       setAlertOpen({ open: true, success: false, message: 'Failed to create client. Check log for errors' });
@@ -106,8 +110,10 @@ const managementModel = {
 
     setAlertOpen({ open: true, success: true, message: 'Successfully submitted form' });
   }),
-  delete: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
+  deleteEntity: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
     const setAlertOpen = getStoreActions().setAlertOpen;
+    const removeStaff = getStoreActions().removeStaff;
+    const removeClient = getStoreActions().removeClient;
     try {
       const { type, id, deleteDependencies = false } = payload;
       switch (type) {
@@ -115,10 +121,17 @@ const managementModel = {
           await deleteCompanyAsync(id);
           if (deleteDependencies) {
             const company = getStoreState().companies.find(company => company.id === id);
-            deleteCompanyDependencies(company);
+            deleteCompanyDependencies(company, removeStaff, removeClient);
           }
           getStoreActions().removeCompany(payload);
           setAlertOpen({ open: true, success: true, message: 'Successfully deleted company' });
+        case CLIENT:
+          await deleteClientAsync(id);
+          return;
+        case STAFF:
+          await deleteStaffAsync(id);
+          removeStaff(id);
+          return;
         default:
           console.error('Unknown delete type provided');
           return;
