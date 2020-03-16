@@ -5,8 +5,9 @@ import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listPermissions, listCompanys, listClients } from '../graphql/queries';
-import { updateStaff } from '../graphql/mutations';
+import { listStaffs, listPermissions, listClients, getCompany } from 'graphql/queries';
+import { listCompanysWithStaffAndClients } from 'graphql/customQueries';
+import { updateStaff } from 'graphql/mutations';
 
 const mainModel = {
   user: {},
@@ -49,6 +50,9 @@ const mainModel = {
   addCompany: action((state, payload) => {
     state.companies.push(payload);
   }),
+  removeCompany: action((state, payload) => {
+    _.remove(state.companies, comp => comp.id === payload);
+  }),
   setCompanies: action((state, payload) => {
     state.companies = payload;
   }),
@@ -56,7 +60,7 @@ const mainModel = {
     actions => actions.fetchAll,
     async actions => {
       try {
-        const ret = await API.graphql(graphqlOperation(listCompanys));
+        const ret = await API.graphql(graphqlOperation(listCompanysWithStaffAndClients));
         actions.setCompanies(ret.data.listCompanys.items);
       } catch (error) {
         console.log(error);
@@ -68,9 +72,15 @@ const mainModel = {
   setStaff: action((state, payload) => {
     state.staff = payload;
   }),
+  addStaff: action((state, payload) => {
+    state.staff.push(payload);
+  }),
+  removeStaff: action((state, payload) => {
+    _.remove(state.staff, staff => staff.id === payload);
+  }),
   fetchStaff: thunkOn(
     actions => actions.fetchAll,
-    async (actions) => {
+    async actions => {
       try {
         const ret = await API.graphql(graphqlOperation(listStaffs));
         actions.setStaff(ret.data.listStaffs.items || []);
@@ -83,9 +93,15 @@ const mainModel = {
   setClients: action((state, payload) => {
     state.clients = payload;
   }),
+  addClient: action((state, payload) => {
+    state.clients.push(payload);
+  }),
+  removeClient: action((state, payload) => {
+    _.remove(state.clients, client => client.id === payload);
+  }),
   fetchClients: thunkOn(
     actions => actions.fetchAll,
-    async (actions) => {
+    async actions => {
       try {
         const ret = await API.graphql(graphqlOperation(listClients));
         actions.setClients(ret.data.listClients.items || []);
@@ -96,7 +112,7 @@ const mainModel = {
   ),
   getPermissions: thunkOn(
     actions => actions.fetchAll,
-    async (actions) => {
+    async actions => {
       try {
         const result = await API.graphql(graphqlOperation(listPermissions));
         actions.setPermissions(result.data.listPermissions.items);

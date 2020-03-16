@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
+import _ from 'lodash';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,9 +35,14 @@ const Summary = () => {
   const classes = useStyles();
   const data = useStoreState(state => state.managementModel.formData);
   const submitFormData = useStoreActions(actions => actions.managementModel.submitFormData);
+  const resetFormData = useStoreActions(actions => actions.managementModel.resetFormData);
 
   const handleSubmit = () => {
     submitFormData();
+  };
+
+  const handleResetFormData = () => {
+    resetFormData();
   };
 
   return (
@@ -89,8 +95,10 @@ const Summary = () => {
         </Grid>
         <Grid item style={{ marginLeft: 'auto' }}>
           <ButtonGroup>
-            <Button color='secondary'>Reset</Button>
-            <Button onClick={handleSubmit} color='primary'>
+            <Button color='secondary' onClick={handleResetFormData}>
+              Reset
+            </Button>
+            <Button disabled={!_.get(data.company, 'name')} onClick={handleSubmit} color='primary'>
               Submit
             </Button>
           </ButtonGroup>

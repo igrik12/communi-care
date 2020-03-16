@@ -1,15 +1,21 @@
 import { action, computed, thunk } from 'easy-peasy';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { createCompany, createStaff, createClient } from '../graphql/mutations';
+import {
+  companyExists,
+  createNewCompany,
+  createNewClient,
+  createNewStaff,
+  signUpUser,
+  deleteCompanyAsync,
+  deleteCompanyDependencies,
+  deleteStaffAsync,
+  deleteClientAsync
+} from 'utils/modelHelpers';
+import { CLIENT, STAFF, COMPANY } from 'utils/constants';
 
 const managementModel = {
-  editModeOn: false,
-  setEditModeOn: action((state, payload) => {
-    state.editModeOn = payload;
-  }),
-  editType: 'new',
-  setEditType: action((state, payload) => {
-    state.editType = payload;
+  editOpen: { open: false, type: '', id: '' },
+  setEditOpen: action((state, payload) => {
+    state.editOpen = payload;
   }),
   data: computed(state => {
     const company = state.company;
@@ -44,12 +50,24 @@ const managementModel = {
     const staff = state.staff;
     return { company, clients, staff };
   }),
+  resetFormData: action((state, payload) => {
+    state.company = { name: '', companyLogoUrl: '' };
+    state.clients = [];
+    state.staff = [];
+  }),
   submitFormData: thunk(async (actions, payload, { getState, getStoreActions, getStoreState }) => {
     // 1. Check if company exist
     const { company, clients, staff } = getState().formData;
     let newCompany = companyExists(company, getStoreState().companies);
     if (!newCompany) {
-      newCompany = await createNewCompany(company);
+      try {
+        newCompany = await createNewCompany(company);
+      } catch (error) {
+        console.error(`Failed to create company ${company.name}`);
+        console.error(`Error: ${error}`);
+        setAlertOpen({ open: true, success: false, message: 'Failed to create company. Check log for errors' });
+        newCompany = undefined;
+      }
       if (newCompany) {
         getStoreActions().addCompany(company);
       }
@@ -61,81 +79,68 @@ const managementModel = {
     const setAlertOpen = getStoreActions().setAlertOpen;
     // 2. Create every Staff with Company ID
 
-    staff.forEach(await createNewStaff(companyId, setAlertOpen));
+    try {
+      staff.forEach(await createNewStaff(companyId, setAlertOpen));
+      // staff.forEach(st => getStoreActions.addStaff(st));
+    } catch (error) {
+      console.error(`Failed to create staff. Error: ${JSON.stringify(error)}`);
+      setAlertOpen({
+        open: true,
+        success: false,
+        message: 'Failed to create staff. Check log for errors.'
+      });
+    }
+
+    // Sign up
+    try {
+      staff.forEach(await signUpUser);
+    } catch (error) {
+      console.error(`Failed to add user to Cognito. Error: ${JSON.stringify(error)}`);
+      setAlertOpen({ open: true, success: false, message: 'Failed to ad user to Cognito. Check log for errors' });
+    }
+
     // 3. Create every client
-    clients.forEach(await createNewClient(companyId, setAlertOpen));
+    try {
+      clients.forEach(await createNewClient(companyId));
+      // clients.forEach(client => getStoreActions.addClient(client));
+    } catch (error) {
+      console.error(`Failed to create client. Error: ${JSON.stringify(error)}`);
+      setAlertOpen({ open: true, success: false, message: 'Failed to create client. Check log for errors' });
+    }
 
     setAlertOpen({ open: true, success: true, message: 'Successfully submitted form' });
-  })
-};
-
-// Check if company with name X exists
-const companyExists = (company, allCompanies) => {
-  if (!allCompanies.length) return undefined;
-  return allCompanies.find(comp => comp.name === company.name);
-};
-
-// Create new company
-const createNewCompany = async (company, setAlertOpen) => {
-  const { name, companyLogoUrl } = company;
-  try {
-    const details = { input: { name, companyLogoUrl } };
-    const result = await API.graphql(graphqlOperation(createCompany, details));
-    return result.data.createCompany;
-  } catch (error) {
-    console.error(`Failed to create company ${name}`);
-    console.error(`Error: ${error}`);
-    setAlertOpen({ open: true, success: false, message: 'Failed to create company. Check log for errors' });
-    return undefined;
-  }
-};
-
-const createNewStaff = (companyId, setAlertOpen) => async staff => {
-  const { username, userType, permissions, password, email, phone_number } = staff;
-  let result;
-  try {
-    const details = {
-      input: {
-        username,
-        userType,
-        email,
-        phone_number,
-        staffCompanyId: companyId,
-        permissions: permissions ? permissions.map(perm => perm.value) : []
+  }),
+  deleteEntity: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
+    const setAlertOpen = getStoreActions().setAlertOpen;
+    const removeStaff = getStoreActions().removeStaff;
+    const removeClient = getStoreActions().removeClient;
+    try {
+      const { type, id, deleteDependencies = false } = payload;
+      switch (type) {
+        case COMPANY:
+          await deleteCompanyAsync(id);
+          if (deleteDependencies) {
+            const company = getStoreState().companies.find(company => company.id === id);
+            deleteCompanyDependencies(company, removeStaff, removeClient);
+          }
+          getStoreActions().removeCompany(payload);
+          setAlertOpen({ open: true, success: true, message: 'Successfully deleted company' });
+        case CLIENT:
+          await deleteClientAsync(id);
+          return;
+        case STAFF:
+          await deleteStaffAsync(id);
+          removeStaff(id);
+          return;
+        default:
+          console.error('Unknown delete type provided');
+          return;
       }
-    };
-    result = await API.graphql(graphqlOperation(createStaff, details));
-  } catch (error) {
-    console.error(`Failed to create staff. Error: ${JSON.stringify(error)}`);
-    setAlertOpen({
-      open: true,
-      success: false,
-      message: 'Failed to create staff. Check log for errors.'
-    });
-
-    return undefined;
-  }
-
-  try {
-    await Auth.signUp({ username, password, attributes: { email, phone_number } });
-    return result.data.createStaff.id;
-  } catch (error) {
-    console.error(`Failed to add user to Cognito. Error: ${JSON.stringify(error)}`);
-    setAlertOpen({ open: true, success: false, message: 'Failed to ad user to Cognito. Check log for errors' });
-  }
-};
-
-const createNewClient = (companyId, setAlertOpen) => async client => {
-  const { name } = client;
-  try {
-    const details = { input: { name, clientCompanyId: companyId } };
-    const result = await API.graphql(graphqlOperation(createClient, details));
-    return result.data.createClient.id;
-  } catch (error) {
-    console.error(`Failed to create client. Error: ${JSON.stringify(error)}`);
-    setAlertOpen({ open: true, success: false, message: 'Failed to create client. Check log for errors' });
-    return undefined;
-  }
+    } catch (error) {
+      setAlertOpen({ open: true, success: false, message: 'Failed to delete company. Check console for errors' });
+      console.error(JSON.stringify(error));
+    }
+  })
 };
 
 export default managementModel;
