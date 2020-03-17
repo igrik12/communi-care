@@ -13,7 +13,7 @@ const ToastAlert = () => {
       return;
     }
 
-    setAlertOpen({ open: false });
+    setAlertOpen({ open: false, success: true });
   };
   return (
     <Snackbar open={alertOpen.open} autoHideDuration={3000} onClose={handleClose}>

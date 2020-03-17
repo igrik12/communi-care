@@ -1,69 +1,131 @@
 import { API, graphqlOperation, Auth } from 'aws-amplify';
+import async from 'async';
 import {
   createCompany,
   createStaff,
   createClient,
   deleteCompany,
   deleteClient,
-  deleteStaff
+  deleteStaff,
+  updateStaff,
+  updateCompany,
+  updateClient
 } from '../graphql/mutations';
-import async from 'async';
-import * as subscriptions from 'graphql/subscriptions';
-import { ON_DELETE_CLIENT, ON_DELETE_COMPANY, ON_DELETE_STAFF } from 'utils/constants';
+
+import {
+  onDeleteStaff,
+  onDeleteClient,
+  onDeleteCompany,
+  onCreateClient,
+  onCreateCompany,
+  onCreateStaff
+} from 'graphql/subscriptions';
+import {
+  ON_DELETE_CLIENT,
+  ON_DELETE_COMPANY,
+  ON_DELETE_STAFF,
+  ON_CREATE_CLIENT,
+  ON_CREATE_STAFF,
+  ON_CREATE_COMPANY,
+  STAFF,
+  COMPANY,
+  CLIENT
+} from 'utils/constants';
 
 /**
  *
  * @param {function} action called upon subsription trigger
- * @param {function} unsubscribe callback providing subscription back to the caller
  */
-export const clientDeleteSubscribe = (action, unsubscribe) => {
-  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteClient)).subscribe({
+export const clientDeleteSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onDeleteClient)).subscribe({
     next: clientData => action(clientData)
   });
-  unsubscribe(subscription);
+  return subscription;
 };
 
 /**
  *
  * @param {function} action called upon subsription trigger
- * @param {function} unsubscribe callback providing subscription back to the caller
  */
-export const staffDeleteSubscribe = (action, unsubscribe) => {
-  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteStaff)).subscribe({
+export const staffDeleteSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onDeleteStaff)).subscribe({
     next: staffData => action(staffData)
   });
-  unsubscribe(subscription);
+  return subscription;
 };
 
 /**
  *
  * @param {function} action called upon subsription trigger
- * @param {function} unsubscribe callback providing subscription back to the caller
  */
-export const companyDeleteSubscribe = (action, unsubscribe) => {
-  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteCompany)).subscribe({
+export const companyDeleteSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onDeleteCompany)).subscribe({
     next: companyData => action(companyData)
   });
-  unsubscribe(subscription);
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const companyCreateSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onCreateCompany)).subscribe({
+    next: companyData => action(companyData)
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const clientCreateSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onCreateClient)).subscribe({
+    next: clientData => action(clientData)
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const staffCreateSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onCreateStaff)).subscribe({
+    next: staffData => action(staffData)
+  });
+  return subscription;
 };
 
 export const subscribe = subscriptions => {
+  const subs = [];
   subscriptions.forEach(subscription => {
-    const { type, action, callback } = subscription;
+    const { type, action } = subscription;
     switch (type) {
       case ON_DELETE_CLIENT:
-        clientDeleteSubscribe(action, callback);
+        subs.push(clientDeleteSubscribe(action));
         break;
       case ON_DELETE_STAFF:
-        staffDeleteSubscribe(action, callback);
+        subs.push(staffDeleteSubscribe(action));
         break;
       case ON_DELETE_COMPANY:
-        companyDeleteSubscribe(action, callback);
+        subs.push(companyDeleteSubscribe(action));
+        break;
+      case ON_CREATE_COMPANY:
+        subs.push(companyCreateSubscribe(action));
+        break;
+      case ON_CREATE_CLIENT:
+        subs.push(clientCreateSubscribe(action));
+        break;
+      case ON_CREATE_STAFF:
+        subs.push(staffCreateSubscribe(action));
         break;
       default:
         break;
     }
   });
+  return subs;
 };
 
 // Check if company with name X exists
@@ -164,4 +226,33 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
       }
     }
   );
+};
+
+export const updateStaffAsync = async staff => {
+  const details = { input: { ...staff } };
+  return await API.graphql(graphqlOperation(updateStaff, details));
+};
+
+export const updateCompanyAsync = async company => {
+  const details = { input: { ...company } };
+  return await API.graphql(graphqlOperation(updateCompany, details));
+};
+
+export const updateClientAsync = async client => {
+  const details = { input: { ...client } };
+  return await API.graphql(graphqlOperation(updateClient, details));
+};
+
+export const updateEntityAsync = async entity => {
+  const { type, data } = entity;
+  switch (type) {
+    case STAFF:
+      return await updateStaffAsync(data);
+    case COMPANY:
+      return await updateCompanyAsync(data);
+    case CLIENT:
+      return await updateClientAsync(data);
+    default:
+      break;
+  }
 };

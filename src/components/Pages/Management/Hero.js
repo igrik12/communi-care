@@ -91,8 +91,8 @@ export default function Hero() {
   return (
     <>
       <div className={classes.root}>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
+        <ExpansionPanel defaultExpanded>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Box display='flex' flexDirection='column'>
               <Typography variant='h5' component='h2' gutterBottom>
                 Management
@@ -217,7 +217,6 @@ const StaffList = ({ staff }) => {
 };
 
 const ConfirmClientDelete = ({ openDelete, setOpenDelete }) => {
-  const [checked, setChecked] = React.useState(false);
   const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
 
   const handleClose = () => {
@@ -245,12 +244,8 @@ const ConfirmClientDelete = ({ openDelete, setOpenDelete }) => {
 };
 
 const ConfirmStaffDelete = ({ openDelete, setOpenDelete }) => {
-  const [checked, setChecked] = React.useState(false);
   const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
 
-  const handleChange = event => {
-    setChecked(event.target.checked);
-  };
   const handleClose = () => {
     setOpenDelete({ open: false });
   };
@@ -367,16 +362,7 @@ const EditEntityDialog = () => {
   };
   return (
     <Dialog open={editOpen.open} onClose={handleClose}>
-      <DialogTitle>{''}</DialogTitle>
       <DialogContent>{editOpen.open && <EditEntity />}</DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color='primary'>
-          Cancel
-        </Button>
-        <Button onClick={handleClose} color='primary' autoFocus>
-          Save
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

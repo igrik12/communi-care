@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
 import { useForm } from 'react-hook-form';
-
+import { COMPANY } from 'utils/constants';
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +17,10 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     marginLeft: theme.spacing(1)
+  },
+  btnGroup: {
+    margin: theme.spacing(1),
+    marginLeft: 'auto'
   }
 }));
 
@@ -29,17 +29,20 @@ export default function EditCompany() {
   const classes = useStyles();
   const editOpen = useStoreState(state => state.managementModel.editOpen);
   const companies = useStoreState(state => state.companies);
-  const updateCompany = useStoreActions(actions => actions.managementModel.updateCompany);
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
   const { register, handleSubmit } = useForm();
 
   const handleOnSubmit = data => {
-    updateCompany(data);
+    const updateDetails = { id: company.id, ...data };
+    updateEntity({ type: COMPANY, data: updateDetails });
+    setEditOpen({ open: false });
   };
 
   useEffect(() => {
     const match = companies.find(company => company.id === editOpen.id);
     setCompany(match);
-  }, [editOpen.id]);
+  }, [editOpen.id, companies]);
   if (_.isEmpty(company)) return null;
 
   return (
@@ -60,6 +63,14 @@ export default function EditCompany() {
           name='companyLogoUrl'
           defaultValue={company.companyLogoUrl}
         />
+        <div className={classes.btnGroup}>
+          <Button onClick={() => setEditOpen({ open: false })} autoFocus>
+            Cancel
+          </Button>
+          <Button type='submit' color='primary'>
+            Save
+          </Button>
+        </div>
       </form>
     </div>
   );
