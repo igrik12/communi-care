@@ -1,4 +1,4 @@
-import { action, computed, thunk } from 'easy-peasy';
+import { action, computed, thunk, actionOn } from 'easy-peasy';
 import store from 'store';
 import {
   companyExists,
@@ -10,8 +10,11 @@ import {
   deleteCompanyDependencies,
   deleteStaffAsync,
   deleteClientAsync,
-  subscribe
+  subscribe,
+  updateEntityAsync
 } from 'utils/modelHelpers';
+import { update } from 'utils/helpers';
+
 import {
   CLIENT,
   STAFF,
@@ -177,6 +180,26 @@ const managementModel = {
     } catch (error) {
       setAlertOpen({ open: true, success: false, message: 'Failed to delete company. Check console for errors' });
       console.error(JSON.stringify(error));
+    }
+  }),
+  updateEntity: thunk(async (actions, payload, { getStoreState, getStoreActions }) => {
+    const result = await updateEntityAsync(payload);
+    const { staff, clients, companies } = getStoreState();
+    switch (payload.type) {
+      case STAFF:
+        update(staff, result.data.updateStaff.id, result.data.updateStaff);
+        getStoreActions().setStaff(staff);
+        break;
+      case COMPANY:
+        update(companies, result.data.updateCompany.id, result.data.updateCompany);
+        getStoreActions().setCompanies(companies);
+        break;
+      case CLIENT:
+        update(clients, result.data.updateClient.id, result.data.updateClient);
+        getStoreActions().setClients(clients);
+        break;
+      default:
+        break;
     }
   })
 };

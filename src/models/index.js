@@ -47,14 +47,14 @@ const mainModel = {
     state.alertOpen = payload;
   }),
   companies: [],
+  setCompanies: action((state, payload) => {
+    state.companies = new Array(...payload);
+  }),
   addCompany: action((state, payload) => {
     state.companies.push(payload);
   }),
   removeCompany: action((state, payload) => {
     _.remove(state.companies, comp => comp.id === payload);
-  }),
-  setCompanies: action((state, payload) => {
-    state.companies = payload;
   }),
   fetchCompanies: thunkOn(
     actions => actions.fetchAll,
@@ -101,7 +101,7 @@ const mainModel = {
   }),
   fetchClients: thunkOn(
     actions => actions.fetchAll,
-    async actions => { 
+    async actions => {
       try {
         const ret = await API.graphql(graphqlOperation(listClients));
         actions.setClients(ret.data.listClients.items || []);

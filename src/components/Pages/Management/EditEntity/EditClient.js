@@ -9,7 +9,8 @@ export default function EditClient() {
   useEffect(() => {
     const match = clients.find(company => company.id === editOpen.id);
     setClient(match);
-  }, [editOpen.id]);
+  }, [editOpen.id, clients]);
+  
   if (_.isEmpty(client)) return null;
 
   return <div>{client.name}</div>;

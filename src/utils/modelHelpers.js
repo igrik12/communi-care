@@ -1,13 +1,17 @@
 import { API, graphqlOperation, Auth } from 'aws-amplify';
+import async from 'async';
 import {
   createCompany,
   createStaff,
   createClient,
   deleteCompany,
   deleteClient,
-  deleteStaff
+  deleteStaff,
+  updateStaff,
+  updateCompany,
+  updateClient
 } from '../graphql/mutations';
-import async from 'async';
+
 import {
   onDeleteStaff,
   onDeleteClient,
@@ -22,7 +26,10 @@ import {
   ON_DELETE_STAFF,
   ON_CREATE_CLIENT,
   ON_CREATE_STAFF,
-  ON_CREATE_COMPANY
+  ON_CREATE_COMPANY,
+  STAFF,
+  COMPANY,
+  CLIENT
 } from 'utils/constants';
 
 /**
@@ -219,4 +226,33 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
       }
     }
   );
+};
+
+export const updateStaffAsync = async staff => {
+  const details = { input: { ...staff } };
+  return await API.graphql(graphqlOperation(updateStaff, details));
+};
+
+export const updateCompanyAsync = async company => {
+  const details = { input: { ...company } };
+  return await API.graphql(graphqlOperation(updateCompany, details));
+};
+
+export const updateClientAsync = async client => {
+  const details = { input: { ...client } };
+  return await API.graphql(graphqlOperation(updateClient, details));
+};
+
+export const updateEntityAsync = async entity => {
+  const { type, data } = entity;
+  switch (type) {
+    case STAFF:
+      return await updateStaffAsync(data);
+    case COMPANY:
+      return await updateCompanyAsync(data);
+    case CLIENT:
+      return await updateClientAsync(data);
+    default:
+      break;
+  }
 };
