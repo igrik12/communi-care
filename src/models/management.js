@@ -12,25 +12,42 @@ import {
   deleteClientAsync,
   subscribe
 } from 'utils/modelHelpers';
-import { CLIENT, STAFF, COMPANY, ON_DELETE_CLIENT, ON_DELETE_COMPANY, ON_DELETE_STAFF } from 'utils/constants';
+import {
+  CLIENT,
+  STAFF,
+  COMPANY,
+  ON_DELETE_CLIENT,
+  ON_DELETE_COMPANY,
+  ON_DELETE_STAFF,
+  ON_CREATE_CLIENT,
+  ON_CREATE_COMPANY,
+  ON_CREATE_STAFF
+} from 'utils/constants';
 
 const subscriptions = actions => [
   {
     type: ON_DELETE_CLIENT,
-    action: clientData => {
-      actions.removeClient(clientData.data.onDeleteClient.id);
-    },
-    callback: sub => sub.unsubscribe()
+    action: clientData => actions.removeClient(clientData.value.data.onDeleteClient.id)
   },
   {
     type: ON_DELETE_COMPANY,
-    action: companyData => actions.removeCompany(companyData.data.onDeleteCompany.id),
-    callback: sub => sub.unsubscribe()
+    action: companyData => actions.removeCompany(companyData.value.data.onDeleteCompany.id)
   },
   {
     type: ON_DELETE_STAFF,
-    action: staffData => actions.removeStaff(staffData.data.onDeleteStaff.id),
-    callback: sub => sub.unsubscribe()
+    action: staffData => actions.removeStaff(staffData.value.data.onDeleteStaff.id)
+  },
+  {
+    type: ON_CREATE_CLIENT,
+    action: clientData => actions.addClient(clientData.value.data.onCreateClient)
+  },
+  {
+    type: ON_CREATE_STAFF,
+    action: staffData => actions.addStaff(staffData.value.data.onCreateStaff)
+  },
+  {
+    type: ON_CREATE_COMPANY,
+    action: companyData => actions.addCompany(companyData.value.data.onCreateCompany)
   }
 ];
 
@@ -38,11 +55,10 @@ const managementModel = {
   subscriptions: [],
   setupSubscription: action((state, payload) => {
     const subs = subscriptions(store.getActions());
-    subscribe(subs);
-    state.subscriptions = subs;
+    state.subscriptions = subscribe(subs);
   }),
   unsubscribe: action((state, payload) => {
-    state.subscriptions.forEach(subscription => subscription.callback());
+    state.subscriptions.forEach(subscription => subscription.unsubscribe());
   }),
   editOpen: { open: false, type: '', id: '' },
   setEditOpen: action((state, payload) => {
@@ -97,22 +113,14 @@ const managementModel = {
         console.error(`Failed to create company ${company.name}`);
         console.error(`Error: ${error}`);
         setAlertOpen({ open: true, success: false, message: 'Failed to create company. Check log for errors' });
-        newCompany = undefined;
-      }
-      if (newCompany) {
-        getStoreActions().addCompany(company);
+        return;
       }
     }
 
-    if (!newCompany) return;
-
     const companyId = newCompany.id;
     const setAlertOpen = getStoreActions().setAlertOpen;
-    // 2. Create every Staff with Company ID
-
     try {
       staff.forEach(await createNewStaff(companyId, setAlertOpen));
-      // staff.forEach(st => getStoreActions.addStaff(st));
     } catch (error) {
       console.error(`Failed to create staff. Error: ${JSON.stringify(error)}`);
       setAlertOpen({
@@ -133,7 +141,6 @@ const managementModel = {
     // 3. Create every client
     try {
       clients.forEach(await createNewClient(companyId));
-      // clients.forEach(client => getStoreActions.addClient(client));
     } catch (error) {
       console.error(`Failed to create client. Error: ${JSON.stringify(error)}`);
       setAlertOpen({ open: true, success: false, message: 'Failed to create client. Check log for errors' });

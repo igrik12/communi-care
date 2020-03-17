@@ -101,7 +101,7 @@ const mainModel = {
   }),
   fetchClients: thunkOn(
     actions => actions.fetchAll,
-    async actions => {
+    async actions => { 
       try {
         const ret = await API.graphql(graphqlOperation(listClients));
         actions.setClients(ret.data.listClients.items || []);
