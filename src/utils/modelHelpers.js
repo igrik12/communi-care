@@ -8,6 +8,63 @@ import {
   deleteStaff
 } from '../graphql/mutations';
 import async from 'async';
+import * as subscriptions from 'graphql/subscriptions';
+import { ON_DELETE_CLIENT, ON_DELETE_COMPANY, ON_DELETE_STAFF } from 'utils/constants';
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ * @param {function} unsubscribe callback providing subscription back to the caller
+ */
+export const clientDeleteSubscribe = (action, unsubscribe) => {
+  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteClient)).subscribe({
+    next: clientData => action(clientData)
+  });
+  unsubscribe(subscription);
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ * @param {function} unsubscribe callback providing subscription back to the caller
+ */
+export const staffDeleteSubscribe = (action, unsubscribe) => {
+  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteStaff)).subscribe({
+    next: staffData => action(staffData)
+  });
+  unsubscribe(subscription);
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ * @param {function} unsubscribe callback providing subscription back to the caller
+ */
+export const companyDeleteSubscribe = (action, unsubscribe) => {
+  const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteCompany)).subscribe({
+    next: companyData => action(companyData)
+  });
+  unsubscribe(subscription);
+};
+
+export const subscribe = subscriptions => {
+  subscriptions.forEach(subscription => {
+    const { type, action, callback } = subscription;
+    switch (type) {
+      case ON_DELETE_CLIENT:
+        clientDeleteSubscribe(action, callback);
+        break;
+      case ON_DELETE_STAFF:
+        staffDeleteSubscribe(action, callback);
+        break;
+      case ON_DELETE_COMPANY:
+        companyDeleteSubscribe(action, callback);
+        break;
+      default:
+        break;
+    }
+  });
+};
 
 // Check if company with name X exists
 export const companyExists = (company, allCompanies) => {
@@ -64,7 +121,7 @@ export const deleteClientAsync = async id => {
   await API.graphql(graphqlOperation(deleteClient, details));
 };
 
-export const deleteCompanyDependencies = (company, removeStaff, removeClients) => {
+export const deleteCompanyDependencies = (company, removeStaff, removeClient) => {
   const clientIds = company.client.items.map(client => client.id);
   const staffIds = company.staff.items.map(st => st.id);
 
@@ -93,7 +150,7 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClients) =
     function(id, callback) {
       try {
         deleteClientAsync(id);
-        removeClients(id);
+        removeClient(id);
         callback();
       } catch (error) {
         callback(error);

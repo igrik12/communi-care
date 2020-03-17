@@ -141,25 +141,34 @@ export default function Hero() {
 
 const ClientList = ({ clients }) => {
   const classes = useStyles();
+  const [openDelete, setOpenDelete] = useState({ open: false, type: CLIENT, id: '' });
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
   return (
-    <List className={classes.list}>
-      {clients.map((client, index) => {
-        return (
-          <ListItem
-            onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
-            button
-            key={client.name + index}
-            alignItems='flex-start'
-          >
-            <ListItemAvatar>
-              <Avatar />
-            </ListItemAvatar>
-            <ListItemText primary={client.name} />
-          </ListItem>
-        );
-      })}
-    </List>
+    <>
+      <List className={classes.list}>
+        {clients.map((client, index) => {
+          return (
+            <ListItem
+              onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
+              button
+              key={client.name + index}
+              alignItems='flex-start'
+            >
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText primary={client.name} />
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: CLIENT, id: client.id })}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+      <ConfirmClientDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+    </>
   );
 };
 
@@ -203,6 +212,34 @@ const StaffList = ({ staff }) => {
         })}
       </List>
       <ConfirmStaffDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+    </>
+  );
+};
+
+const ConfirmClientDelete = ({ openDelete, setOpenDelete }) => {
+  const [checked, setChecked] = React.useState(false);
+  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
+
+  const handleClose = () => {
+    setOpenDelete({ open: false });
+  };
+  const handleDelete = () => {
+    deleteEntity({ type: CLIENT, id: openDelete.id });
+    setOpenDelete({ open: false });
+  };
+  return (
+    <>
+      <Dialog onClose={handleClose} open={openDelete.open}>
+        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete client?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} color='primary'>
+            No
+          </Button>
+          <Button onClick={handleDelete} color='primary' autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
