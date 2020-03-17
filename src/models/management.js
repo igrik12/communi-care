@@ -1,4 +1,5 @@
 import { action, computed, thunk } from 'easy-peasy';
+import store from 'store';
 import {
   companyExists,
   createNewCompany,
@@ -8,11 +9,41 @@ import {
   deleteCompanyAsync,
   deleteCompanyDependencies,
   deleteStaffAsync,
-  deleteClientAsync
+  deleteClientAsync,
+  subscribe
 } from 'utils/modelHelpers';
-import { CLIENT, STAFF, COMPANY } from 'utils/constants';
+import { CLIENT, STAFF, COMPANY, ON_DELETE_CLIENT, ON_DELETE_COMPANY, ON_DELETE_STAFF } from 'utils/constants';
+
+const subscriptions = actions => [
+  {
+    type: ON_DELETE_CLIENT,
+    action: clientData => {
+      actions.removeClient(clientData.data.onDeleteClient.id);
+    },
+    callback: sub => sub.unsubscribe()
+  },
+  {
+    type: ON_DELETE_COMPANY,
+    action: companyData => actions.removeCompany(companyData.data.onDeleteCompany.id),
+    callback: sub => sub.unsubscribe()
+  },
+  {
+    type: ON_DELETE_STAFF,
+    action: staffData => actions.removeStaff(staffData.data.onDeleteStaff.id),
+    callback: sub => sub.unsubscribe()
+  }
+];
 
 const managementModel = {
+  subscriptions: [],
+  setupSubscription: action((state, payload) => {
+    const subs = subscriptions(store.getActions());
+    subscribe(subs);
+    state.subscriptions = subs;
+  }),
+  unsubscribe: action((state, payload) => {
+    state.subscriptions.forEach(subscription => subscription.callback());
+  }),
   editOpen: { open: false, type: '', id: '' },
   setEditOpen: action((state, payload) => {
     state.editOpen = payload;
