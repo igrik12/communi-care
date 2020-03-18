@@ -108,6 +108,7 @@ const managementModel = {
   submitFormData: thunk(async (actions, payload, { getState, getStoreActions, getStoreState }) => {
     // 1. Check if company exist
     const { company, clients, staff } = getState().formData;
+    const setAlertOpen = getStoreActions().setAlertOpen;
     let newCompany = companyExists(company, getStoreState().companies);
     if (!newCompany) {
       try {
@@ -121,7 +122,6 @@ const managementModel = {
     }
 
     const companyId = newCompany.id;
-    const setAlertOpen = getStoreActions().setAlertOpen;
     try {
       staff.forEach(await createNewStaff(companyId, setAlertOpen));
     } catch (error) {

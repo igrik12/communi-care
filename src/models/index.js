@@ -18,7 +18,7 @@ const mainModel = {
     const filter = { filter: { username: { eq: username } } };
     const ret = await API.graphql(graphqlOperation(listStaffs, filter));
     const staffList = ret.data.listStaffs.items;
-    if (listStaffs.length) {
+    if (staffList.length) {
       const staff = staffList[0];
       if (staff.userType === userType) {
         actions.setUser(staffList[0]);

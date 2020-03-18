@@ -10,8 +10,24 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import Box from '@material-ui/core/Box';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import { makeStyles } from '@material-ui/core/styles';
 
 const filter = createFilterOptions();
+
+const useStyles = makeStyles(theme => ({
+  form: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    width: 250
+  },
+  formField: {
+    margin: theme.spacing(1)
+  }
+}));
 
 export default function CompanyEditType() {
   const [value, setValue] = React.useState(null);
@@ -101,6 +117,8 @@ const findCompany = (companies, inputCompany) => {
 };
 
 const AddNewCompany = ({ open, handleClose }) => {
+  const classes = useStyles();
+  const [active, setActive] = React.useState(true);
   const { register, handleSubmit } = useForm();
   const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
   const onSubmit = data => {
@@ -113,16 +131,42 @@ const AddNewCompany = ({ open, handleClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle id='form-dialog-title'>Add a new company</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin='dense'
-            name='name'
-            inputRef={register}
-            label='Company Name'
-            type='text'
-            autoComplete='off'
-          />
-          <TextField margin='dense' name='companyLogoUrl' inputRef={register} label='Logo URL' autoComplete='off' />
+          <Box className={classes.form}>
+            <TextField
+              fullWidth
+              className={classes.formField}
+              autoFocus
+              margin='dense'
+              name='name'
+              inputRef={register}
+              label='Company Name'
+              type='text'
+              autoComplete='off'
+            />
+            <TextField
+              fullWidth
+              className={classes.formField}
+              margin='dense'
+              name='companyLogoUrl'
+              inputRef={register}
+              label='Logo URL'
+              autoComplete='off'
+            />
+            <FormControlLabel
+              labelPlacement='start'
+              control={
+                <Switch
+                  className={classes.formField}
+                  inputRef={register}
+                  checked={active}
+                  onChange={event => setActive(event.target.checked)}
+                  name='active'
+                  color='primary'
+                />
+              }
+              label='Active'
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>

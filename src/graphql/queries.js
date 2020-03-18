@@ -10,21 +10,28 @@ export const getCompany = /* GraphQL */ `
       staff {
         items {
           id
+          firstName
+          lastName
           username
           userType
           email
           phone_number
           permissions
+          isActive
         }
         nextToken
       }
       client {
         items {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         nextToken
       }
+      isActive
     }
   }
 `;
@@ -45,6 +52,7 @@ export const listCompanys = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
       }
       nextToken
     }
@@ -54,6 +62,8 @@ export const getStaff = /* GraphQL */ `
   query GetStaff($id: ID!) {
     getStaff(id: $id) {
       id
+      firstName
+      lastName
       username
       userType
       email
@@ -78,8 +88,10 @@ export const getStaff = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
       }
       permissions
+      isActive
     }
   }
 `;
@@ -92,6 +104,8 @@ export const listStaffs = /* GraphQL */ `
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        firstName
+        lastName
         username
         userType
         email
@@ -103,8 +117,10 @@ export const listStaffs = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
         permissions
+        isActive
       }
       nextToken
     }
@@ -114,7 +130,10 @@ export const getClient = /* GraphQL */ `
   query GetClient($id: ID!) {
     getClient(id: $id) {
       id
-      name
+      firstName
+      lastName
+      dateOfBirth
+      isActive
       clientRecords {
         items {
           id
@@ -135,6 +154,23 @@ export const getClient = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
+      }
+      residency {
+        id
+        name
+        address {
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
       }
     }
   }
@@ -148,7 +184,10 @@ export const listClients = /* GraphQL */ `
     listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        name
+        firstName
+        lastName
+        dateOfBirth
+        isActive
         clientRecords {
           nextToken
         }
@@ -156,7 +195,97 @@ export const listClients = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
+        residency {
+          id
+          name
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const getResidency = /* GraphQL */ `
+  query GetResidency($id: ID!) {
+    getResidency(id: $id) {
+      id
+      name
+      address {
+        firstLine
+        county
+        postCode
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        clientRecords {
+          nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
+          isActive
+        }
+        residency {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const listResidencys = /* GraphQL */ `
+  query ListResidencys(
+    $filter: ModelResidencyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listResidencys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        address {
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const getAddress = /* GraphQL */ `
+  query GetAddress($id: ID!) {
+    getAddress(id: $id) {
+      firstLine
+      county
+      postCode
+    }
+  }
+`;
+export const listAddresss = /* GraphQL */ `
+  query ListAddresss(
+    $filter: ModelAddressFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAddresss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        firstLine
+        county
+        postCode
       }
       nextToken
     }
@@ -168,6 +297,8 @@ export const getClientRecord = /* GraphQL */ `
       id
       staff {
         id
+        firstName
+        lastName
         username
         userType
         email
@@ -179,12 +310,17 @@ export const getClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
         permissions
+        isActive
       }
       client {
         id
-        name
+        firstName
+        lastName
+        dateOfBirth
+        isActive
         clientRecords {
           nextToken
         }
@@ -192,6 +328,11 @@ export const getClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
+        }
+        residency {
+          id
+          name
         }
       }
       entry {
@@ -231,15 +372,21 @@ export const listClientRecords = /* GraphQL */ `
         id
         staff {
           id
+          firstName
+          lastName
           username
           userType
           email
           phone_number
           permissions
+          isActive
         }
         client {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         entry {
           id
@@ -279,15 +426,21 @@ export const getEntry = /* GraphQL */ `
         id
         staff {
           id
+          firstName
+          lastName
           username
           userType
           email
           phone_number
           permissions
+          isActive
         }
         client {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         entry {
           id

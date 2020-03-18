@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import { ButtonGroup, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -71,10 +73,38 @@ const AddStaff = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
               required
+              error={errors.firstName}
+              inputRef={register({
+                required: true
+              })}
+              className={classes.textField}
+              name='firstName'
+              label='First Name'
+              variant='outlined'
+              autoComplete='off'
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
+              required
+              error={errors.lastName}
+              inputRef={register({
+                required: true
+              })}
+              className={classes.textField}
+              name='lastName'
+              label='Last Name'
+              variant='outlined'
+              autoComplete='off'
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <TextField
+              required
               error={errors.username}
               inputRef={register({
                 required: true,
-                minLength: 5,
+                minLength: 4,
                 validate: validateUsername
               })}
               className={classes.textField}
@@ -153,6 +183,14 @@ const AddStaff = () => {
               renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
               getOptionLabel={option => option.title}
               renderInput={params => <TextField {...params} name='permissions' label='Permission' variant='outlined' />}
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <FormControlLabel
+              style={{ marginLeft: 'auto' }}
+              labelPlacement='start'
+              control={<Switch inputRef={register} name='active' color='primary' defaultChecked />}
+              label='Active'
             />
           </Grid>
           <ButtonGroup fullWidth className={classes.buttonGroup}>

@@ -29,7 +29,7 @@ function CrateEditManagement({ width }) {
   return (
     <div className={classes.root}>
       <Paper className={classes.menu}>
-        <Grid container justify='space-around' spacing={2}>
+        <Grid container  spacing={2}>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <AddCompany />
           </Grid>

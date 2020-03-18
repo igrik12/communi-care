@@ -4,10 +4,13 @@ type Company @model {
   companyLogoUrl: String!
   staff: [Staff]! @connection(name: "CompanyStaff")
   client: [Client]! @connection(name: "CompanyClients")
+  isActive: Boolean!
 }
 
 type Staff @model {
   id: ID!
+  firstName: String!
+  lastName: String!
   username: String!
   userType: UserType
   email: AWSEmail!
@@ -15,13 +18,31 @@ type Staff @model {
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
   company: Company @connection(name: "CompanyStaff")
   permissions: [String]
+  isActive: Boolean!
 }
 
 type Client @model {
   id: ID!
-  name: String!
+  firstName: String!
+  lastName: String!
+  dateOfBirth: AWSDateTime!
+  isActive: Boolean!
   clientRecords: [ClientRecord] @connection(name: "ClientRecords")
   company: Company @connection(name: "CompanyClients")
+  residency: Residency @connection(name: "ClientResidency")
+}
+
+type Residency @model {
+  id: ID!
+  name: String!
+  address: Address!
+  client: Client @connection(name: "ClientResidency")
+}
+
+type Address @model {
+  firstLine: String!
+  county: String!
+  postCode: String!
 }
 
 type ClientRecord @model {
