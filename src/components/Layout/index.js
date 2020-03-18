@@ -24,10 +24,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import HealingIcon from '@material-ui/icons/Healing';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { Avatar } from '@material-ui/core';
+import UserIcon from '@material-ui/icons/SupervisedUserCircle';
 
 const drawerWidth = 260;
 
@@ -135,12 +135,11 @@ function ResponsiveDrawer(props) {
           <Typography className={classes.title} variant='h5' noWrap>
             @Communi-Care
           </Typography>
-          <ButtonGroup
-            style={{ marginLeft: 'auto' }}
-            variant='text'
-            color='primary'
-            aria-label='text primary button group'
-          >
+
+          <ButtonGroup style={{ marginLeft: 'auto' }} variant='text' color='primary'>
+            <Button disableRipple startIcon={<UserIcon />} color='inherit'>
+              {Auth.user.username}
+            </Button>
             <Button onClick={setThemeColor} color='inherit'>
               Theme
             </Button>
