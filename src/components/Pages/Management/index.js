@@ -4,7 +4,6 @@ import { useStoreActions } from 'easy-peasy';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Hero from './Hero';
-import Summary from './Summary';
 import CrateEditManagement from './CrateEditManagement';
 
 const useStyles = makeStyles(() => ({
@@ -31,11 +30,8 @@ export default function Management() {
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Grid container spacing={1}>
-            <Grid item lg={8} md={12} sm={12} xs={12}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
               <CrateEditManagement />
-            </Grid>
-            <Grid item lg={4} md={12} sm={12} xs={12}>
-              <Summary />
             </Grid>
           </Grid>
         </Grid>

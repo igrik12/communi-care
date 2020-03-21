@@ -7,8 +7,9 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
       shift
       entryType
       client {
-        name
         id
+        firstName
+        lastName
       }
       entry {
         id
@@ -92,8 +93,14 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
         companyLogoUrl
         staff {
           items {
+            firstName
+            lastName
             username
             userType
+            email
+            phone_number
+            password
+            isActive
             permissions
             id
           }
@@ -103,7 +110,10 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
         client {
           items {
             id
-            name
+            firstName
+            lastName
+            dateOfBirth
+            isActive
           }
           nextToken
         }

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listPermissions, listClients, getCompany } from 'graphql/queries';
+import { listStaffs, listPermissions, listClients, listResidences } from 'graphql/queries';
 import { listCompanysWithStaffAndClients } from 'graphql/customQueries';
 import { updateStaff } from 'graphql/mutations';
 
@@ -18,7 +18,7 @@ const mainModel = {
     const filter = { filter: { username: { eq: username } } };
     const ret = await API.graphql(graphqlOperation(listStaffs, filter));
     const staffList = ret.data.listStaffs.items;
-    if (listStaffs.length) {
+    if (staffList.length) {
       const staff = staffList[0];
       if (staff.userType === userType) {
         actions.setUser(staffList[0]);
@@ -67,7 +67,9 @@ const mainModel = {
       }
     }
   ),
-  fetchAll: action(() => {}),
+  fetchAll: action(() => {
+    
+  }),
   staff: [],
   setStaff: action((state, payload) => {
     state.staff = payload;
@@ -105,6 +107,27 @@ const mainModel = {
       try {
         const ret = await API.graphql(graphqlOperation(listClients));
         actions.setClients(ret.data.listClients.items || []);
+      } catch (error) {
+        console.error(`Failed to retrieve all clients. ${error}`);
+      }
+    }
+  ),
+  residences: [],
+  setResidences: action((state, payload) => {
+    state.residences = payload;
+  }),
+  addResidence: action((state, payload) => {
+    state.residences.push(payload);
+  }),
+  removeResidence: action((state, payload) => {
+    _.remove(state.residences, residence => residence.id === payload);
+  }),
+  fetchResidences: thunkOn(
+    actions => actions.fetchAll,
+    async actions => {
+      try {
+        const ret = await API.graphql(graphqlOperation(listResidences));
+        actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
         console.error(`Failed to retrieve all clients. ${error}`);
       }

@@ -2,6 +2,7 @@ import React from 'react';
 import AddCompany from './AddCompany';
 import AddStaff from './AddStaff';
 import AddClient from './AddClient';
+import AddResidence from './AddResidence';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,14 +30,24 @@ function CrateEditManagement({ width }) {
   return (
     <div className={classes.root}>
       <Paper className={classes.menu}>
-        <Grid container justify='space-around' spacing={2}>
-          <Grid item lg={12} md={12} sm={12} xs={12}>
+        <Grid container spacing={2}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
             <AddCompany />
+          </Grid>
+          <Grid item lg={1} md={12} sm={12} xs={12}>
+            <Divider
+              className={classes.divider}
+              orientation={width === 'lg' || width === 'xl' ? 'vertical' : 'horizontal'}
+              variant='middle'
+            />
+          </Grid>
+          <Grid item lg={5} md={12} sm={12} xs={12}>
+            <AddResidence />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <Divider />
           </Grid>
-          <Grid item lg={7} md={12} sm={12} xs={12}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
             <AddStaff />
           </Grid>
           <Grid item lg={1} md={12} sm={12} xs={12}>
@@ -46,7 +57,7 @@ function CrateEditManagement({ width }) {
               variant='middle'
             />
           </Grid>
-          <Grid item lg={4} md={12} sm={12} xs={12}>
+          <Grid item lg={5} md={12} sm={12} xs={12}>
             <AddClient />
           </Grid>
         </Grid>

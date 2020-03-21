@@ -4,6 +4,8 @@ import {
   createCompany,
   createStaff,
   createClient,
+  createResidence,
+  createAddress,
   deleteCompany,
   deleteClient,
   deleteStaff,
@@ -136,19 +138,34 @@ export const companyExists = (company, allCompanies) => {
 
 // Create new company
 export const createNewCompany = async company => {
-  const { name, companyLogoUrl } = company;
-  const details = { input: { name, companyLogoUrl } };
+  const { name, companyLogoUrl, isActive } = company;
+  const details = { input: { name, companyLogoUrl, isActive } };
   const result = await API.graphql(graphqlOperation(createCompany, details));
   return result.data.createCompany;
 };
 
-export const createNewStaff = companyId => async staff => {
-  const { username, userType, permissions, password, email, phone_number } = staff;
+export const createNewStaff = async staffData => {
+  const {
+    firstName,
+    lastName,
+    username,
+    userType,
+    permissions,
+    password,
+    email,
+    phone_number,
+    companyId,
+    isActive
+  } = staffData;
   const details = {
     input: {
+      firstName,
+      lastName,
       username,
       userType,
+      isActive,
       email,
+      password,
       phone_number,
       staffCompanyId: companyId,
       permissions: permissions ? permissions.map(perm => perm.value) : []
@@ -162,10 +179,30 @@ export const signUpUser = async staff => {
   await Auth.signUp({ username, password, attributes: { email, phone_number } });
 };
 
-export const createNewClient = companyId => async client => {
-  const { name } = client;
-  const details = { input: { name, clientCompanyId: companyId } };
+export const createNewClient = async clientData => {
+  const { firstName, lastName, dateOfBirth, isActive, companyId, residenceId } = clientData;
+  const details = {
+    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId: companyId, clientRecidenceId: residenceId }
+  };
   await API.graphql(graphqlOperation(createClient, details));
+};
+
+export const createNewResidence = async residence => {
+  let result;
+  try {
+    result = await createNewAddress(residence.address);
+  } catch (error) {
+    console.error(`Failed to create address. Error: ${JSON.stringify(error)}`);
+    throw Error(error);
+  }
+  const details = { input: { name: residence.name, residenceAddressId: result.data.createAddress.Id } };
+  await API.graphql(graphqlOperation(createResidence, details));
+};
+
+export const createNewAddress = async address => {
+  const details = { input: address };
+  const result = await API.graphql(graphqlOperation(createAddress, details));
+  return result;
 };
 
 export const deleteCompanyAsync = async id => {

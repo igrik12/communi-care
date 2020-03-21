@@ -10,21 +10,29 @@ export const onCreateCompany = /* GraphQL */ `
       staff {
         items {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         nextToken
       }
       client {
         items {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         nextToken
       }
+      isActive
     }
   }
 `;
@@ -37,21 +45,29 @@ export const onUpdateCompany = /* GraphQL */ `
       staff {
         items {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         nextToken
       }
       client {
         items {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         nextToken
       }
+      isActive
     }
   }
 `;
@@ -64,21 +80,29 @@ export const onDeleteCompany = /* GraphQL */ `
       staff {
         items {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         nextToken
       }
       client {
         items {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         nextToken
       }
+      isActive
     }
   }
 `;
@@ -86,9 +110,12 @@ export const onCreateStaff = /* GraphQL */ `
   subscription OnCreateStaff {
     onCreateStaff {
       id
+      firstName
+      lastName
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -110,8 +137,10 @@ export const onCreateStaff = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
       }
       permissions
+      isActive
     }
   }
 `;
@@ -119,9 +148,12 @@ export const onUpdateStaff = /* GraphQL */ `
   subscription OnUpdateStaff {
     onUpdateStaff {
       id
+      firstName
+      lastName
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -143,8 +175,10 @@ export const onUpdateStaff = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
       }
       permissions
+      isActive
     }
   }
 `;
@@ -152,9 +186,12 @@ export const onDeleteStaff = /* GraphQL */ `
   subscription OnDeleteStaff {
     onDeleteStaff {
       id
+      firstName
+      lastName
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -176,8 +213,10 @@ export const onDeleteStaff = /* GraphQL */ `
         client {
           nextToken
         }
+        isActive
       }
       permissions
+      isActive
     }
   }
 `;
@@ -185,7 +224,10 @@ export const onCreateClient = /* GraphQL */ `
   subscription OnCreateClient {
     onCreateClient {
       id
-      name
+      firstName
+      lastName
+      dateOfBirth
+      isActive
       clientRecords {
         items {
           id
@@ -205,6 +247,24 @@ export const onCreateClient = /* GraphQL */ `
         }
         client {
           nextToken
+        }
+        isActive
+      }
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
       }
     }
@@ -214,7 +274,10 @@ export const onUpdateClient = /* GraphQL */ `
   subscription OnUpdateClient {
     onUpdateClient {
       id
-      name
+      firstName
+      lastName
+      dateOfBirth
+      isActive
       clientRecords {
         items {
           id
@@ -234,6 +297,24 @@ export const onUpdateClient = /* GraphQL */ `
         }
         client {
           nextToken
+        }
+        isActive
+      }
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
       }
     }
@@ -243,7 +324,10 @@ export const onDeleteClient = /* GraphQL */ `
   subscription OnDeleteClient {
     onDeleteClient {
       id
-      name
+      firstName
+      lastName
+      dateOfBirth
+      isActive
       clientRecords {
         items {
           id
@@ -263,6 +347,219 @@ export const onDeleteClient = /* GraphQL */ `
         }
         client {
           nextToken
+        }
+        isActive
+      }
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
+    }
+  }
+`;
+export const onCreateResidence = /* GraphQL */ `
+  subscription OnCreateResidence {
+    onCreateResidence {
+      id
+      name
+      address {
+        id
+        firstLine
+        county
+        postCode
+        residence {
+          id
+          name
+        }
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        clientRecords {
+          nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const onUpdateResidence = /* GraphQL */ `
+  subscription OnUpdateResidence {
+    onUpdateResidence {
+      id
+      name
+      address {
+        id
+        firstLine
+        county
+        postCode
+        residence {
+          id
+          name
+        }
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        clientRecords {
+          nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const onDeleteResidence = /* GraphQL */ `
+  subscription OnDeleteResidence {
+    onDeleteResidence {
+      id
+      name
+      address {
+        id
+        firstLine
+        county
+        postCode
+        residence {
+          id
+          name
+        }
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        clientRecords {
+          nextToken
+        }
+        company {
+          id
+          name
+          companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const onCreateAddress = /* GraphQL */ `
+  subscription OnCreateAddress {
+    onCreateAddress {
+      id
+      firstLine
+      county
+      postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
+    }
+  }
+`;
+export const onUpdateAddress = /* GraphQL */ `
+  subscription OnUpdateAddress {
+    onUpdateAddress {
+      id
+      firstLine
+      county
+      postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
+    }
+  }
+`;
+export const onDeleteAddress = /* GraphQL */ `
+  subscription OnDeleteAddress {
+    onDeleteAddress {
+      id
+      firstLine
+      county
+      postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
       }
     }
@@ -274,9 +571,12 @@ export const onCreateClientRecord = /* GraphQL */ `
       id
       staff {
         id
+        firstName
+        lastName
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -285,12 +585,17 @@ export const onCreateClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
         permissions
+        isActive
       }
       client {
         id
-        name
+        firstName
+        lastName
+        dateOfBirth
+        isActive
         clientRecords {
           nextToken
         }
@@ -298,6 +603,11 @@ export const onCreateClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
         }
       }
       entry {
@@ -332,9 +642,12 @@ export const onUpdateClientRecord = /* GraphQL */ `
       id
       staff {
         id
+        firstName
+        lastName
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -343,12 +656,17 @@ export const onUpdateClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
         permissions
+        isActive
       }
       client {
         id
-        name
+        firstName
+        lastName
+        dateOfBirth
+        isActive
         clientRecords {
           nextToken
         }
@@ -356,6 +674,11 @@ export const onUpdateClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
         }
       }
       entry {
@@ -390,9 +713,12 @@ export const onDeleteClientRecord = /* GraphQL */ `
       id
       staff {
         id
+        firstName
+        lastName
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -401,12 +727,17 @@ export const onDeleteClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
         }
         permissions
+        isActive
       }
       client {
         id
-        name
+        firstName
+        lastName
+        dateOfBirth
+        isActive
         clientRecords {
           nextToken
         }
@@ -414,6 +745,11 @@ export const onDeleteClientRecord = /* GraphQL */ `
           id
           name
           companyLogoUrl
+          isActive
+        }
+        residence {
+          id
+          name
         }
       }
       entry {
@@ -459,15 +795,22 @@ export const onCreateEntry = /* GraphQL */ `
         id
         staff {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         client {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         entry {
           id
@@ -506,15 +849,22 @@ export const onUpdateEntry = /* GraphQL */ `
         id
         staff {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         client {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         entry {
           id
@@ -553,15 +903,22 @@ export const onDeleteEntry = /* GraphQL */ `
         id
         staff {
           id
+          firstName
+          lastName
           username
           userType
           email
+          password
           phone_number
           permissions
+          isActive
         }
         client {
           id
-          name
+          firstName
+          lastName
+          dateOfBirth
+          isActive
         }
         entry {
           id

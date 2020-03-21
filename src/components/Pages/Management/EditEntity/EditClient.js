@@ -7,11 +7,11 @@ export default function EditClient() {
   const editOpen = useStoreState(state => state.managementModel.editOpen);
   const clients = useStoreState(state => state.clients);
   useEffect(() => {
-    const match = clients.find(company => company.id === editOpen.id);
+    const match = clients.find(client => client.id === editOpen.id);
     setClient(match);
   }, [editOpen.id, clients]);
-  
+
   if (_.isEmpty(client)) return null;
 
-  return <div>{client.name}</div>;
+  return <div>{client.firstName}</div>;
 }

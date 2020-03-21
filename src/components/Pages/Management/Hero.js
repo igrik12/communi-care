@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import EditEntity from './EditEntity';
-import { STAFF, COMPANY, CLIENT } from 'utils/constants';
+import { STAFF, COMPANY, CLIENT, RESIDENCE } from 'utils/constants';
+import _ from 'lodash';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,10 +19,8 @@ import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteButton from '@material-ui/icons/Delete';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
@@ -77,35 +76,32 @@ export default function Hero() {
   const staff = useStoreState(state => state.staff);
   const clients = useStoreState(state => state.clients);
   const companies = useStoreState(state => state.companies);
+  const residences = useStoreState(state => state.residences);
 
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [filteredStaff, setFilteredStaff] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
+  const [filteredResidences, setFilteredResidences] = useState([]);
 
   useEffect(() => {
     setFilteredCompanies(companies);
     setFilteredStaff(staff);
     setFilteredClients(clients);
-  }, [companies, clients, staff]);
+    setFilteredResidences(residences);
+  }, [companies, clients, staff, residences]);
 
   return (
     <>
       <div className={classes.root}>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Box display='flex' flexDirection='column'>
-              <Typography variant='h5' component='h2' gutterBottom>
-                Management
-              </Typography>
-              <Typography variant='body2' component='p' color='textSecondary'>
-                This page is for company, staff and client management, that allows a user to create new entities and
-                manage their permissions.
-              </Typography>
-            </Box>
+            <Typography variant='h5' component='h2' gutterBottom>
+              Management
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={1}>
-              <Grid item lg={4} xl={4} md={6} sm={12} xs={12}>
+              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
                 <TextField
                   onChange={onStaffChange(staff, setFilteredStaff)}
                   className={classes.titleRoot}
@@ -113,7 +109,7 @@ export default function Hero() {
                 />
                 <StaffList staff={filteredStaff} />
               </Grid>
-              <Grid item lg={4} xl={4} md={6} sm={12} xs={12}>
+              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
                 <TextField
                   onChange={onClientChange(clients, setFilteredClients)}
                   className={classes.titleRoot}
@@ -121,7 +117,7 @@ export default function Hero() {
                 />
                 <ClientList clients={filteredClients} />
               </Grid>
-              <Grid item lg={4} xl={4} md={6} sm={12} xs={12}>
+              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
                 <TextField
                   onChange={onCompanyChange(companies, setFilteredCompanies)}
                   className={classes.titleRoot}
@@ -129,6 +125,15 @@ export default function Hero() {
                   autoComplete='off'
                 />
                 <CompanyList companies={filteredCompanies} />
+              </Grid>
+              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
+                <TextField
+                  onChange={onResidenceChange(residences, setFilteredResidences)}
+                  className={classes.titleRoot}
+                  label='Search residence'
+                  autoComplete='off'
+                />
+                <ResidenceList residences={filteredResidences} />
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
@@ -147,6 +152,7 @@ const ClientList = ({ clients }) => {
     <>
       <List className={classes.list}>
         {clients.map((client, index) => {
+          console.log(client);
           return (
             <ListItem
               onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
@@ -157,7 +163,16 @@ const ClientList = ({ clients }) => {
               <ListItemAvatar>
                 <Avatar />
               </ListItemAvatar>
-              <ListItemText primary={client.name} />
+              <ListItemText
+                primary={`${client.firstName} ${client.lastName}`}
+                secondary={
+                  <>
+                    <Typography component='span' variant='body2' className={classes.inline} color='textPrimary'>
+                      Active: {client.isActive ? 'Yes' : 'No'}
+                    </Typography>
+                  </>
+                }
+              />
               <ListItemSecondaryAction>
                 <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: CLIENT, id: client.id })}>
                   <DeleteIcon />
@@ -167,7 +182,7 @@ const ClientList = ({ clients }) => {
           );
         })}
       </List>
-      <ConfirmClientDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+      <ConfirmEntityDelete openDelete={openDelete} setOpenDelete={setOpenDelete} entity={CLIENT} />
     </>
   );
 };
@@ -198,7 +213,7 @@ const StaffList = ({ staff }) => {
                       Email: {st.email}
                     </Typography>
                     <br />
-                    Phone Number: {st.phone_number}
+                    Active: {st.isActive ? 'Yes' : 'No'}
                   </>
                 }
               />
@@ -211,52 +226,59 @@ const StaffList = ({ staff }) => {
           );
         })}
       </List>
-      <ConfirmStaffDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
+      <ConfirmEntityDelete openDelete={openDelete} setOpenDelete={setOpenDelete} entity={STAFF} />
     </>
   );
 };
 
-const ConfirmClientDelete = ({ openDelete, setOpenDelete }) => {
+const ResidenceList = ({ residences }) => {
+  const classes = useStyles();
+  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const [openDelete, setOpenDelete] = useState({ open: false, type: RESIDENCE, id: '' });
+
+  return (
+    <>
+      <List className={classes.list}>
+        {residences.map((residence, index) => {
+          return (
+            <ListItem
+              onClick={() => setEditOpen({ open: true, type: RESIDENCE, id: residence.id })}
+              button
+              key={residence.name + index}
+              alignItems='flex-start'
+            >
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText primary={residence.name} />
+              <ListItemSecondaryAction>
+                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: RESIDENCE, id: residence.id })}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+      <ConfirmEntityDelete openDelete={openDelete} setOpenDelete={setOpenDelete} entity={RESIDENCE} />
+    </>
+  );
+};
+
+const ConfirmEntityDelete = ({ openDelete, setOpenDelete, entity }) => {
   const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
 
   const handleClose = () => {
     setOpenDelete({ open: false });
   };
   const handleDelete = () => {
-    deleteEntity({ type: CLIENT, id: openDelete.id });
+    deleteEntity({ type: entity, id: openDelete.id });
     setOpenDelete({ open: false });
   };
   return (
     <>
       <Dialog onClose={handleClose} open={openDelete.open}>
-        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete client?</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            No
-          </Button>
-          <Button onClick={handleDelete} color='primary' autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
-const ConfirmStaffDelete = ({ openDelete, setOpenDelete }) => {
-  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
-
-  const handleClose = () => {
-    setOpenDelete({ open: false });
-  };
-  const handleDelete = () => {
-    deleteEntity({ type: STAFF, id: openDelete.id });
-    setOpenDelete({ open: false });
-  };
-  return (
-    <>
-      <Dialog onClose={handleClose} open={openDelete.open}>
-        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete staff?</DialogTitle>
+        <DialogTitle>Are you sure you want to delete {entity.toLowerCase()}?</DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color='primary'>
             No
@@ -312,44 +334,7 @@ const CompanyList = ({ companies }) => {
           );
         })}
       </List>
-      <ConfirmCompanyDelete openDelete={openDelete} setOpenDelete={setOpenDelete} />
-    </>
-  );
-};
-
-const ConfirmCompanyDelete = ({ openDelete, setOpenDelete }) => {
-  const [checked, setChecked] = React.useState(false);
-  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
-
-  const handleChange = event => {
-    setChecked(event.target.checked);
-  };
-  const handleClose = () => {
-    setOpenDelete({ open: false });
-  };
-  const handleDelete = () => {
-    deleteEntity({ type: COMPANY, id: openDelete.id, deleteDependencies: checked });
-    setOpenDelete({ open: false });
-  };
-  return (
-    <>
-      <Dialog onClose={handleClose} open={openDelete.open}>
-        <DialogTitle id='simple-dialog-title'>Are you sure you want to delete company?</DialogTitle>
-        <DialogContent>
-          <FormControlLabel
-            control={<Checkbox checked={checked} onChange={handleChange} color='primary' />}
-            label='Delete all clients/staff?'
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            No
-          </Button>
-          <Button onClick={handleDelete} color='primary' autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmEntityDelete openDelete={openDelete} setOpenDelete={setOpenDelete} entity={COMPANY} />
     </>
   );
 };
@@ -390,5 +375,13 @@ const onStaffChange = (staff, setFilteredStaff) => event => {
     setFilteredStaff(staff);
   } else {
     setFilteredStaff(staff.filter(stf => stf.username.toLowerCase().includes(event.target.value.toLowerCase())));
+  }
+};
+
+const onResidenceChange = (residence, setFilteredResidence) => event => {
+  if (!event.target.value) {
+    setFilteredResidence(residence);
+  } else {
+    setFilteredResidence(residence.filter(stf => stf.name.toLowerCase().includes(event.target.value.toLowerCase())));
   }
 };

@@ -4,24 +4,48 @@ type Company @model {
   companyLogoUrl: String!
   staff: [Staff]! @connection(name: "CompanyStaff")
   client: [Client]! @connection(name: "CompanyClients")
+  isActive: Boolean!
 }
 
 type Staff @model {
   id: ID!
+  firstName: String!
+  lastName: String!
   username: String!
   userType: UserType
   email: AWSEmail!
+  password: String!
   phone_number: AWSPhone!
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
   company: Company @connection(name: "CompanyStaff")
   permissions: [String]
+  isActive: Boolean!
 }
 
 type Client @model {
   id: ID!
-  name: String!
+  firstName: String!
+  lastName: String!
+  dateOfBirth: AWSDateTime!
+  isActive: Boolean!
   clientRecords: [ClientRecord] @connection(name: "ClientRecords")
   company: Company @connection(name: "CompanyClients")
+  residence: Residence @connection(name: "ClientResidence")
+}
+
+type Residence @model {
+  id: ID!
+  name: String!
+  address: Address @connection(name: "ResidenceAddress")
+  client: Client @connection(name: "ClientResidence")
+}
+
+type Address @model {
+  id: ID!
+  firstLine: String!
+  county: String!
+  postCode: String!
+  residence: Residence @connection(name:"ResidenceAddress")
 }
 
 type ClientRecord @model {
