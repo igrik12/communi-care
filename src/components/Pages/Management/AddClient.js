@@ -29,7 +29,6 @@ const useStyles = makeStyles(theme => ({
 
 const AddClient = () => {
   const classes = useStyles();
-  const addClient = useStoreActions(actions => actions.managementModel.addClient);
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const companies = useStoreState(state => state.companies);
   const residences = useStoreState(state => state.residences);

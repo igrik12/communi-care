@@ -8,7 +8,8 @@ import {
   VerifyContact,
   ForgotPassword,
   RequireNewPassword,
-  ConfirmSignUp
+  ConfirmSignUp,
+  Loading
 } from 'aws-amplify-react';
 import { MuiThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
@@ -94,18 +95,19 @@ function App() {
           <Route path='/record' component={ClientRecord} />
           <Route path='/reports' component={CareReports} />
           {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/management' />
+          <Redirect from='/' to='/record' />
         </Layout>
       </Switch>
     </MuiThemeProvider>
   );
 }
 
-export default withAuthenticator(App,  [
+export default withAuthenticator(App, false, [
   <SignIn />,
   <ConfirmSignIn />,
   <VerifyContact />,
   <ForgotPassword />,
   <RequireNewPassword />,
-  <ConfirmSignUp />
+  <ConfirmSignUp />,
+  <Loading />
 ]);

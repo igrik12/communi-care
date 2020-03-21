@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
 export default function ClientRecord() {
   return (
     <>
@@ -98,16 +97,14 @@ const SelectMenu = () => {
   const setRecord = useStoreActions(actions => actions.clientRecordModel.setRecord);
   const recordDate = useStoreState(state => state.clientRecordModel.record.recordDate);
   const shift = useStoreState(state => state.clientRecordModel.record.shift);
-  const clients = useStoreState(state => state.clientRecordModel.clients);
+  const clients = useStoreState(state => state.clients);
   const clientId = useStoreState(state => state.clientRecordModel.record.clientId);
   const inputLabel = React.useRef(null);
-  const getClients = useStoreActions(actions => actions.clientRecordModel.getClients);
   const [labelWidth, setLabelWidth] = React.useState(0);
 
   React.useEffect(() => {
-    getClients();
     setLabelWidth(inputLabel.current.offsetWidth);
-  }, [getClients]);
+  }, []);
 
   return (
     <>
@@ -161,7 +158,7 @@ const SelectMenu = () => {
                 </MenuItem>
                 {clients.map(client => (
                   <MenuItem key={client.id} value={client.id}>
-                    {client.name}
+                    {`${client.firstName } ${client.lastName }`}
                   </MenuItem>
                 ))}
               </Select>

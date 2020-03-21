@@ -7,8 +7,9 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
       shift
       entryType
       client {
-        name
         id
+        firstName
+        lastName
       }
       entry {
         id

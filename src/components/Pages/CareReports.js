@@ -7,6 +7,9 @@ import { Grid, Paper, withWidth } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 import Summary from '../Shared/Summary';
 
+const convertRecords = records =>
+  records.map(record => ({ ...record, fullName: `${record.client.firstName}${record.client.lastName}` }));
+
 function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);
   const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
@@ -19,6 +22,9 @@ function CareReports() {
     };
     query();
   }, [setRecords, setSelectedRecord]);
+
+  const converted = convertRecords(records);
+  console.log(converted)
 
   const options = {
     filter: true,
@@ -40,11 +46,8 @@ function CareReports() {
         <MUIDataTable
           columns={[
             {
-              name: 'client.name',
+              name: 'fullName',
               label: 'Client Name',
-              options: {
-                customBodyRender: value => value
-              }
             },
             {
               name: 'createdAt',
@@ -74,7 +77,7 @@ function CareReports() {
               }
             }
           ]}
-          data={records}
+          data={converted}
           options={options}
           title='Client Records'
         />
