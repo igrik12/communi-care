@@ -15,6 +15,7 @@ export const onCreateCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -49,6 +50,7 @@ export const onUpdateCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -83,6 +85,7 @@ export const onDeleteCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -112,6 +115,7 @@ export const onCreateStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -149,6 +153,7 @@ export const onUpdateStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -186,6 +191,7 @@ export const onDeleteStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -244,10 +250,11 @@ export const onCreateClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -293,10 +300,11 @@ export const onUpdateClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -342,10 +350,11 @@ export const onDeleteClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -361,15 +370,20 @@ export const onDeleteClient = /* GraphQL */ `
     }
   }
 `;
-export const onCreateResidency = /* GraphQL */ `
-  subscription OnCreateResidency {
-    onCreateResidency {
+export const onCreateResidence = /* GraphQL */ `
+  subscription OnCreateResidence {
+    onCreateResidence {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -386,7 +400,7 @@ export const onCreateResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -394,15 +408,20 @@ export const onCreateResidency = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateResidency = /* GraphQL */ `
-  subscription OnUpdateResidency {
-    onUpdateResidency {
+export const onUpdateResidence = /* GraphQL */ `
+  subscription OnUpdateResidence {
+    onUpdateResidence {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -419,7 +438,7 @@ export const onUpdateResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -427,15 +446,20 @@ export const onUpdateResidency = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteResidency = /* GraphQL */ `
-  subscription OnDeleteResidency {
-    onDeleteResidency {
+export const onDeleteResidence = /* GraphQL */ `
+  subscription OnDeleteResidence {
+    onDeleteResidence {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -452,7 +476,7 @@ export const onDeleteResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -463,27 +487,81 @@ export const onDeleteResidency = /* GraphQL */ `
 export const onCreateAddress = /* GraphQL */ `
   subscription OnCreateAddress {
     onCreateAddress {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
 export const onUpdateAddress = /* GraphQL */ `
   subscription OnUpdateAddress {
     onUpdateAddress {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
 export const onDeleteAddress = /* GraphQL */ `
   subscription OnDeleteAddress {
     onDeleteAddress {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
@@ -498,6 +576,7 @@ export const onCreateClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -526,7 +605,7 @@ export const onCreateClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -568,6 +647,7 @@ export const onUpdateClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -596,7 +676,7 @@ export const onUpdateClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -638,6 +718,7 @@ export const onDeleteClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -666,7 +747,7 @@ export const onDeleteClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -719,6 +800,7 @@ export const onCreateEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -772,6 +854,7 @@ export const onUpdateEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -825,6 +908,7 @@ export const onDeleteEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive

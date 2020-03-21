@@ -1,6 +1,7 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, ErrorMessage } from 'react-hook-form';
 import { useStoreActions, useStoreState } from 'easy-peasy';
+import { STAFF } from 'utils/constants';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -31,27 +32,29 @@ const AddStaff = () => {
   const classes = useStyles();
   const [allPermissions, setAllPermissions] = React.useState([]);
   const { register, handleSubmit, setValue, reset, errors } = useForm();
-  const addStaff = useStoreActions(actions => actions.managementModel.addStaff);
+  const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const permissions = useStoreState(state => state.permissions);
+  const companies = useStoreState(state => state.companies);
   const staff = useStoreState(state => state.staff);
 
   const onSubmit = data => {
-    addStaff(data);
+    submitEntity({ type: STAFF, data });
     reset();
     setValue('permissions', []);
-    setValue('userType', null);
+    setValue('company', null);
     setAllPermissions([]);
   };
 
   const onReset = () => {
     reset();
     setValue('permissions', []);
-    setValue('userType', null);
+    setValue('companyId', null);
     setAllPermissions([]);
   };
 
   React.useEffect(() => {
     register({ name: 'permissions' });
+    register({ name: 'companyId' });
     setValue('permissions', []);
   }, [register, setValue]);
 
@@ -105,15 +108,15 @@ const AddStaff = () => {
               inputRef={register({
                 required: true,
                 minLength: 4,
-                validate: validateUsername
+                validate: validateUsername ? undefined : 'Username already exists!'
               })}
               className={classes.textField}
               name='username'
               label='Username'
               variant='outlined'
               autoComplete='off'
-              helperText={errors.username && 'User already exists!'}
             />
+            <ErrorMessage style={{ color: 'red' }} errors={errors} name='username' as='p' />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <TextField
@@ -142,14 +145,27 @@ const AddStaff = () => {
             <TextField
               required
               error={errors.email}
-              inputRef={register({ required: true, validate: validateEmail })}
+              inputRef={register({ required: true, validate: validateEmail ? undefined : 'Email is already in use' })}
               className={classes.textField}
               name='email'
               type='email'
               label='Email'
               variant='outlined'
               autoComplete='off'
-              helperText={errors.email && 'Email already in use!'}
+            />
+            <ErrorMessage style={{ color: 'red' }} errors={errors} name='email' as='p' />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Autocomplete
+              required
+              freeSolo
+              onChange={(e, data) => {
+                setValue('companyId', data.id);
+              }}
+              className={classes.textField}
+              options={companies}
+              getOptionLabel={option => option.name}
+              renderInput={params => <TextField {...params} name='companyId' label='Company' variant='outlined' />}
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -169,7 +185,7 @@ const AddStaff = () => {
               )}
             />
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
             <Autocomplete
               className={classes.textField}
               options={permissions}
@@ -189,7 +205,7 @@ const AddStaff = () => {
             <FormControlLabel
               style={{ marginLeft: 'auto' }}
               labelPlacement='start'
-              control={<Switch inputRef={register} name='active' color='primary' defaultChecked />}
+              control={<Switch inputRef={register} name='isActive' color='primary' defaultChecked />}
               label='Active'
             />
           </Grid>

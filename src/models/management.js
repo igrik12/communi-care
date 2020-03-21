@@ -5,6 +5,7 @@ import {
   createNewCompany,
   createNewClient,
   createNewStaff,
+  createNewResidence,
   signUpUser,
   deleteCompanyAsync,
   deleteCompanyDependencies,
@@ -19,6 +20,7 @@ import {
   CLIENT,
   STAFF,
   COMPANY,
+  RESIDENCE,
   ON_DELETE_CLIENT,
   ON_DELETE_COMPANY,
   ON_DELETE_STAFF,
@@ -105,51 +107,74 @@ const managementModel = {
     state.clients = [];
     state.staff = [];
   }),
-  submitFormData: thunk(async (actions, payload, { getState, getStoreActions, getStoreState }) => {
-    // 1. Check if company exist
-    const { company, clients, staff } = getState().formData;
+  submitEntity: thunk(async (actions, payload, { getStoreActions }) => {
+    const { type, data } = payload;
     const setAlertOpen = getStoreActions().setAlertOpen;
-    let newCompany = companyExists(company, getStoreState().companies);
-    if (!newCompany) {
-      try {
-        newCompany = await createNewCompany(company);
-      } catch (error) {
-        console.error(`Failed to create company ${company.name}`);
-        console.error(`Error: ${error}`);
-        setAlertOpen({ open: true, success: false, message: 'Failed to create company. Check log for errors' });
-        return;
-      }
-    }
 
-    const companyId = newCompany.id;
-    try {
-      staff.forEach(await createNewStaff(companyId, setAlertOpen));
-    } catch (error) {
-      console.error(`Failed to create staff. Error: ${JSON.stringify(error)}`);
-      setAlertOpen({
-        open: true,
-        success: false,
-        message: 'Failed to create staff. Check log for errors.'
-      });
+    switch (type) {
+      case COMPANY:
+        try {
+          await createNewCompany(data);
+          setAlertOpen({ open: true, success: true, message: `Successfully created company ${data.name}` });
+          break;
+        } catch (error) {
+          console.error(`Failed to create company ${data.name}`);
+          console.error(`Error: ${error}`);
+          setAlertOpen({ open: true, success: false, message: 'Failed to create company. Check log for errors' });
+          break;
+        }
+      case STAFF:
+        try {
+          await createNewStaff(data);
+        } catch (error) {
+          console.error(`Failed to create staff ${data.firstName}. Error: ${JSON.stringify(error)}`);
+          setAlertOpen({
+            open: true,
+            success: false,
+            message: 'Failed to create staff. Check log for errors.'
+          });
+          break;
+        }
+        try {
+          await signUpUser(data);
+          setAlertOpen({ open: true, success: true, message: `Successfully created staff ${data.firstName}` });
+          break;
+        } catch (error) {
+          console.error(`Failed to add user to Cognito. Error: ${JSON.stringify(error)}`);
+          setAlertOpen({ open: true, success: false, message: 'Failed to ad user to Cognito. Check log for errors' });
+          break;
+        }
+      case CLIENT:
+        try {
+          await createNewClient(data);
+          setAlertOpen({ open: true, success: true, message: `Successfully created client ${data.firstName}` });
+          break;
+        } catch (error) {
+          console.error(`Failed to create client ${data.firstName}. Error: ${JSON.stringify(error)}`);
+          setAlertOpen({
+            open: true,
+            success: false,
+            message: 'Failed to create client. Check log for errors.'
+          });
+          break;
+        }
+      case RESIDENCE:
+        try {
+          await createNewResidence(data);
+          setAlertOpen({ open: true, success: true, message: `Successfully created residence ${data.name}` });
+          break;
+        } catch (error) {
+          console.error(`Failed to create client ${data.firstName}. Error: ${JSON.stringify(error)}`);
+          setAlertOpen({
+            open: true,
+            success: false,
+            message: 'Failed to create residence. Check log for errors.'
+          });
+          break;
+        }
+      default:
+        break;
     }
-
-    // Sign up
-    try {
-      staff.forEach(await signUpUser);
-    } catch (error) {
-      console.error(`Failed to add user to Cognito. Error: ${JSON.stringify(error)}`);
-      setAlertOpen({ open: true, success: false, message: 'Failed to ad user to Cognito. Check log for errors' });
-    }
-
-    // 3. Create every client
-    try {
-      clients.forEach(await createNewClient(companyId));
-    } catch (error) {
-      console.error(`Failed to create client. Error: ${JSON.stringify(error)}`);
-      setAlertOpen({ open: true, success: false, message: 'Failed to create client. Check log for errors' });
-    }
-
-    setAlertOpen({ open: true, success: true, message: 'Successfully submitted form' });
   }),
   deleteEntity: thunk(async (actions, payload, { getStoreActions, getStoreState }) => {
     const setAlertOpen = getStoreActions().setAlertOpen;

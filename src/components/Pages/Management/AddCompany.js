@@ -1,157 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { useForm } from 'react-hook-form';
+import { useForm, ErrorMessage } from 'react-hook-form';
+import { COMPANY } from 'utils/constants';
+import _ from 'lodash';
 
 // Matertial-UI imports
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-
-const filter = createFilterOptions();
+import Grid from '@material-ui/core/Grid';
+import { ButtonGroup, FormControl } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-  form: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-    width: 250
+  root: { marginTop: theme.spacing(1) },
+  formControl: {
+    marginTop: theme.spacing(1)
   },
-  formField: {
-    margin: theme.spacing(1)
+  buttonGroup: {
+    marginTop: theme.spacing(1)
   }
 }));
 
-export default function CompanyEditType() {
-  const [value, setValue] = React.useState(null);
-  const [open, toggleOpen] = React.useState(false);
-  const companies = useStoreState(state => state.companies);
-  const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
-  const handleClose = () => {
-    setDialogValue({
-      name: '',
-      url: ''
-    });
-
-    toggleOpen(false);
-  };
-
-  const [, setDialogValue] = React.useState({
-    name: '',
-    url: ''
-  });
-
-  return (
-    <>
-      <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-          if (typeof newValue === 'string') {
-            setTimeout(() => {
-              toggleOpen(true);
-              setDialogValue({
-                name: newValue,
-                url: ''
-              });
-            });
-            return;
-          }
-
-          if (newValue && newValue.inputValue) {
-            toggleOpen(true);
-            setDialogValue({
-              name: newValue.inputValue,
-              url: ''
-            });
-
-            return;
-          }
-
-          setValue(newValue);
-          setCompany(findCompany(companies, newValue));
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-          if (params.inputValue !== '') {
-            filtered.push({
-              inputValue: params.inputValue,
-              name: `Add "${params.inputValue}"`
-            });
-          }
-
-          return filtered;
-        }}
-        id='free-solo-dialog-demo'
-        options={companies}
-        getOptionLabel={option => {
-          // e.g value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option.name;
-        }}
-        renderOption={option => option.name}
-        freeSolo
-        renderInput={params => (
-          <TextField required name='company-name' {...params} label='Company name' variant='outlined' />
-        )}
-      />
-      <AddNewCompany open={open} handleClose={handleClose} />
-    </>
-  );
-}
+const filter = createFilterOptions();
 
 const findCompany = (companies, inputCompany) => {
   if (!inputCompany || !companies || !companies.length) return [];
   return companies.find(company => company.name === inputCompany.name);
 };
 
-const AddNewCompany = ({ open, handleClose }) => {
+export default function AddCompany() {
+  const companies = useStoreState(state => state.companies);
+  const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const classes = useStyles();
   const [active, setActive] = React.useState(true);
-  const { register, handleSubmit } = useForm();
-  const setCompany = useStoreActions(actions => actions.managementModel.setCompany);
-  const onSubmit = data => {
-    setCompany(data);
-    handleClose(true);
-  };
+  const { register, handleSubmit, reset, errors } = useForm();
 
+  const onSubmitHandle = data => {
+    if (_.isEmpty(errors)) {
+      submitEntity({ type: COMPANY, data });
+      reset();
+    }
+  };
+  const validateCompany = value => {
+    return !companies.some(company => company.name.toLowerCase().includes(value.toLowerCase()))
+      ? undefined
+      : `${value} company exists!`;
+  };
+  console.log(errors);
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle id='form-dialog-title'>Add a new company</DialogTitle>
-        <DialogContent>
-          <Box className={classes.form}>
-            <TextField
-              fullWidth
-              className={classes.formField}
-              autoFocus
-              margin='dense'
-              name='name'
-              inputRef={register}
-              label='Company Name'
-              type='text'
-              autoComplete='off'
-            />
-            <TextField
-              fullWidth
-              className={classes.formField}
-              margin='dense'
-              name='companyLogoUrl'
-              inputRef={register}
-              label='Logo URL'
-              autoComplete='off'
-            />
+    <>
+      <Typography gutterBottom variant='h5' component='h2'>
+        Company
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmitHandle)}>
+        <Grid container spacing={1}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <FormControl fullWidth className={classes.formControl}>
+              <TextField
+                required
+                inputRef={register({ required: true, validate: validateCompany })}
+                variant='outlined'
+                name='name'
+                label='Company Name'
+                autoComplete='off'
+              />
+              <ErrorMessage style={{ color: 'red' }} errors={errors} name='name' as='p' />
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <FormControl fullWidth className={classes.formControl}>
+              <TextField
+                required
+                variant='outlined'
+                name='companyLogoUrl'
+                inputRef={register({ required: true })}
+                label='Logo URL'
+                autoComplete='off'
+              />
+            </FormControl>
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControlLabel
               labelPlacement='start'
               control={
@@ -160,23 +92,23 @@ const AddNewCompany = ({ open, handleClose }) => {
                   inputRef={register}
                   checked={active}
                   onChange={event => setActive(event.target.checked)}
-                  name='active'
+                  name='isActive'
                   color='primary'
                 />
               }
               label='Active'
             />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            Cancel
-          </Button>
-          <Button type='submit' color='primary'>
-            Add
-          </Button>
-        </DialogActions>
+          </Grid>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <ButtonGroup fullWidth className={classes.buttonGroup}>
+              <Button color='primary'>Reset</Button>
+              <Button type='submit' color='primary'>
+                Add
+              </Button>
+            </ButtonGroup>
+          </Grid>
+        </Grid>
       </form>
-    </Dialog>
+    </>
   );
-};
+}

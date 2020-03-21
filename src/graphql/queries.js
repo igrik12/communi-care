@@ -15,6 +15,7 @@ export const getCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -67,6 +68,7 @@ export const getStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -109,6 +111,7 @@ export const listStaffs = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -156,10 +159,11 @@ export const getClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -197,7 +201,7 @@ export const listClients = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -206,15 +210,20 @@ export const listClients = /* GraphQL */ `
     }
   }
 `;
-export const getResidency = /* GraphQL */ `
-  query GetResidency($id: ID!) {
-    getResidency(id: $id) {
+export const getResidence = /* GraphQL */ `
+  query GetResidence($id: ID!) {
+    getResidence(id: $id) {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -231,7 +240,7 @@ export const getResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -239,17 +248,18 @@ export const getResidency = /* GraphQL */ `
     }
   }
 `;
-export const listResidencys = /* GraphQL */ `
-  query ListResidencys(
-    $filter: ModelResidencyFilterInput
+export const listResidences = /* GraphQL */ `
+  query ListResidences(
+    $filter: ModelResidenceFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listResidencys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listResidences(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -269,9 +279,27 @@ export const listResidencys = /* GraphQL */ `
 export const getAddress = /* GraphQL */ `
   query GetAddress($id: ID!) {
     getAddress(id: $id) {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
@@ -283,9 +311,14 @@ export const listAddresss = /* GraphQL */ `
   ) {
     listAddresss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       nextToken
     }
@@ -302,6 +335,7 @@ export const getClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -330,7 +364,7 @@ export const getClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -377,6 +411,7 @@ export const listClientRecords = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -431,6 +466,7 @@ export const getEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive

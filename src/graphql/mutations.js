@@ -18,6 +18,7 @@ export const createCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -55,6 +56,7 @@ export const updateCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -92,6 +94,7 @@ export const deleteCompany = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -124,6 +127,7 @@ export const createStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -164,6 +168,7 @@ export const updateStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -204,6 +209,7 @@ export const deleteStaff = /* GraphQL */ `
       username
       userType
       email
+      password
       phone_number
       clientRecords {
         items {
@@ -265,10 +271,11 @@ export const createClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -317,10 +324,11 @@ export const updateClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -369,10 +377,11 @@ export const deleteClient = /* GraphQL */ `
         }
         isActive
       }
-      residency {
+      residence {
         id
         name
         address {
+          id
           firstLine
           county
           postCode
@@ -388,18 +397,23 @@ export const deleteClient = /* GraphQL */ `
     }
   }
 `;
-export const createResidency = /* GraphQL */ `
-  mutation CreateResidency(
-    $input: CreateResidencyInput!
-    $condition: ModelResidencyConditionInput
+export const createResidence = /* GraphQL */ `
+  mutation CreateResidence(
+    $input: CreateResidenceInput!
+    $condition: ModelResidenceConditionInput
   ) {
-    createResidency(input: $input, condition: $condition) {
+    createResidence(input: $input, condition: $condition) {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -416,7 +430,7 @@ export const createResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -424,18 +438,23 @@ export const createResidency = /* GraphQL */ `
     }
   }
 `;
-export const updateResidency = /* GraphQL */ `
-  mutation UpdateResidency(
-    $input: UpdateResidencyInput!
-    $condition: ModelResidencyConditionInput
+export const updateResidence = /* GraphQL */ `
+  mutation UpdateResidence(
+    $input: UpdateResidenceInput!
+    $condition: ModelResidenceConditionInput
   ) {
-    updateResidency(input: $input, condition: $condition) {
+    updateResidence(input: $input, condition: $condition) {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -452,7 +471,7 @@ export const updateResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -460,18 +479,23 @@ export const updateResidency = /* GraphQL */ `
     }
   }
 `;
-export const deleteResidency = /* GraphQL */ `
-  mutation DeleteResidency(
-    $input: DeleteResidencyInput!
-    $condition: ModelResidencyConditionInput
+export const deleteResidence = /* GraphQL */ `
+  mutation DeleteResidence(
+    $input: DeleteResidenceInput!
+    $condition: ModelResidenceConditionInput
   ) {
-    deleteResidency(input: $input, condition: $condition) {
+    deleteResidence(input: $input, condition: $condition) {
       id
       name
       address {
+        id
         firstLine
         county
         postCode
+        residence {
+          id
+          name
+        }
       }
       client {
         id
@@ -488,7 +512,7 @@ export const deleteResidency = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -502,9 +526,27 @@ export const createAddress = /* GraphQL */ `
     $condition: ModelAddressConditionInput
   ) {
     createAddress(input: $input, condition: $condition) {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
@@ -514,9 +556,27 @@ export const updateAddress = /* GraphQL */ `
     $condition: ModelAddressConditionInput
   ) {
     updateAddress(input: $input, condition: $condition) {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
@@ -526,9 +586,27 @@ export const deleteAddress = /* GraphQL */ `
     $condition: ModelAddressConditionInput
   ) {
     deleteAddress(input: $input, condition: $condition) {
+      id
       firstLine
       county
       postCode
+      residence {
+        id
+        name
+        address {
+          id
+          firstLine
+          county
+          postCode
+        }
+        client {
+          id
+          firstName
+          lastName
+          dateOfBirth
+          isActive
+        }
+      }
     }
   }
 `;
@@ -546,6 +624,7 @@ export const createClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -574,7 +653,7 @@ export const createClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -619,6 +698,7 @@ export const updateClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -647,7 +727,7 @@ export const updateClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -692,6 +772,7 @@ export const deleteClientRecord = /* GraphQL */ `
         username
         userType
         email
+        password
         phone_number
         clientRecords {
           nextToken
@@ -720,7 +801,7 @@ export const deleteClientRecord = /* GraphQL */ `
           companyLogoUrl
           isActive
         }
-        residency {
+        residence {
           id
           name
         }
@@ -776,6 +857,7 @@ export const createEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -832,6 +914,7 @@ export const updateEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
@@ -888,6 +971,7 @@ export const deleteEntry = /* GraphQL */ `
           username
           userType
           email
+          password
           phone_number
           permissions
           isActive
