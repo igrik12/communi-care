@@ -940,27 +940,3 @@ export const onDeleteEntry = /* GraphQL */ `
     }
   }
 `;
-export const onCreatePermission = /* GraphQL */ `
-  subscription OnCreatePermission {
-    onCreatePermission {
-      title
-      value
-    }
-  }
-`;
-export const onUpdatePermission = /* GraphQL */ `
-  subscription OnUpdatePermission {
-    onUpdatePermission {
-      title
-      value
-    }
-  }
-`;
-export const onDeletePermission = /* GraphQL */ `
-  subscription OnDeletePermission {
-    onDeletePermission {
-      title
-      value
-    }
-  }
-`;

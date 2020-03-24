@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm, ErrorMessage } from 'react-hook-form';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { STAFF } from 'utils/constants';
+import permissions from 'utils/permissions.json';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,7 +34,6 @@ const AddStaff = () => {
   const [allPermissions, setAllPermissions] = React.useState([]);
   const { register, handleSubmit, setValue, reset, errors } = useForm();
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
-  const permissions = useStoreState(state => state.permissions);
   const companies = useStoreState(state => state.companies);
   const staff = useStoreState(state => state.staff);
 

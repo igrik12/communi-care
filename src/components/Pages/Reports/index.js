@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listClientRecordsWithClient } from '../../graphql/customQueries';
+import { listClientRecordsWithClient } from 'graphql/customQueries';
 import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper, withWidth } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
-import Summary from '../Shared/Summary';
+import Summary from './Summary';
 
 const convertRecords = records =>
-  records.map(record => ({ ...record, fullName: `${record.client.firstName}${record.client.lastName}` }));
+  records.map(record => ({ ...record, fullName: `${record.client.firstName.trim()} ${record.client.lastName.trim()}` }));
 
 function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);
   const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
   const setSelectedRecord = useStoreActions(actions => actions.clientRecordModel.setSelectedRecord);
+
   useEffect(() => {
     const query = async () => {
       const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
@@ -24,7 +25,6 @@ function CareReports() {
   }, [setRecords, setSelectedRecord]);
 
   const converted = convertRecords(records);
-  console.log(converted)
 
   const options = {
     filter: true,
@@ -47,7 +47,7 @@ function CareReports() {
           columns={[
             {
               name: 'fullName',
-              label: 'Client Name',
+              label: 'Client Name'
             },
             {
               name: 'createdAt',

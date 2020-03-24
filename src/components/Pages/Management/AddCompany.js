@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, ErrorMessage } from 'react-hook-form';
 import { COMPANY } from 'utils/constants';
 import _ from 'lodash';
 
 // Matertial-UI imports
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -25,13 +24,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const filter = createFilterOptions();
-
-const findCompany = (companies, inputCompany) => {
-  if (!inputCompany || !companies || !companies.length) return [];
-  return companies.find(company => company.name === inputCompany.name);
-};
-
 export default function AddCompany() {
   const companies = useStoreState(state => state.companies);
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
@@ -50,7 +42,6 @@ export default function AddCompany() {
       ? undefined
       : `${value} company exists!`;
   };
-  console.log(errors);
   return (
     <>
       <Typography gutterBottom variant='h5' component='h2'>

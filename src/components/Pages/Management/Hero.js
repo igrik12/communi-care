@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import EditEntity from './EditEntity';
 import { STAFF, COMPANY, CLIENT, RESIDENCE } from 'utils/constants';
-import _ from 'lodash';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Box, Grid } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -25,9 +24,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
+import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
@@ -60,6 +58,9 @@ const useStyles = makeStyles(theme => ({
   titleRoot: {
     marginBottom: theme.spacing(1),
     marginLeft: theme.spacing(2)
+  },
+  paper: {
+    height: '100%'
   },
   logoText: {
     margin: theme.spacing(1),
@@ -101,39 +102,47 @@ export default function Hero() {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={1}>
-              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
-                <TextField
-                  onChange={onStaffChange(staff, setFilteredStaff)}
-                  className={classes.titleRoot}
-                  label='Search staff'
-                />
-                <StaffList staff={filteredStaff} />
+              <Grid item lg={6} xl={6} md={6} sm={12} xs={12}>
+                <Paper elevation={1} className={classes.paper}>
+                  <TextField
+                    onChange={onStaffChange(staff, setFilteredStaff)}
+                    className={classes.titleRoot}
+                    label='Search staff'
+                  />
+                  <StaffList staff={filteredStaff} />
+                </Paper>
               </Grid>
-              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
-                <TextField
-                  onChange={onClientChange(clients, setFilteredClients)}
-                  className={classes.titleRoot}
-                  label='Search client'
-                />
-                <ClientList clients={filteredClients} />
+              <Grid item lg={6} xl={6} md={6} sm={12} xs={12}>
+                <Paper elevation={1} className={classes.paper}>
+                  <TextField
+                    onChange={onClientChange(clients, setFilteredClients)}
+                    className={classes.titleRoot}
+                    label='Search client'
+                  />
+                  <ClientList clients={filteredClients} />
+                </Paper>
               </Grid>
-              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
-                <TextField
-                  onChange={onCompanyChange(companies, setFilteredCompanies)}
-                  className={classes.titleRoot}
-                  label='Search company'
-                  autoComplete='off'
-                />
-                <CompanyList companies={filteredCompanies} />
+              <Grid item lg={6} xl={6} md={6} sm={12} xs={12}>
+                <Paper elevation={1} className={classes.paper}>
+                  <TextField
+                    onChange={onCompanyChange(companies, setFilteredCompanies)}
+                    className={classes.titleRoot}
+                    label='Search company'
+                    autoComplete='off'
+                  />
+                  <CompanyList companies={filteredCompanies} />
+                </Paper>
               </Grid>
-              <Grid item lg={6} xl={4} md={6} sm={12} xs={12}>
-                <TextField
-                  onChange={onResidenceChange(residences, setFilteredResidences)}
-                  className={classes.titleRoot}
-                  label='Search residence'
-                  autoComplete='off'
-                />
-                <ResidenceList residences={filteredResidences} />
+              <Grid item lg={6} xl={6} md={6} sm={12} xs={12}>
+                <Paper elevation={1} className={classes.paper}>
+                  <TextField
+                    onChange={onResidenceChange(residences, setFilteredResidences)}
+                    className={classes.titleRoot}
+                    label='Search residence'
+                    autoComplete='off'
+                  />
+                  <ResidenceList residences={filteredResidences} />
+                </Paper>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
@@ -265,33 +274,6 @@ const ResidenceList = ({ residences }) => {
   );
 };
 
-const ConfirmEntityDelete = ({ openDelete, setOpenDelete, entity }) => {
-  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
-
-  const handleClose = () => {
-    setOpenDelete({ open: false });
-  };
-  const handleDelete = () => {
-    deleteEntity({ type: entity, id: openDelete.id });
-    setOpenDelete({ open: false });
-  };
-  return (
-    <>
-      <Dialog onClose={handleClose} open={openDelete.open}>
-        <DialogTitle>Are you sure you want to delete {entity.toLowerCase()}?</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            No
-          </Button>
-          <Button onClick={handleDelete} color='primary' autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
 const CompanyList = ({ companies }) => {
   const classes = useStyles();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
@@ -335,6 +317,33 @@ const CompanyList = ({ companies }) => {
         })}
       </List>
       <ConfirmEntityDelete openDelete={openDelete} setOpenDelete={setOpenDelete} entity={COMPANY} />
+    </>
+  );
+};
+
+const ConfirmEntityDelete = ({ openDelete, setOpenDelete, entity }) => {
+  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
+
+  const handleClose = () => {
+    setOpenDelete({ open: false });
+  };
+  const handleDelete = () => {
+    deleteEntity({ type: entity, id: openDelete.id });
+    setOpenDelete({ open: false });
+  };
+  return (
+    <>
+      <Dialog onClose={handleClose} open={openDelete.open}>
+        <DialogTitle>Are you sure you want to delete {entity.toLowerCase()}?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} color='primary'>
+            No
+          </Button>
+          <Button onClick={handleDelete} color='primary' autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

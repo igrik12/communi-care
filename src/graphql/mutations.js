@@ -1003,36 +1003,3 @@ export const deleteEntry = /* GraphQL */ `
     }
   }
 `;
-export const createPermission = /* GraphQL */ `
-  mutation CreatePermission(
-    $input: CreatePermissionInput!
-    $condition: ModelPermissionConditionInput
-  ) {
-    createPermission(input: $input, condition: $condition) {
-      title
-      value
-    }
-  }
-`;
-export const updatePermission = /* GraphQL */ `
-  mutation UpdatePermission(
-    $input: UpdatePermissionInput!
-    $condition: ModelPermissionConditionInput
-  ) {
-    updatePermission(input: $input, condition: $condition) {
-      title
-      value
-    }
-  }
-`;
-export const deletePermission = /* GraphQL */ `
-  mutation DeletePermission(
-    $input: DeletePermissionInput!
-    $condition: ModelPermissionConditionInput
-  ) {
-    deletePermission(input: $input, condition: $condition) {
-      title
-      value
-    }
-  }
-`;

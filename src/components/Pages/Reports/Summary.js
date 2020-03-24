@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {
@@ -13,10 +13,10 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getPlainEntry } from '../../graphql/customQueries';
+import { getPlainEntry } from 'graphql/customQueries';
 import { useStoreState } from 'easy-peasy';
 import _ from 'lodash';
-import { hasPermissions } from '../../utils/permissions';
+import { hasPermissions } from 'utils/permissions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,11 +30,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(18),
     textAlign: 'center'
   },
-  icon: {
-    verticalAlign: 'bottom',
-    height: 20,
-    width: 20
-  },
   details: {
     alignItems: 'center'
   },
@@ -42,46 +37,37 @@ const useStyles = makeStyles(theme => ({
   column: {
     flexBasis: '33.33%',
     marginLeft: 10
-  },
-  helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
-    padding: theme.spacing(1, 2)
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
   }
 }));
+
 export default function Summary() {
   const classes = useStyles();
   const [entries, setEntries] = useState([]);
   const selectedRecord = useStoreState(state => state.clientRecordModel.selectedRecord);
   const user = useStoreState(state => state.user);
 
+  const fetchRecords = useCallback(async selectedRecord => {
+    const ret = await API.graphql(graphqlOperation(getPlainEntry, { id: selectedRecord.entry.id }));
+    const mappedEntries = [];
+    _.forIn(ret.data.getEntry, (value, key) => {
+      if (key === 'id') {
+        mappedEntries.push({ title: key, content: value });
+        return;
+      }
+      const newKey = key
+        .replace(/^\w/, c => c.toUpperCase())
+        .split(/(?=[A-Z])/)
+        .join(' ');
+      mappedEntries.push({ title: newKey, content: value });
+    });
+    setEntries(mappedEntries);
+  }, []);
+
   useEffect(() => {
     if (selectedRecord) {
-      const fetchEntries = async () => {
-        const ret = await API.graphql(graphqlOperation(getPlainEntry, { id: selectedRecord.entry.id }));
-        const mappedEntries = [];
-        _.forIn(ret.data.getEntry, (value, key) => {
-          if (key === 'id') {
-            mappedEntries.push({ title: key, content: value });
-            return;
-          }
-          const newKey = key
-            .replace(/^\w/, c => c.toUpperCase())
-            .split(/(?=[A-Z])/)
-            .join(' ');
-          mappedEntries.push({ title: newKey, content: value });
-        });
-        setEntries(mappedEntries);
-      };
-      fetchEntries();
+      fetchRecords(selectedRecord);
     }
-  }, [selectedRecord]);
+  }, [selectedRecord, fetchRecords]);
 
   if (!selectedRecord) return null;
   const hasPerm = hasPermissions(user, 'editRecordSummary');
@@ -89,7 +75,7 @@ export default function Summary() {
   return (
     <div className={classes.root}>
       <DataPanel
-        name={selectedRecord.client.name}
+        name={selectedRecord.client.firstName}
         createdAt={selectedRecord.createdAt}
         entryType={selectedRecord.entryType}
       >
@@ -118,7 +104,7 @@ export default function Summary() {
 
 const DataPanel = ({ children, name, createdAt, entryType }) => {
   const user = useStoreState(state => state.user);
-  const hasPerm = hasPermissions(user, 'saveRecordSummary');
+  const hasPerm = hasPermissions(user, 'editRecordSummary');
   const classes = useStyles();
   return (
     <ExpansionPanel elevation={3} defaultExpanded>

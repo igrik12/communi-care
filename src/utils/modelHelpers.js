@@ -34,6 +34,8 @@ import {
   CLIENT
 } from 'utils/constants';
 
+import { hashPassword } from './helpers';
+
 /**
  *
  * @param {function} action called upon subsription trigger
@@ -99,7 +101,10 @@ export const staffCreateSubscribe = action => {
   });
   return subscription;
 };
-
+/**
+ *
+ * @param {Object} subscriptions
+ */
 export const subscribe = subscriptions => {
   const subs = [];
   subscriptions.forEach(subscription => {
@@ -157,6 +162,14 @@ export const createNewStaff = async staffData => {
     companyId,
     isActive
   } = staffData;
+  let hashedPassword;
+  
+  try {
+    hashedPassword = await hashPassword(password);
+  } catch (error) {
+    throw Error(`Faile to create password. ${error}`);
+  }
+
   const details = {
     input: {
       firstName,
@@ -165,7 +178,7 @@ export const createNewStaff = async staffData => {
       userType,
       isActive,
       email,
-      password,
+      password: hashedPassword,
       phone_number,
       staffCompanyId: companyId,
       permissions: permissions ? permissions.map(perm => perm.value) : []

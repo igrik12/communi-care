@@ -1,7 +1,6 @@
-import { action, computed, thunk, actionOn } from 'easy-peasy';
+import { action, computed, thunk, memo } from 'easy-peasy';
 import store from 'store';
 import {
-  companyExists,
   createNewCompany,
   createNewClient,
   createNewStaff,
@@ -14,6 +13,7 @@ import {
   subscribe,
   updateEntityAsync
 } from 'utils/modelHelpers';
+
 import { update } from 'utils/helpers';
 
 import {
@@ -56,10 +56,12 @@ const subscriptions = actions => [
   }
 ];
 
+const memoisedSubscriptions = memo(subscriptions, 2);
+
 const managementModel = {
   subscriptions: [],
   setupSubscription: action((state, payload) => {
-    const subs = subscriptions(store.getActions());
+    const subs = memoisedSubscriptions(store.getActions());
     state.subscriptions = subscribe(subs);
   }),
   unsubscribe: action((state, payload) => {
@@ -191,16 +193,17 @@ const managementModel = {
           }
           getStoreActions().removeCompany(payload);
           setAlertOpen({ open: true, success: true, message: 'Successfully deleted company' });
+          break;
         case CLIENT:
           await deleteClientAsync(id);
-          return;
+          break;
         case STAFF:
           await deleteStaffAsync(id);
           removeStaff(id);
-          return;
+          break;
         default:
           console.error('Unknown delete type provided');
-          return;
+          break;
       }
     } catch (error) {
       setAlertOpen({ open: true, success: false, message: 'Failed to delete company. Check console for errors' });
