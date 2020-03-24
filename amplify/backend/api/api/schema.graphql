@@ -73,11 +73,6 @@ type Entry @model {
   clientRecord: ClientRecord @connection(name: "ClientEntry")
 }
 
-type Permission @model {
-  title: String!
-  value: String!
-}
-
 enum UserType {
   user
   admin

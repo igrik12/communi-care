@@ -11,20 +11,22 @@ import {
   ConfirmSignUp,
   Loading
 } from 'aws-amplify-react';
+import ClientRecord from './components/Pages/ClientRecord';
+import CareReports from 'components/Pages/Reports';
+import Management from './components/Pages/Management';
+import Layout from './components/Layout';
+import { Auth } from 'aws-amplify';
+import PrivateRoute from './components/Shared/PrivateRoute';
+import Unauthorised from 'components/Shared/Unauthorised';
+
+// MUI Imports
 import { MuiThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 import CssBaseLine from '@material-ui/core/CssBaseline';
-import ClientRecord from './components/Pages/ClientRecord';
-import CareReports from './components/Pages/CareReports';
-import Management from './components/Pages/Management';
-import Layout from './components/Layout';
-import { isDeveloper } from './utils/permissions';
-import { Auth } from 'aws-amplify';
 
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
-  const userGroups = useStoreState(state => state.userGroups);
   const getUser = useStoreActions(actions => actions.getUser);
   const fetchAll = useStoreActions(actions => actions.fetchAll);
   let theme = useMemo(() => {
@@ -92,10 +94,17 @@ function App() {
       <CssBaseLine />
       <Switch>
         <Layout>
-          <Route path='/record' component={ClientRecord} />
-          <Route path='/reports' component={CareReports} />
-          {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/record' />
+          <PrivateRoute path='/record' permission='recordsPage'>
+            <ClientRecord />
+          </PrivateRoute>
+          <PrivateRoute path='/reports' permission='reportsPage'>
+            <CareReports />
+          </PrivateRoute>
+          <PrivateRoute path='/management' permission='managementPage'>
+            <Management />
+          </PrivateRoute>
+          <Route path='/unauthorised' component={Unauthorised} />
+          <Redirect to='record' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

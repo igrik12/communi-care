@@ -21,7 +21,7 @@ export default function Management() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [setupSubscription, unsubscribe]);
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>

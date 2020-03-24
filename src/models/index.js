@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listPermissions, listClients, listResidences } from 'graphql/queries';
+import { listStaffs, listClients, listResidences } from 'graphql/queries';
 import { listCompanysWithStaffAndClients } from 'graphql/customQueries';
 import { updateStaff } from 'graphql/mutations';
 
@@ -130,17 +130,6 @@ const mainModel = {
         actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
         console.error(`Failed to retrieve all clients. ${error}`);
-      }
-    }
-  ),
-  getPermissions: thunkOn(
-    actions => actions.fetchAll,
-    async actions => {
-      try {
-        const result = await API.graphql(graphqlOperation(listPermissions));
-        actions.setPermissions(result.data.listPermissions.items);
-      } catch (error) {
-        console.error(`Failed to retrieve permissions. Error: ${error}`);
       }
     }
   ),

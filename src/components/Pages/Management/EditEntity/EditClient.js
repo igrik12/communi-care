@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useStoreState } from 'easy-peasy';
 import _ from 'lodash';
 
 export default function EditClient() {

@@ -528,26 +528,3 @@ export const listEntrys = /* GraphQL */ `
     }
   }
 `;
-export const getPermission = /* GraphQL */ `
-  query GetPermission($id: ID!) {
-    getPermission(id: $id) {
-      title
-      value
-    }
-  }
-`;
-export const listPermissions = /* GraphQL */ `
-  query ListPermissions(
-    $filter: ModelPermissionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPermissions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        title
-        value
-      }
-      nextToken
-    }
-  }
-`;

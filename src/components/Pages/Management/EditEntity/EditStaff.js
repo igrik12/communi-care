@@ -3,17 +3,19 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { STAFF } from 'utils/constants';
+import permissions from 'utils/permissions.json';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem, Button, Select } from '@material-ui/core';
+import { MenuItem, Button, Select, Grid } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/AutoComplete';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minWidth: 250
+    minWidth: 350
   },
   form: {
     display: 'flex',
@@ -38,9 +40,10 @@ export default function EditStaff() {
   const [currentStaff, setCurrentStaff] = useState();
   const editOpen = useStoreState(state => state.managementModel.editOpen);
   const staff = useStoreState(state => state.staff);
+  const [allPermissions, setAllPermissions] = React.useState([]);
   const companies = useStoreState(state => state.companies);
   const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, setValue, getValues } = useForm();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
 
   useEffect(() => {
@@ -50,8 +53,15 @@ export default function EditStaff() {
     setCompany(companyMatch);
   }, [editOpen.id, companies, staff]);
 
+  useEffect(() => {
+    if (currentStaff) {
+      const common = _.intersectionWith(permissions, currentStaff.permissions, (a, b) => a.value === b);
+      setAllPermissions(common);
+    }
+  }, [currentStaff, setValue, setAllPermissions]);
+
   const handleOnSubmit = data => {
-    const updateDetails = { id: currentStaff.id, ...data };
+    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map(perm => perm.value) };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
   };
@@ -129,6 +139,23 @@ export default function EditStaff() {
             control={control}
             defaultValue={currentStaff.userType}
           />
+        </FormControl>
+        <FormControl variant='outlined'>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Autocomplete
+              className={classes.textField}
+              options={permissions}
+              multiple
+              disableCloseOnSelect
+              onChange={(e, data) => {
+                setAllPermissions(data);
+              }}
+              value={allPermissions}
+              renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
+              getOptionLabel={option => option.title}
+              renderInput={params => <TextField {...params} label='Permission' variant='outlined' />}
+            />
+          </Grid>
         </FormControl>
         <div className={classes.btnGroup}>
           <Button onClick={() => setEditOpen({ open: false })} autoFocus>
