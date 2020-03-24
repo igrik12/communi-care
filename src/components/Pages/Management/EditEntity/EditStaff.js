@@ -43,7 +43,7 @@ export default function EditStaff() {
   const [allPermissions, setAllPermissions] = React.useState([]);
   const companies = useStoreState(state => state.companies);
   const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
-  const { register, handleSubmit, control, setValue } = useForm();
+  const { register, handleSubmit, control, setValue, getValues } = useForm();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
 
   useEffect(() => {
@@ -56,13 +56,12 @@ export default function EditStaff() {
   useEffect(() => {
     if (currentStaff) {
       const common = _.intersectionWith(permissions, currentStaff.permissions, (a, b) => a.value === b);
-      setValue('permissions', common);
       setAllPermissions(common);
     }
   }, [currentStaff, setValue, setAllPermissions]);
 
   const handleOnSubmit = data => {
-    const updateDetails = { id: currentStaff.id, ...data };
+    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map(perm => perm.value) };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
   };
@@ -149,14 +148,12 @@ export default function EditStaff() {
               multiple
               disableCloseOnSelect
               onChange={(e, data) => {
-                console.log(data);
-                setValue('permissions', data);
                 setAllPermissions(data);
               }}
               value={allPermissions}
               renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
               getOptionLabel={option => option.title}
-              renderInput={params => <TextField {...params} name='permissions' label='Permission' variant='outlined' />}
+              renderInput={params => <TextField {...params} label='Permission' variant='outlined' />}
             />
           </Grid>
         </FormControl>
