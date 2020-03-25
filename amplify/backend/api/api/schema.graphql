@@ -45,7 +45,7 @@ type Address @model {
   firstLine: String!
   county: String!
   postCode: String!
-  residence: Residence @connection(name:"ResidenceAddress")
+  residence: Residence @connection(name: "ResidenceAddress")
 }
 
 type ClientRecord @model {

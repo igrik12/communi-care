@@ -5,14 +5,17 @@ import { COMPANY } from 'utils/constants';
 import _ from 'lodash';
 
 // Matertial-UI imports
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { ButtonGroup, FormControl } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Business from '@material-ui/icons/Business';
+import Link from '@material-ui/icons/Link';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -54,6 +57,13 @@ export default function AddCompany() {
               <TextField
                 required
                 inputRef={register({ required: true, validate: validateCompany })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Business />
+                    </InputAdornment>
+                  )
+                }}
                 variant='outlined'
                 name='name'
                 label='Company Name'
@@ -69,6 +79,13 @@ export default function AddCompany() {
                 variant='outlined'
                 name='companyLogoUrl'
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Link />
+                    </InputAdornment>
+                  )
+                }}
                 label='Logo URL'
                 autoComplete='off'
               />

@@ -16,6 +16,8 @@ import Grid from '@material-ui/core/Grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -61,6 +63,13 @@ const AddClient = () => {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <AccountCircle />
+                    </InputAdornment>
+                  )
+                }}
                 label='First Name'
                 name='firstName'
                 variant='outlined'
@@ -74,6 +83,13 @@ const AddClient = () => {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <AccountCircle />
+                    </InputAdornment>
+                  )
+                }}
                 label='Last Name'
                 name='lastName'
                 variant='outlined'
