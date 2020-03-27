@@ -2,16 +2,11 @@ import { action, thunk, computed } from 'easy-peasy';
 import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
-import _ from 'lodash';
 
 const clientRecordModel = {
   records: [],
   setRecords: action((state, payload) => {
     state.records = payload;
-  }),
-  alertOpen: { open: false, success: true, message: null },
-  setAlertOpen: action((state, payload) => {
-    state.alertOpen = payload;
   }),
   saveRecordDisabled: computed(state => {
     return (
@@ -47,13 +42,13 @@ const clientRecordModel = {
   setEntry: action((state, payload) => {
     state.record.entry[payload.fieldId] = payload.value;
   }),
-  saveRecord: thunk(async (actions, payload, { getState, getStoreState }) => {
+  saveRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
     const { clientId, shift, recordDate, entry } = getState().record;
-
+    const setAlertOpen = getStoreActions().setAlertOpen;
     const recordDetails = {
       clientRecordStaffId: getStoreState().staff.id,
       clientRecordClientId: clientId,
-      date: recordDate,
+      createdAt: recordDate,
       shift: shift,
       entryType: payload.entryType
     };
@@ -61,12 +56,10 @@ const clientRecordModel = {
     try {
       record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
       console.error(error);
       return;
     }
-
-    console.log('Created record', record.data);
 
     const entryDetails = {
       entryClientRecordId: record.data.createClientRecord.id,
@@ -77,13 +70,10 @@ const clientRecordModel = {
     try {
       retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
       console.error(error);
       return;
     }
-
-    console.log('Created entry', retEntry.data);
-
 
     const recordUpdate = {
       id: record.data.createClientRecord.id,
@@ -92,9 +82,9 @@ const clientRecordModel = {
     try {
       await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
       actions.resetRecord();
-      actions.setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
+      setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
     } catch (error) {
-      actions.setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
       console.error(error);
       return;
     }

@@ -1,1 +1,8 @@
-[{ "username": "smeadmin", "type": "admin", "permissions": ["editRecordSummary", "saveRecordSummary"] }]
+[
+  { "title": "Edit Record Summary", "value": "editRecordSummary" },
+  { "title": "Records Page", "value": "recordsPage" },
+  { "title": "Reports Page", "value": "reportsPage" },
+  { "title": "Management Page", "value": "managementPage" },
+  { "title": "Save Record", "value": "saveRecord" },
+  { "title": "Edit Record", "value": "editRecord" }
+]

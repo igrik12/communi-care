@@ -3,12 +3,13 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
   listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      date
+      createdAt
       shift
       entryType
       client {
-        name
         id
+        firstName
+        lastName
       }
       entry {
         id
@@ -18,7 +19,6 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
   }
 }
 `;
-
 
 export const getPlainEntry = /* GraphQL */ `
   query GetEntry($id: ID!) {
@@ -38,21 +38,88 @@ export const getPlainEntry = /* GraphQL */ `
 `;
 
 export const getStaffByUsername = /* GraphQL */ `
-  query GetStaff($userName: String!) {
-    getStaff(userName: $userName) {
+  query GetStaff($username: String!) {
+    getStaff(username: $username) {
       id
-      userName
+      username
       userType
       clientRecords {
         items {
           id
-          date
+          createdAt
           status
           shift
           entryType
         }
         nextToken
       }
+    }
+  }
+`;
+
+export const getCompanyWithDependencyIds = `
+query GetCompany($id: ID!) {
+  getCompany(id: $id) {
+    id
+    name
+    companyLogoUrl
+    staff {
+      items {
+        id
+        username
+        userType
+        email
+        phone_number
+        permissions
+      }
+      nextToken
+    }
+    client {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+}`;
+
+export const listCompanysWithStaffAndClients = /* GraphQL */ `
+  query ListCompanys($filter: ModelCompanyFilterInput, $limit: Int, $nextToken: String) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        companyLogoUrl
+        isActive
+        staff {
+          items {
+            firstName
+            lastName
+            username
+            userType
+            email
+            phone_number
+            password
+            isActive
+            permissions
+            id
+          }
+          nextToken
+        }
+        name
+        client {
+          items {
+            id
+            firstName
+            lastName
+            dateOfBirth
+            isActive
+          }
+          nextToken
+        }
+      }
+      nextToken
     }
   }
 `;

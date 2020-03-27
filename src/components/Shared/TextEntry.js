@@ -11,7 +11,6 @@ export default function TextEntry({ field }) {
       <Paper elevation={3}>
         <TextField
           onChange={event => setRecord({ fieldId: field.fieldId, value: event.target.value })}
-          id='outlined-multiline-static'
           label={field.label}
           multiline
           fullWidth

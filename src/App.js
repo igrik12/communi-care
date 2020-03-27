@@ -8,29 +8,28 @@ import {
   VerifyContact,
   ForgotPassword,
   RequireNewPassword,
-  ConfirmSignUp
+  ConfirmSignUp,
+  Loading
 } from 'aws-amplify-react';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { blue, deepPurple } from '@material-ui/core/colors';
-import CssBaseLine from '@material-ui/core/CssBaseline';
-import ClientRecord from './components/Pages/ClientRecord';
-import CareReports from './components/Pages/CareReports';
+import Records from './components/Pages/Records';
+import CareReports from 'components/Pages/Reports';
 import Management from './components/Pages/Management';
 import Layout from './components/Layout';
-import { isDeveloper } from './utils/permissions';
-import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
-import { listStaffs, listClients } from './graphql/queries';
-import { createStaff, createClient } from './graphql/mutations';
+import { Auth } from 'aws-amplify';
+import PrivateRoute from './components/Shared/PrivateRoute';
+import Unauthorised from 'components/Shared/Unauthorised';
 
-const fakeClients = ['Bob', 'John', 'George', 'Amy'];
+// MUI Imports
+import { MuiThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
+import CssBaseLine from '@material-ui/core/CssBaseline';
 
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
-  const userGroups = useStoreState(state => state.userGroups);
-  const setStaff = useStoreActions(actions => actions.setStaff);
-  const getStaff = useStoreActions(actions => actions.getStaff);
-  const theme = useMemo(() => {
+  const getUser = useStoreActions(actions => actions.getUser);
+  const fetchAll = useStoreActions(actions => actions.fetchAll);
+  let theme = useMemo(() => {
     return createMuiTheme({
       overrides: {
         MUIDataTable: {
@@ -42,10 +41,6 @@ function App() {
             height: 'calc(100% - 128px)'
           }
         }
-      },
-      toolBar: {
-        dark: deepPurple[800],
-        light: blue[500]
       },
       palette: {
         type: themeColor,
@@ -59,65 +54,57 @@ function App() {
           main: '#DB2828',
           contrastText: '#ffcc00'
         },
-        fontFamily: ['Roboto', 'sans-serif']
+
+        typography: {
+          fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"'
+          ].join(',')
+        }
       }
     });
   }, [themeColor]);
 
+  theme = responsiveFontSizes(theme);
+
   useEffect(() => {
     const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
     setUserGroups(groups);
-  }, []);
+    fetchAll();
+  }, [setUserGroups, fetchAll]);
 
-  //This is temporary hack for development user management
   useEffect(() => {
-    const apiCall = async () => {
-      const user = Auth.user;
-      const { username } = Auth.user;
+    const user = Auth.user;
+    const { username } = Auth.user;
+    const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
+    let userType = groups ? groups[0] : 'user';
+    getUser({ username, userType });
+  }, [getUser]);
 
-      const groups = user.signInUserSession.accessToken.payload['cognito:groups'];
-      let userType = groups ? groups[0] : 'user';
-
-      const filterCondition = { filter: { userName: { eq: username } } };
-      let result;
-      try {
-        result = await API.graphql(graphqlOperation(listStaffs, filterCondition));
-      } catch (error) {
-        throw Error('Failed to retrieve staff list!', error);
-      }
-
-      if (!result.data.listStaffs.items.length) {
-        const inputDetails = { input: { username, userType } };
-        try {
-          const ret = await API.graphql(graphqlOperation(createStaff, inputDetails));
-          setStaff(ret.data.createStaff);
-        } catch (error) {
-          throw Error('Failed to create new staff!', error);
-        }
-      } else {
-        getStaff({ username, userType });
-      }
-
-      // Temp to populate fake clients to DB
-      const res = await API.graphql(graphqlOperation(listClients));
-      if (!res.data.listClients.items.length) {
-        fakeClients.forEach(async client => {
-          const clientDetails = { input: { name: client } };
-          await API.graphql(graphqlOperation(createClient, clientDetails));
-        });
-      }
-    };
-    apiCall();
-  }, []);
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseLine />
       <Switch>
         <Layout>
-          <Route path='/record' component={ClientRecord} />
-          <Route path='/reports' component={CareReports} />
-          {isDeveloper(userGroups) && <Route path='/management' component={Management} />}
-          <Redirect from='/' to='/record' />
+          <PrivateRoute path='/record' permission='recordsPage'>
+            <Records />
+          </PrivateRoute>
+          <PrivateRoute path='/reports' permission='reportsPage'>
+            <CareReports />
+          </PrivateRoute>
+          <PrivateRoute path='/management' permission='managementPage'>
+            <Management />
+          </PrivateRoute>
+          <Route path='/unauthorised' component={Unauthorised} />
+          <Redirect to='management' />
         </Layout>
       </Switch>
     </MuiThemeProvider>
@@ -130,5 +117,6 @@ export default withAuthenticator(App, false, [
   <VerifyContact />,
   <ForgotPassword />,
   <RequireNewPassword />,
-  <ConfirmSignUp />
+  <ConfirmSignUp />,
+  <Loading />
 ]);

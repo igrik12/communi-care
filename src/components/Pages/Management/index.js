@@ -1,13 +1,12 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
+import { useStoreActions } from 'easy-peasy';
 // Material-UI imports
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Hero from './Hero';
-import Summary from './Summary';
-import CreateEdit from './CreateEdit';
+import CrateEditManagement from './CrateEditManagement';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1
   }
@@ -15,6 +14,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function Management() {
   const classes = useStyles();
+  const setupSubscription = useStoreActions(actions => actions.managementModel.setupSubscription);
+  const unsubscribe = useStoreActions(actions => actions.managementModel.unsubscribe);
+  useEffect(() => {
+    setupSubscription();
+    return () => {
+      unsubscribe();
+    };
+  }, [setupSubscription, unsubscribe]);
   return (
     <div className={classes.root}>
       <Grid container spacing={1}>
@@ -23,11 +30,8 @@ export default function Management() {
         </Grid>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Grid container spacing={1}>
-            <Grid item lg={5} md={5} sm={6} xs={6}>
-              <CreateEdit />
-            </Grid>
-            <Grid item lg={7} md={7} sm={6} xs={6}>
-              <Summary />
+            <Grid item lg={12} md={12} sm={12} xs={12}>
+              <CrateEditManagement />
             </Grid>
           </Grid>
         </Grid>
