@@ -1,0 +1,93 @@
+type Company @model {
+  id: ID!
+  name: String!
+  companyLogoUrl: String!
+  staff: [Staff]! @connection(name: "CompanyStaff")
+  client: [Client]! @connection(name: "CompanyClients")
+  isActive: Boolean!
+}
+
+type Staff @model {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  userType: UserType
+  email: AWSEmail!
+  password: String!
+  phone_number: AWSPhone!
+  clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
+  company: Company @connection(name: "CompanyStaff")
+  permissions: [String]
+  isActive: Boolean!
+}
+
+type Client @model {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  dateOfBirth: AWSDateTime!
+  isActive: Boolean!
+  clientRecords: [ClientRecord] @connection(name: "ClientRecords")
+  company: Company @connection(name: "CompanyClients")
+  residence: Residence @connection(name: "ClientResidence")
+}
+
+type Residence @model {
+  id: ID!
+  name: String!
+  address: Address @connection(name: "ResidenceAddress")
+  client: Client @connection(name: "ClientResidence")
+}
+
+type Address @model {
+  id: ID!
+  firstLine: String!
+  county: String!
+  postCode: String!
+  residence: Residence @connection(name: "ResidenceAddress")
+}
+
+type ClientRecord @model {
+  id: ID!
+  staff: Staff @connection(name: "StaffClientRecords")
+  client: Client @connection(name: "ClientRecords")
+  entry: Entry @connection(name: "ClientEntry")
+  createdAt: AWSDateTime!
+  status: String
+  shift: ShiftType
+  entryType: EntryType
+}
+
+type Entry @model {
+  id: ID!
+  moodAndInteraction: String
+  selfCare: String
+  physicalHealth: String
+  medication: String
+  leave: String
+  dietAndFluids: String
+  livingSkills: String
+  finances: String
+  dailyActivityParticipation: String
+  clientRecord: ClientRecord @connection(name: "ClientEntry")
+}
+
+enum UserType {
+  user
+  admin
+  developer
+}
+
+enum EntryType {
+  normal
+  warning
+  emergency
+}
+
+enum ShiftType {
+  am
+  pm
+  night
+  ld
+}
