@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { MenuItem, Button, Select, Grid } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/AutoComplete';
+import { Autocomplete } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
   root: {
