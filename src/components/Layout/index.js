@@ -83,9 +83,9 @@ function ResponsiveDrawer(props) {
     <div>
       <ListItem>
         <ListItemIcon>
-          <Avatar src={companyData?.company?.companyLogoUrl} />
+          <Avatar src={_.get(companyData, 'company.companyLogoUrl')} />
         </ListItemIcon>
-        <Typography variant={'h6'}>{companyData?.company?.name ?? 'No Company'}</Typography>
+        <Typography variant={'h6'}>{_.get(companyData, 'company.name') || 'No Company'}</Typography>
       </ListItem>
       <Divider />
       <List>

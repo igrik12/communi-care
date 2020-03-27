@@ -68,8 +68,8 @@ export default function EditClient() {
   }, [editOpen.id, clients]);
 
   useEffect(() => {
-    setDateOfBirth(client?.dateOfBirth);
-  }, [client?.dateOfBirth]);
+    setDateOfBirth(_.get(client, 'dateOfBirth'));
+  }, [_.get(client, 'dateOfBirth')]);
 
   if (_.isEmpty(client)) return null;
 
