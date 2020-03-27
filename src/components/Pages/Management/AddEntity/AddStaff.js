@@ -13,13 +13,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PermIdentity from '@material-ui/icons/PermIdentity';
 import Lock from '@material-ui/icons/Lock';
 import Phone from '@material-ui/icons/Phone';
 import Email from '@material-ui/icons/Email';
-import Business from '@material-ui/icons/Business';
-import InputAdornment from '@material-ui/core/InputAdornment';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },

@@ -91,6 +91,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
         id
         name
         companyLogoUrl
+        isActive
         staff {
           items {
             firstName

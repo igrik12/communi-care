@@ -26,7 +26,8 @@ const useStyles = makeStyles(theme => ({
   },
   field: {
     flexGrow: 1,
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    maxWidth: 500
   },
   btnGroup: {
     margin: theme.spacing(1),
@@ -140,10 +141,9 @@ export default function EditStaff() {
             defaultValue={currentStaff.userType}
           />
         </FormControl>
-        <FormControl variant='outlined'>
+        <FormControl className={classes.field} variant='outlined'>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <Autocomplete
-              className={classes.textField}
               options={permissions}
               multiple
               disableCloseOnSelect

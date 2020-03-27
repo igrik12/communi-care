@@ -1,14 +1,16 @@
 import React from 'react';
 import 'date-fns';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import { Paper, Grid, FormControl, InputLabel, Input, InputAdornment, Select, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import TextEntry from '../Shared/TextEntry';
-import SaveConfirmDialog from '../Shared/SaveConfirmDialog';
 import { Auth } from 'aws-amplify';
+import DateFnsUtils from '@date-io/date-fns';
+import TextEntry from 'components/Shared/TextEntry';
+import SaveConfirmDialog from 'components/Shared/SaveConfirmDialog';
+
+// MUI Imports
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import { makeStyles } from '@material-ui/core/styles';
+import { Paper, Grid, FormControl, InputLabel, Input, InputAdornment, Select, MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -28,7 +30,7 @@ export default function ClientRecord() {
     <>
       <Grid container spacing={1} direction='column'>
         <Grid item>
-          <SelectMenu />
+          <RecordMeta />
         </Grid>
         <Grid item>
           <TextEntries />
@@ -92,7 +94,7 @@ const TextEntries = () => {
   );
 };
 
-const SelectMenu = () => {
+const RecordMeta = () => {
   const classes = useStyles();
   const setRecord = useStoreActions(actions => actions.clientRecordModel.setRecord);
   const recordDate = useStoreState(state => state.clientRecordModel.record.recordDate);
@@ -158,7 +160,7 @@ const SelectMenu = () => {
                 </MenuItem>
                 {clients.map(client => (
                   <MenuItem key={client.id} value={client.id}>
-                    {`${client.firstName } ${client.lastName }`}
+                    {`${client.firstName} ${client.lastName}`}
                   </MenuItem>
                 ))}
               </Select>

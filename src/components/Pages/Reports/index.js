@@ -6,9 +6,15 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper, withWidth } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 import Summary from './Summary';
+import _ from 'lodash';
 
-const convertRecords = records =>
-  records.map(record => ({ ...record, fullName: `${record.client.firstName.trim()} ${record.client.lastName.trim()}` }));
+const convertRecords = records => {
+  console.log(records);
+  return records.map(record => ({
+    ...record,
+    fullName: `${record?.client?.firstName?.trim() ?? 'unknown'} ${record?.client?.lastName?.trim() ?? 'unknown'}`
+  }));
+};
 
 function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);
@@ -18,6 +24,7 @@ function CareReports() {
   useEffect(() => {
     const query = async () => {
       const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
+      console.log(ret);
       setRecords(ret.data.listClientRecords.items);
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
@@ -33,6 +40,7 @@ function CareReports() {
     rowsPerPageOptions: [5, 10, 100],
     onRowClick: (rowData, cellMeta) => setSelectedRecord(records[cellMeta.dataIndex])
   };
+
   const count = useMemo(() => {
     const emergencyCount = records.filter(rec => rec.entryType === 'emergency').length;
     const normalCount = records.filter(rec => rec.entryType === 'normal').length;

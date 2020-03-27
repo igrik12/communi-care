@@ -83,16 +83,16 @@ function ResponsiveDrawer(props) {
     <div>
       <ListItem>
         <ListItemIcon>
-          <Avatar src={_.get(companyData, 'company.companyLogoUrl')} />
+          <Avatar src={companyData?.company?.companyLogoUrl} />
         </ListItemIcon>
-        <Typography variant={'h6'}>{_.get(companyData, 'company.name')}</Typography>
+        <Typography variant={'h6'}>{companyData?.company?.name ?? 'No Company'}</Typography>
       </ListItem>
       <Divider />
       <List>
         {[
-          { title: 'Records', value: '/record', authorised: () =>  hasPermissions(user, 'recordsPage') },
-          { title: 'Reports', value: '/reports', authorised: () =>  hasPermissions(user, 'reportsPage') },
-          { title: 'Clients', value: '/clients', authorised: () =>  hasPermissions(user, 'clientsPage') },
+          { title: 'Records', value: '/record', authorised: () => hasPermissions(user, 'recordsPage') },
+          { title: 'Reports', value: '/reports', authorised: () => hasPermissions(user, 'reportsPage') },
+          { title: 'Clients', value: '/clients', authorised: () => hasPermissions(user, 'clientsPage') },
           { title: 'Management', value: '/management', authorised: () => hasPermissions(user, 'managementPage') }
         ].map((item, index) => {
           return (

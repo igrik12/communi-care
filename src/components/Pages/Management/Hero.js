@@ -161,12 +161,11 @@ const ClientList = ({ clients }) => {
     <>
       <List className={classes.list}>
         {clients.map((client, index) => {
-          console.log(client);
           return (
             <ListItem
               onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
               button
-              key={client.name + index}
+              key={client.id}
               alignItems='flex-start'
             >
               <ListItemAvatar>

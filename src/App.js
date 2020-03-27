@@ -11,7 +11,7 @@ import {
   ConfirmSignUp,
   Loading
 } from 'aws-amplify-react';
-import ClientRecord from './components/Pages/ClientRecord';
+import Records from './components/Pages/Records';
 import CareReports from 'components/Pages/Reports';
 import Management from './components/Pages/Management';
 import Layout from './components/Layout';
@@ -95,7 +95,7 @@ function App() {
       <Switch>
         <Layout>
           <PrivateRoute path='/record' permission='recordsPage'>
-            <ClientRecord />
+            <Records />
           </PrivateRoute>
           <PrivateRoute path='/reports' permission='reportsPage'>
             <CareReports />
@@ -104,7 +104,7 @@ function App() {
             <Management />
           </PrivateRoute>
           <Route path='/unauthorised' component={Unauthorised} />
-          <Redirect to='record' />
+          <Redirect to='management' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

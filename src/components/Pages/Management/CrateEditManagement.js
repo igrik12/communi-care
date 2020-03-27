@@ -1,8 +1,8 @@
 import React from 'react';
-import AddCompany from './AddCompany';
-import AddStaff from './AddStaff';
-import AddClient from './AddClient';
-import AddResidence from './AddResidence';
+import AddCompany from './AddEntity/AddCompany';
+import AddStaff from './AddEntity/AddStaff';
+import AddClient from './AddEntity/AddClient';
+import AddResidence from './AddEntity/AddResidence';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';

@@ -31,7 +31,7 @@ const mainModel = {
   companyData: computed(state => {
     const user = state.user;
     const companies = state.companies;
-    const id = _.get(user, 'company.id');
+    const id = user?.company?.id;
     if (id) {
       const company = companies.find(company => company.id === id);
       return { company };
@@ -48,7 +48,7 @@ const mainModel = {
   }),
   companies: [],
   setCompanies: action((state, payload) => {
-    state.companies = new Array(...payload);
+    state.companies = payload;
   }),
   addCompany: action((state, payload) => {
     state.companies.push(payload);
@@ -67,9 +67,7 @@ const mainModel = {
       }
     }
   ),
-  fetchAll: action(() => {
-    
-  }),
+  fetchAll: action(() => {}),
   staff: [],
   setStaff: action((state, payload) => {
     state.staff = payload;
