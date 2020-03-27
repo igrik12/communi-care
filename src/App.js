@@ -27,6 +27,7 @@ import CssBaseLine from '@material-ui/core/CssBaseline';
 function App() {
   const themeColor = useStoreState(state => state.layoutModel.themeColor);
   const setUserGroups = useStoreActions(actions => actions.setUserGroups);
+  console.log('blah')
   const getUser = useStoreActions(actions => actions.getUser);
   const fetchAll = useStoreActions(actions => actions.fetchAll);
   let theme = useMemo(() => {
