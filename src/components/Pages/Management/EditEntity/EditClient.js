@@ -117,11 +117,12 @@ export default function EditClient() {
           <AutoComplete
             required
             onChange={(e, data) => {
+              console.log(data)
               setValue('clientResidenceId', data?.id);
             }}
             className={classes.formControl}
             options={residences}
-            defaultValue={client?.residence || residences[0]}
+            defaultValue={client?.residence}
             getOptionLabel={option => option.name ?? ''}
             renderInput={params => (
               <TextField {...params} name='clientResidenceId' label='Residence' variant='outlined' />

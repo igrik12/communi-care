@@ -10,6 +10,7 @@ import {
   deleteCompanyDependencies,
   deleteStaffAsync,
   deleteClientAsync,
+  deleteResidenceAsync,
   subscribe,
   updateEntityAsync
 } from 'utils/modelHelpers';
@@ -26,7 +27,9 @@ import {
   ON_DELETE_STAFF,
   ON_CREATE_CLIENT,
   ON_CREATE_COMPANY,
-  ON_CREATE_STAFF
+  ON_CREATE_STAFF,
+  ON_DELETE_RESIDENCE,
+  ON_CREATE_RESIDENCE
 } from 'utils/constants';
 
 const subscriptions = actions => [
@@ -37,6 +40,10 @@ const subscriptions = actions => [
   {
     type: ON_DELETE_COMPANY,
     action: companyData => actions.removeCompany(companyData.value.data.onDeleteCompany.id)
+  },
+  {
+    type: ON_DELETE_RESIDENCE,
+    action: residenceData => actions.removeResidence(residenceData.value.data.onDeleteResidence.id)
   },
   {
     type: ON_DELETE_STAFF,
@@ -53,6 +60,10 @@ const subscriptions = actions => [
   {
     type: ON_CREATE_COMPANY,
     action: companyData => actions.addCompany(companyData.value.data.onCreateCompany)
+  },
+  {
+    type: ON_CREATE_RESIDENCE,
+    action: residenceData => actions.addResidence(residenceData.value.data.onCreateResidence)
   }
 ];
 
@@ -182,6 +193,7 @@ const managementModel = {
     const setAlertOpen = getStoreActions().setAlertOpen;
     const removeStaff = getStoreActions().removeStaff;
     const removeClient = getStoreActions().removeClient;
+    const removeResidence = getStoreActions().removeResidence;
     try {
       const { type, id, deleteDependencies = false } = payload;
       switch (type) {
@@ -201,6 +213,10 @@ const managementModel = {
           await deleteStaffAsync(id);
           removeStaff(id);
           break;
+        case RESIDENCE:
+          await deleteResidenceAsync(id);
+          removeResidence(id);
+          break;
         default:
           console.error('Unknown delete type provided');
           break;
@@ -212,7 +228,7 @@ const managementModel = {
   }),
   updateEntity: thunk(async (actions, payload, { getStoreState, getStoreActions }) => {
     const result = await updateEntityAsync(payload);
-    const { staff, clients, companies } = getStoreState();
+    const { staff, clients, companies, residences } = getStoreState();
     switch (payload.type) {
       case STAFF:
         update(staff, result.data.updateStaff.id, result.data.updateStaff);
@@ -225,6 +241,10 @@ const managementModel = {
       case CLIENT:
         update(clients, result.data.updateClient.id, result.data.updateClient);
         getStoreActions().setClients(clients);
+        break;
+      case RESIDENCE:
+        update(residences, result.data.updateResidence.id, result.data.updateResidence);
+        getStoreActions().setResidences(residences);
         break;
       default:
         break;
