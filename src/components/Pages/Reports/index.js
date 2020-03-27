@@ -6,14 +6,12 @@ import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper, withWidth } from '@material-ui/core';
 import { Bar } from 'react-chartjs-2';
 import Summary from './Summary';
-import _ from 'lodash';
 
 const convertRecords = records => {
   console.log(records);
   return records.map(record => ({
     ...record,
-    fullName: `${_.get(record, 'client.firstName').trim() || 'unknown'} ${_.get(record, 'client.lastName').trim() ||
-      'unknown'}`
+    fullName: `${record?.client?.firstName?.trim() || 'unknown'} ${record?.client?.lastName?.trim() || 'unknown'}`
   }));
 };
 

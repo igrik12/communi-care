@@ -44,11 +44,21 @@ const AddClient = () => {
 
   React.useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
-  }, [register]);
+    register({ name: 'companyId' });
+    register({ name: 'residenceId' });
+  }, [register, setValue]);
 
-  const onHandleSubmit = data => {
+  const onSubmit = data => {
     submitEntity({ type: CLIENT, data });
     reset();
+    setValue('companyId', null);
+    setValue('residenceId', null);
+  };
+
+  const onReset = () => {
+    reset();
+    setValue('companyId', null);
+    setValue('residenceId', null);
   };
 
   return (
@@ -56,7 +66,7 @@ const AddClient = () => {
       <Typography gutterBottom variant='h5' component='h2'>
         Client
       </Typography>
-      <form onSubmit={handleSubmit(onHandleSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={1}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl fullWidth className={classes.formControl}>
@@ -116,6 +126,10 @@ const AddClient = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Autocomplete
               required
+              freeSolo
+              onChange={(e, data) => {
+                setValue('recidencyId', data.id);
+              }}
               className={classes.formControl}
               options={residences}
               getOptionLabel={option => option.name}
@@ -133,18 +147,14 @@ const AddClient = () => {
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <Autocomplete
               required
-              className={classes.textField}
+              freeSolo
+              onChange={(e, data) => {
+                setValue('companyId', data.id);
+              }}
+              className={classes.formControl}
               options={companies}
               getOptionLabel={option => option.name}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  inputRef={register({ required: true })}
-                  name='company'
-                  label='Company'
-                  variant='outlined'
-                />
-              )}
+              renderInput={params => <TextField {...params} name='companyId' label='Company' variant='outlined' />}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -155,7 +165,9 @@ const AddClient = () => {
             />
           </Grid>
           <ButtonGroup fullWidth className={classes.buttonGroup}>
-            <Button color='primary'>Reset</Button>
+            <Button color='primary' onClick={onReset}>
+              Reset
+            </Button>
             <Button type='submit' color='primary'>
               Add
             </Button>
