@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm, ErrorMessage } from 'react-hook-form';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { STAFF } from 'utils/constants';
+import permissions from 'utils/permissions.json';
 
 // Material-UI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +13,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import PermIdentity from '@material-ui/icons/PermIdentity';
+import Lock from '@material-ui/icons/Lock';
+import Phone from '@material-ui/icons/Phone';
+import Email from '@material-ui/icons/Email';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -33,7 +40,6 @@ const AddStaff = () => {
   const [allPermissions, setAllPermissions] = React.useState([]);
   const { register, handleSubmit, setValue, reset, errors } = useForm();
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
-  const permissions = useStoreState(state => state.permissions);
   const companies = useStoreState(state => state.companies);
   const staff = useStoreState(state => state.staff);
 
@@ -80,6 +86,13 @@ const AddStaff = () => {
               inputRef={register({
                 required: true
               })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <AccountCircle />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='firstName'
               label='First Name'
@@ -94,6 +107,13 @@ const AddStaff = () => {
               inputRef={register({
                 required: true
               })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <AccountCircle />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='lastName'
               label='Last Name'
@@ -110,6 +130,13 @@ const AddStaff = () => {
                 minLength: 4,
                 validate: validateUsername ? undefined : 'Username already exists!'
               })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <PermIdentity />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='username'
               label='Username'
@@ -122,6 +149,13 @@ const AddStaff = () => {
             <TextField
               required
               inputRef={register({ required: true })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Lock />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='password'
               type='password'
@@ -134,6 +168,13 @@ const AddStaff = () => {
             <TextField
               required
               inputRef={register({ required: true })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Phone />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='phone_number'
               label='Phone number'
@@ -146,6 +187,13 @@ const AddStaff = () => {
               required
               error={errors.email}
               inputRef={register({ required: true, validate: validateEmail ? undefined : 'Email is already in use' })}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Email />
+                  </InputAdornment>
+                )
+              }}
               className={classes.textField}
               name='email'
               type='email'

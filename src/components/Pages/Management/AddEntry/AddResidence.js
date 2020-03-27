@@ -10,6 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Home from '@material-ui/icons/Home';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MarkunreadMailbox from '@material-ui/icons/MarkunreadMailbox';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -52,6 +56,13 @@ export default function AddResidence() {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <AccountCircle />
+                    </InputAdornment>
+                  )
+                }}
                 label='Name'
                 name='name'
                 variant='outlined'
@@ -65,6 +76,13 @@ export default function AddResidence() {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Home />
+                    </InputAdornment>
+                  )
+                }}
                 label='First line'
                 name='firstLine'
                 variant='outlined'
@@ -78,6 +96,13 @@ export default function AddResidence() {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Home />
+                    </InputAdornment>
+                  )
+                }}
                 label='County'
                 name='county'
                 variant='outlined'
@@ -91,6 +116,13 @@ export default function AddResidence() {
               <TextField
                 required
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <MarkunreadMailbox />
+                    </InputAdornment>
+                  )
+                }}
                 label='Post Code'
                 name='postCode'
                 variant='outlined'

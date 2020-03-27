@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, ErrorMessage } from 'react-hook-form';
 import { COMPANY } from 'utils/constants';
 import _ from 'lodash';
 
 // Matertial-UI imports
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { ButtonGroup, FormControl } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Business from '@material-ui/icons/Business';
+import Link from '@material-ui/icons/Link';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -24,13 +26,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1)
   }
 }));
-
-const filter = createFilterOptions();
-
-const findCompany = (companies, inputCompany) => {
-  if (!inputCompany || !companies || !companies.length) return [];
-  return companies.find(company => company.name === inputCompany.name);
-};
 
 export default function AddCompany() {
   const companies = useStoreState(state => state.companies);
@@ -50,7 +45,6 @@ export default function AddCompany() {
       ? undefined
       : `${value} company exists!`;
   };
-  console.log(errors);
   return (
     <>
       <Typography gutterBottom variant='h5' component='h2'>
@@ -63,6 +57,13 @@ export default function AddCompany() {
               <TextField
                 required
                 inputRef={register({ required: true, validate: validateCompany })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Business />
+                    </InputAdornment>
+                  )
+                }}
                 variant='outlined'
                 name='name'
                 label='Company Name'
@@ -78,6 +79,13 @@ export default function AddCompany() {
                 variant='outlined'
                 name='companyLogoUrl'
                 inputRef={register({ required: true })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Link />
+                    </InputAdornment>
+                  )
+                }}
                 label='Logo URL'
                 autoComplete='off'
               />

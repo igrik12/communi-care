@@ -1,10 +1,10 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
-import { isDeveloper } from '../../utils/permissions';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 import ToastAlert from '../Shared/ToastAlert';
 import _ from 'lodash';
+import { hasPermissions } from 'utils/permissions';
 
 // MUI imports
 import PropTypes from 'prop-types';
@@ -71,7 +71,7 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const { container, children } = props;
-  const userGroups = useStoreState(state => state.userGroups);
+  const user = useStoreState(state => state.user);
   const companyData = useStoreState(state => state.companyData);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -83,17 +83,17 @@ function ResponsiveDrawer(props) {
     <div>
       <ListItem>
         <ListItemIcon>
-          <Avatar src={_.get(companyData, 'company.companyLogoUrl')} />
+          <Avatar src={companyData?.company?.companyLogoUrl} />
         </ListItemIcon>
-        <Typography variant={'h6'}>{_.get(companyData, 'company.name')}</Typography>
+        <Typography variant={'h6'}>{companyData?.company?.name ?? 'No Company'}</Typography>
       </ListItem>
       <Divider />
       <List>
         {[
-          { title: 'Records', value: '/record', authorised: () => true },
-          { title: 'Reports', value: '/reports', authorised: () => true },
-          { title: 'Clients', value: '/clients', authorised: () => true },
-          { title: 'Management', value: '/management', authorised: () => isDeveloper(userGroups) }
+          { title: 'Records', value: '/record', authorised: () => hasPermissions(user, 'recordsPage') },
+          { title: 'Reports', value: '/reports', authorised: () => hasPermissions(user, 'reportsPage') },
+          { title: 'Clients', value: '/clients', authorised: () => hasPermissions(user, 'clientsPage') },
+          { title: 'Management', value: '/management', authorised: () => hasPermissions(user, 'managementPage') }
         ].map((item, index) => {
           return (
             item.authorised() && (

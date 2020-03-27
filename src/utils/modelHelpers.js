@@ -99,7 +99,10 @@ export const staffCreateSubscribe = action => {
   });
   return subscription;
 };
-
+/**
+ *
+ * @param {Object} subscriptions
+ */
 export const subscribe = subscriptions => {
   const subs = [];
   subscriptions.forEach(subscription => {
@@ -157,6 +160,7 @@ export const createNewStaff = async staffData => {
     companyId,
     isActive
   } = staffData;
+
   const details = {
     input: {
       firstName,
