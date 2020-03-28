@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { MenuItem, Button, Select, Grid, FormControlLabel, Switch } from '@material-ui/core';
-import AutoComplete from '@material-ui/lab/AutoComplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -144,7 +144,7 @@ export default function EditStaff() {
         </FormControl>
         <FormControl className={classes.field} variant='outlined'>
           <Grid item lg={12} md={12} sm={12} xs={12}>
-            <AutoComplete
+            <Autocomplete
               options={permissions}
               multiple
               disableCloseOnSelect

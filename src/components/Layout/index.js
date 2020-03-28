@@ -74,7 +74,7 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const { container, children } = props;
-  const [active, setActive] = useState('Care Reports');
+  const [active, setActive] = useState('Management');
   const user = useStoreState(state => state.user);
   const companyData = useStoreState(state => state.companyData);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
