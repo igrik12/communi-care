@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Grid from '@material-ui/core/Grid';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import AutoComplete from '@material-ui/lab/AutoComplete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -124,7 +124,7 @@ const AddClient = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Controller
               as={
-                <Autocomplete
+                <AutoComplete
                   required
                   className={classes.formControl}
                   options={residences}
@@ -159,7 +159,7 @@ const AddClient = () => {
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <Controller
               as={
-                <Autocomplete
+                <AutoComplete
                   required
                   className={classes.formControl}
                   options={companies}
