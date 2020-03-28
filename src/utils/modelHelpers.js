@@ -247,7 +247,9 @@ export const createNewClient = async clientData => {
   try {
     await API.graphql(graphqlOperation(updateResidence, updateDetails));
   } catch (error) {
-    throw Error(`Failed to updated residence when creating client ${firstName} ${lastName}. Error ${error}`);
+    throw Error(
+      `Failed to updated residence when creating client ${firstName} ${lastName}. Error ${JSON.stringify(error)}`
+    );
   }
 };
 
@@ -359,14 +361,7 @@ export const updateResidenceAsync = async residence => {
 
 export const updateClientAsync = async client => {
   const details = { input: { ...client } };
-  const result = await API.graphql(graphqlOperation(updateClient, details));
-  const updateDetails = { input: { id: residenceId, residenceClientId: result.data.createClient.id } };
-  try {
-    await API.graphql(graphqlOperation(updateResidence, updateDetails));
-  } catch (error) {
-    throw Error(`Failed to updated residence when creating client ${firstName} ${lastName}. Error ${error}`);
-  }
-  return result;
+  return await API.graphql(graphqlOperation(updateClient, details));
 };
 
 export const updateEntityAsync = async entity => {

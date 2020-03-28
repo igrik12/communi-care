@@ -40,6 +40,16 @@ function App() {
             maxHeight: 'none',
             height: 'calc(100% - 128px)'
           }
+        },
+        MuiDrawer: {
+          paper: {
+            backgroundBlendMode: 'soft-light',
+            backgroundImage: `url(
+              'https://images.pexels.com/photos/2098427/pexels-photo-2098427.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'
+            )`,
+            background: '#242A45',
+            color: '#fff'
+          }
         }
       },
       palette: {
@@ -104,7 +114,7 @@ function App() {
             <Management />
           </PrivateRoute>
           <Route path='/unauthorised' component={Unauthorised} />
-          <Redirect to='management' />
+          <Redirect to='reports' />
         </Layout>
       </Switch>
     </MuiThemeProvider>

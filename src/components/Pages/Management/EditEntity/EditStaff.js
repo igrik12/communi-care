@@ -62,6 +62,7 @@ export default function EditStaff() {
   }, [currentStaff, setValue, setAllPermissions]);
 
   const handleOnSubmit = data => {
+    if (!data.staffCompanyId) return;
     const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map(perm => perm.value) };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
@@ -160,7 +161,9 @@ export default function EditStaff() {
         <FormControlLabel
           className={classes.field}
           labelPlacement='start'
-          control={<Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />}
+          control={
+            <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
+          }
           label='Active'
         />
         <div className={classes.btnGroup}>

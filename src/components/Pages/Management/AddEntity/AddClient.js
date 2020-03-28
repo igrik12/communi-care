@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import { CLIENT } from 'utils/constants';
 
@@ -34,7 +34,7 @@ const AddClient = () => {
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const companies = useStoreState(state => state.companies);
   const residences = useStoreState(state => state.residences);
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, control } = useForm();
 
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const handleDateChange = date => {
@@ -42,23 +42,21 @@ const AddClient = () => {
     setDateOfBirth(date);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
-    register({ name: 'companyId' });
-    register({ name: 'residenceId' });
+    register({ name: 'clientCompanyId' });
   }, [register, setValue]);
 
   const onSubmit = data => {
-    submitEntity({ type: CLIENT, data });
+    console.log(data);
+    // submitEntity({ type: CLIENT, data });
     reset();
-    setValue('companyId', null);
-    setValue('residenceId', null);
+    setValue('clientCompanyId', null);
   };
 
   const onReset = () => {
     reset();
-    setValue('companyId', null);
-    setValue('residenceId', null);
+    setValue('clientCompanyId', null);
   };
 
   return (
@@ -109,7 +107,7 @@ const AddClient = () => {
             </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <FormControl className={classes.formControl}>
+            <FormControl fullWidth className={classes.formControl}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   required
@@ -124,37 +122,68 @@ const AddClient = () => {
             </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <Autocomplete
-              required
-              freeSolo
-              onChange={(e, data) => {
-                setValue('recidencyId', data.id);
-              }}
-              className={classes.formControl}
-              options={residences}
-              getOptionLabel={option => option.name}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  inputRef={register({ required: true })}
-                  name='recidency'
-                  label='Recidency'
-                  variant='outlined'
+            <Controller
+              as={
+                <Autocomplete
+                  required
+                  className={classes.formControl}
+                  options={residences}
+                  autoHighlight
+                  renderOption={option => (
+                    <React.Fragment>
+                      {option.name} {option.address?.postCode}
+                    </React.Fragment>
+                  )}
+                  getOptionLabel={option => option.name || ''}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label='Residence'
+                      variant='outlined'
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'disabled'
+                      }}
+                    />
+                  )}
                 />
-              )}
+              }
+              onChange={([event, data]) => {
+                return data;
+              }}
+              name='clientResidenceId'
+              control={control}
+              defaultValue={residences[0] || ''}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
-            <Autocomplete
-              required
-              freeSolo
-              onChange={(e, data) => {
-                setValue('companyId', data.id);
+            <Controller
+              as={
+                <Autocomplete
+                  required
+                  className={classes.formControl}
+                  options={companies}
+                  autoHighlight
+                  getOptionLabel={option => option.name || ''}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label='Company'
+                      variant='outlined'
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'disabled'
+                      }}
+                    />
+                  )}
+                />
+              }
+              onChange={([event, data]) => {
+                return data;
               }}
-              className={classes.formControl}
-              options={companies}
-              getOptionLabel={option => option.name}
-              renderInput={params => <TextField {...params} name='companyId' label='Company' variant='outlined' />}
+              name='clientCompanyId'
+              control={control}
+              defaultValue={companies[0] || {}}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
