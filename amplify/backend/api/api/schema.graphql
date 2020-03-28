@@ -37,7 +37,7 @@ type Residence @model {
   id: ID!
   name: String!
   address: Address @connection(name: "ResidenceAddress")
-  client: Client @connection(name: "ClientResidence")
+  clients: [Client] @connection(name: "ClientResidence")
 }
 
 type Address @model {

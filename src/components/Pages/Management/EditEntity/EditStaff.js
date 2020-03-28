@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem, Button, Select, Grid } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { MenuItem, Button, Select, Grid, FormControlLabel, Switch } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/AutoComplete';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +44,7 @@ export default function EditStaff() {
   const [allPermissions, setAllPermissions] = React.useState([]);
   const companies = useStoreState(state => state.companies);
   const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
-  const { register, handleSubmit, control, setValue, getValues } = useForm();
+  const { register, handleSubmit, control, setValue } = useForm();
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
 
   useEffect(() => {
@@ -62,6 +62,7 @@ export default function EditStaff() {
   }, [currentStaff, setValue, setAllPermissions]);
 
   const handleOnSubmit = data => {
+    if (!data.staffCompanyId) return;
     const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map(perm => perm.value) };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
@@ -157,6 +158,14 @@ export default function EditStaff() {
             />
           </Grid>
         </FormControl>
+        <FormControlLabel
+          className={classes.field}
+          labelPlacement='start'
+          control={
+            <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
+          }
+          label='Active'
+        />
         <div className={classes.btnGroup}>
           <Button onClick={() => setEditOpen({ open: false })} autoFocus>
             Cancel

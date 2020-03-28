@@ -86,7 +86,7 @@ export default function EditCompany() {
           <Button onClick={() => setEditOpen({ open: false })} autoFocus>
             Cancel
           </Button>
-          <Button variant='outlined' type='submit' color='primary'>
+          <Button type='submit' variant='outlined' color='primary'>
             Save
           </Button>
         </div>

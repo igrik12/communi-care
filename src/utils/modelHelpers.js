@@ -9,29 +9,37 @@ import {
   deleteCompany,
   deleteClient,
   deleteStaff,
+  deleteResidence,
   updateStaff,
   updateCompany,
-  updateClient
+  updateClient,
+  updateResidence
 } from '../graphql/mutations';
 
 import {
   onDeleteStaff,
   onDeleteClient,
   onDeleteCompany,
+  onDeleteResidence,
   onCreateClient,
   onCreateCompany,
-  onCreateStaff
+  onCreateStaff,
+  onCreateResidence
 } from 'graphql/subscriptions';
+
 import {
   ON_DELETE_CLIENT,
   ON_DELETE_COMPANY,
+  ON_DELETE_RESIDENCE,
   ON_DELETE_STAFF,
   ON_CREATE_CLIENT,
   ON_CREATE_STAFF,
   ON_CREATE_COMPANY,
+  ON_CREATE_RESIDENCE,
   STAFF,
   COMPANY,
-  CLIENT
+  CLIENT,
+  RESIDENCE
 } from 'utils/constants';
 
 import { hashPassword } from './helpers';
@@ -73,9 +81,31 @@ export const companyDeleteSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
+export const residenceDeleteSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onDeleteResidence)).subscribe({
+    next: residenceData => action(residenceData)
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
 export const companyCreateSubscribe = action => {
   const subscription = API.graphql(graphqlOperation(onCreateCompany)).subscribe({
     next: companyData => action(companyData)
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const residenceCreateSubscribe = action => {
+  const subscription = API.graphql(graphqlOperation(onCreateResidence)).subscribe({
+    next: residenceData => action(residenceData)
   });
   return subscription;
 };
@@ -119,8 +149,14 @@ export const subscribe = subscriptions => {
       case ON_DELETE_COMPANY:
         subs.push(companyDeleteSubscribe(action));
         break;
+      case ON_DELETE_RESIDENCE:
+        subs.push(residenceDeleteSubscribe(action));
+        break;
       case ON_CREATE_COMPANY:
         subs.push(companyCreateSubscribe(action));
+        break;
+      case ON_CREATE_RESIDENCE:
+        subs.push(residenceCreateSubscribe(action));
         break;
       case ON_CREATE_CLIENT:
         subs.push(clientCreateSubscribe(action));
@@ -135,13 +171,10 @@ export const subscribe = subscriptions => {
   return subs;
 };
 
-// Check if company with name X exists
-export const companyExists = (company, allCompanies) => {
-  if (!allCompanies.length) return undefined;
-  return allCompanies.find(comp => comp.name === company.name);
-};
-
-// Create new company
+/**
+ *
+ * @param {Object} company. Company data comprised of name, companyLogoUrl, isActive
+ */
 export const createNewCompany = async company => {
   const { name, companyLogoUrl, isActive } = company;
   const details = { input: { name, companyLogoUrl, isActive } };
@@ -149,6 +182,10 @@ export const createNewCompany = async company => {
   return result.data.createCompany;
 };
 
+/**
+ *
+ * @param {Object} staffData
+ */
 export const createNewStaff = async staffData => {
   const {
     firstName,
@@ -187,19 +224,39 @@ export const createNewStaff = async staffData => {
   await API.graphql(graphqlOperation(createStaff, details));
 };
 
+/**
+ *
+ * @param {Object} staff
+ */
 export const signUpUser = async staff => {
   const { username, password, email, phone_number } = staff;
   await Auth.signUp({ username, password, attributes: { email, phone_number } });
 };
 
+/**
+ *
+ * @param {Object} clientData
+ */
 export const createNewClient = async clientData => {
   const { firstName, lastName, dateOfBirth, isActive, companyId, residenceId } = clientData;
   const details = {
     input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId: companyId, clientRecidenceId: residenceId }
   };
-  await API.graphql(graphqlOperation(createClient, details));
+  const result = await API.graphql(graphqlOperation(createClient, details));
+  const updateDetails = { input: { id: residenceId, residenceClientId: result.data.createClient.id } };
+  try {
+    await API.graphql(graphqlOperation(updateResidence, updateDetails));
+  } catch (error) {
+    throw Error(
+      `Failed to updated residence when creating client ${firstName} ${lastName}. Error ${JSON.stringify(error)}`
+    );
+  }
 };
 
+/**
+ *
+ * @param {Object} residence
+ */
 export const createNewResidence = async residence => {
   let result;
   try {
@@ -208,10 +265,14 @@ export const createNewResidence = async residence => {
     console.error(`Failed to create address. Error: ${JSON.stringify(error)}`);
     throw Error(error);
   }
-  const details = { input: { name: residence.name, residenceAddressId: result.data.createAddress.Id } };
+  const details = { input: { name: residence.name, residenceAddressId: result.data.createAddress.id } };
   await API.graphql(graphqlOperation(createResidence, details));
 };
 
+/**
+ *
+ * @param {Object} address
+ */
 export const createNewAddress = async address => {
   const details = { input: address };
   const result = await API.graphql(graphqlOperation(createAddress, details));
@@ -231,6 +292,11 @@ export const deleteStaffAsync = async id => {
 export const deleteClientAsync = async id => {
   const details = { input: { id } };
   await API.graphql(graphqlOperation(deleteClient, details));
+};
+
+export const deleteResidenceAsync = async id => {
+  const details = { input: { id } };
+  await API.graphql(graphqlOperation(deleteResidence, details));
 };
 
 export const deleteCompanyDependencies = (company, removeStaff, removeClient) => {
@@ -288,6 +354,11 @@ export const updateCompanyAsync = async company => {
   return await API.graphql(graphqlOperation(updateCompany, details));
 };
 
+export const updateResidenceAsync = async residence => {
+  const details = { input: { ...residence } };
+  return await API.graphql(graphqlOperation(updateResidence, details));
+};
+
 export const updateClientAsync = async client => {
   const details = { input: { ...client } };
   return await API.graphql(graphqlOperation(updateClient, details));
@@ -302,6 +373,8 @@ export const updateEntityAsync = async entity => {
       return await updateCompanyAsync(data);
     case CLIENT:
       return await updateClientAsync(data);
+    case RESIDENCE:
+      return await updateResidenceAsync(data);
     default:
       break;
   }

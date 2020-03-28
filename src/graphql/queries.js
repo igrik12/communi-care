@@ -168,12 +168,8 @@ export const getClient = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -225,25 +221,15 @@ export const getResidence = /* GraphQL */ `
           name
         }
       }
-      client {
-        id
-        firstName
-        lastName
-        dateOfBirth
-        isActive
-        clientRecords {
-          nextToken
-        }
-        company {
+      clients {
+        items {
           id
-          name
-          companyLogoUrl
+          firstName
+          lastName
+          dateOfBirth
           isActive
         }
-        residence {
-          id
-          name
-        }
+        nextToken
       }
     }
   }
@@ -264,12 +250,8 @@ export const listResidences = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
       nextToken
@@ -292,12 +274,8 @@ export const getAddress = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
