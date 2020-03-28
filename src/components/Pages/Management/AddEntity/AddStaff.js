@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ButtonGroup, Grid } from '@material-ui/core';
-import AutoComplete from '@material-ui/lab/AutoComplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -204,7 +204,7 @@ const AddStaff = () => {
             <ErrorMessage style={{ color: 'red' }} errors={errors} name='email' as='p' />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <AutoComplete
+            <Autocomplete
               required
               freeSolo
               onChange={(e, data) => {
@@ -217,7 +217,7 @@ const AddStaff = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <AutoComplete
+            <Autocomplete
               required
               className={classes.textField}
               options={['user', 'admin', 'developer']}
@@ -234,7 +234,7 @@ const AddStaff = () => {
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
-            <AutoComplete
+            <Autocomplete
               className={classes.textField}
               options={permissions}
               multiple

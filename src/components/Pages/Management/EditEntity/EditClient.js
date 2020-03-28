@@ -12,7 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import { Button, FormControlLabel, Switch } from '@material-ui/core';
-import AutoComplete from '@material-ui/lab/AutoComplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -101,7 +101,7 @@ export default function EditClient() {
           defaultValue={client.lastName}
         />
         <FormControl className={classes.field} variant='outlined'>
-          <AutoComplete
+          <Autocomplete
             required
             onChange={(e, data) => {
               setValue('clientCompanyId', data?.id);
@@ -114,7 +114,7 @@ export default function EditClient() {
           />
         </FormControl>
         <FormControl className={classes.field} variant='outlined'>
-          <AutoComplete
+          <Autocomplete
             required
             onChange={(e, data) => {
               console.log(data)
