@@ -11,28 +11,9 @@ export const createCompany = /* GraphQL */ `
       name
       companyLogoUrl
       staff {
-        items {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
         nextToken
       }
       client {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
       isActive
@@ -49,28 +30,9 @@ export const updateCompany = /* GraphQL */ `
       name
       companyLogoUrl
       staff {
-        items {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
         nextToken
       }
       client {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
       isActive
@@ -87,28 +49,9 @@ export const deleteCompany = /* GraphQL */ `
       name
       companyLogoUrl
       staff {
-        items {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
         nextToken
       }
       client {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
       isActive
@@ -130,25 +73,12 @@ export const createStaff = /* GraphQL */ `
       password
       phone_number
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       permissions
@@ -171,25 +101,12 @@ export const updateStaff = /* GraphQL */ `
       password
       phone_number
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       permissions
@@ -212,25 +129,12 @@ export const deleteStaff = /* GraphQL */ `
       password
       phone_number
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       permissions
@@ -250,39 +154,17 @@ export const createClient = /* GraphQL */ `
       dateOfBirth
       isActive
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -299,39 +181,17 @@ export const updateClient = /* GraphQL */ `
       dateOfBirth
       isActive
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -348,39 +208,17 @@ export const deleteClient = /* GraphQL */ `
       dateOfBirth
       isActive
       clientRecords {
-        items {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
         nextToken
       }
       company {
         id
         name
         companyLogoUrl
-        staff {
-          nextToken
-        }
-        client {
-          nextToken
-        }
         isActive
       }
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -398,19 +236,8 @@ export const createResidence = /* GraphQL */ `
         firstLine
         county
         postCode
-        residence {
-          id
-          name
-        }
       }
       clients {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
     }
@@ -429,19 +256,8 @@ export const updateResidence = /* GraphQL */ `
         firstLine
         county
         postCode
-        residence {
-          id
-          name
-        }
       }
       clients {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
     }
@@ -460,19 +276,8 @@ export const deleteResidence = /* GraphQL */ `
         firstLine
         county
         postCode
-        residence {
-          id
-          name
-        }
       }
       clients {
-        items {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
         nextToken
       }
     }
@@ -491,15 +296,6 @@ export const createAddress = /* GraphQL */ `
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -517,15 +313,6 @@ export const updateAddress = /* GraphQL */ `
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -543,15 +330,6 @@ export const deleteAddress = /* GraphQL */ `
       residence {
         id
         name
-        address {
-          id
-          firstLine
-          county
-          postCode
-        }
-        clients {
-          nextToken
-        }
       }
     }
   }
@@ -572,15 +350,6 @@ export const createClientRecord = /* GraphQL */ `
         email
         password
         phone_number
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
         permissions
         isActive
       }
@@ -590,19 +359,6 @@ export const createClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
-        residence {
-          id
-          name
-        }
       }
       entry {
         id
@@ -615,18 +371,12 @@ export const createClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
-        clientRecord {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
       }
       createdAt
       status
       shift
       entryType
+      version
     }
   }
 `;
@@ -646,15 +396,6 @@ export const updateClientRecord = /* GraphQL */ `
         email
         password
         phone_number
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
         permissions
         isActive
       }
@@ -664,19 +405,6 @@ export const updateClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
-        residence {
-          id
-          name
-        }
       }
       entry {
         id
@@ -689,18 +417,12 @@ export const updateClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
-        clientRecord {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
       }
       createdAt
       status
       shift
       entryType
+      version
     }
   }
 `;
@@ -720,15 +442,6 @@ export const deleteClientRecord = /* GraphQL */ `
         email
         password
         phone_number
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
         permissions
         isActive
       }
@@ -738,19 +451,6 @@ export const deleteClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
-        clientRecords {
-          nextToken
-        }
-        company {
-          id
-          name
-          companyLogoUrl
-          isActive
-        }
-        residence {
-          id
-          name
-        }
       }
       entry {
         id
@@ -763,18 +463,12 @@ export const deleteClientRecord = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
-        clientRecord {
-          id
-          createdAt
-          status
-          shift
-          entryType
-        }
       }
       createdAt
       status
       shift
       entryType
+      version
     }
   }
 `;
@@ -796,41 +490,11 @@ export const createEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
-        staff {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
-        entry {
-          id
-          moodAndInteraction
-          selfCare
-          physicalHealth
-          medication
-          leave
-          dietAndFluids
-          livingSkills
-          finances
-          dailyActivityParticipation
-        }
         createdAt
         status
         shift
         entryType
+        version
       }
     }
   }
@@ -853,41 +517,11 @@ export const updateEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
-        staff {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
-        entry {
-          id
-          moodAndInteraction
-          selfCare
-          physicalHealth
-          medication
-          leave
-          dietAndFluids
-          livingSkills
-          finances
-          dailyActivityParticipation
-        }
         createdAt
         status
         shift
         entryType
+        version
       }
     }
   }
@@ -910,41 +544,11 @@ export const deleteEntry = /* GraphQL */ `
       dailyActivityParticipation
       clientRecord {
         id
-        staff {
-          id
-          firstName
-          lastName
-          username
-          userType
-          email
-          password
-          phone_number
-          permissions
-          isActive
-        }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
-        }
-        entry {
-          id
-          moodAndInteraction
-          selfCare
-          physicalHealth
-          medication
-          leave
-          dietAndFluids
-          livingSkills
-          finances
-          dailyActivityParticipation
-        }
         createdAt
         status
         shift
         entryType
+        version
       }
     }
   }

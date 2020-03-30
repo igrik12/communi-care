@@ -48,7 +48,7 @@ type Address @model {
   residence: Residence @connection(name: "ResidenceAddress")
 }
 
-type ClientRecord @model {
+type ClientRecord @model @versioned {
   id: ID!
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")

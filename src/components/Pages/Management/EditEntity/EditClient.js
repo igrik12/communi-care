@@ -117,7 +117,6 @@ export default function EditClient() {
           <Autocomplete
             required
             onChange={(e, data) => {
-              console.log(data)
               setValue('clientResidenceId', data?.id);
             }}
             className={classes.formControl}

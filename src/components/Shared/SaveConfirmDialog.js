@@ -97,7 +97,7 @@ export default function ConfirmationDialog() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('normal');
   const saveRecordDisabled = useStoreState(state => state.clientRecordModel.saveRecordDisabled);
-  const saveRecord = useStoreActions(actions => actions.clientRecordModel.saveRecord);
+  const createRecord = useStoreActions(actions => actions.clientRecordModel.createRecord);
 
   const handleClick = () => {
     setOpen(true);
@@ -108,7 +108,7 @@ export default function ConfirmationDialog() {
 
     if (newValue) {
       setValue(newValue);
-      saveRecord({ entryType: newValue });
+      createRecord({ entryType: newValue });
     }
   };
 
