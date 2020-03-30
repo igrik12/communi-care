@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "communicarec17db351_identitypool_c17db351",
+    "identityPoolName": "communicare58b36989_identitypool_58b36989",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "communc17db351",
-    "userPoolName": "communicarec17db351_userpool_c17db351",
+    "resourceNameTruncated": "commun58b36989",
+    "userPoolName": "communicare58b36989_userpool_58b36989",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,9 +28,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "communc17db351_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "commun58b36989_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "communicarec17db351",
+    "resourceName": "communicare58b36989",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -45,6 +45,11 @@
         ]
     },
     "useDefault": "default",
+    "triggers": "{}",
     "userPoolGroupList": [],
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": [],
     "dependsOn": []
 }
