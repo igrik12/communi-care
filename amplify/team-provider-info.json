@@ -1,19 +1,19 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-communi-care-dev-190926-authRole",
-            "UnauthRoleArn": "arn:aws:iam::372999212216:role/amplify-communi-care-dev-190926-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::372999212216:role/amplify-communi-care-dev-190926-authRole",
+            "AuthRoleName": "amplify-communi-care-dev-125451-authRole",
+            "UnauthRoleArn": "arn:aws:iam::372999212216:role/amplify-communi-care-dev-125451-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::372999212216:role/amplify-communi-care-dev-125451-authRole",
             "Region": "eu-west-1",
-            "DeploymentBucketName": "amplify-communi-care-dev-190926-deployment",
-            "UnauthRoleName": "amplify-communi-care-dev-190926-unauthRole",
-            "StackName": "amplify-communi-care-dev-190926",
-            "StackId": "arn:aws:cloudformation:eu-west-1:372999212216:stack/amplify-communi-care-dev-190926/56a6ab50-5cb9-11ea-914b-06d3aeb0d9f6",
-            "AmplifyAppId": "d3fiaut4wqjo6m"
+            "DeploymentBucketName": "amplify-communi-care-dev-125451-deployment",
+            "UnauthRoleName": "amplify-communi-care-dev-125451-unauthRole",
+            "StackName": "amplify-communi-care-dev-125451",
+            "StackId": "arn:aws:cloudformation:eu-west-1:372999212216:stack/amplify-communi-care-dev-125451/43a95230-727d-11ea-92a6-02ccbabe1234",
+            "AmplifyAppId": "d3mezsokp6mlom"
         },
         "categories": {
             "auth": {
-                "communicarec17db351": {}
+                "communicare58b36989": {}
             }
         }
     }
