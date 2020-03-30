@@ -238,19 +238,11 @@ export const signUpUser = async staff => {
  * @param {Object} clientData
  */
 export const createNewClient = async clientData => {
-  const { firstName, lastName, dateOfBirth, isActive, companyId, residenceId } = clientData;
+  const { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId } = clientData;
   const details = {
-    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId: companyId, clientRecidenceId: residenceId }
+    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId }
   };
-  const result = await API.graphql(graphqlOperation(createClient, details));
-  const updateDetails = { input: { id: residenceId, residenceClientId: result.data.createClient.id } };
-  try {
-    await API.graphql(graphqlOperation(updateResidence, updateDetails));
-  } catch (error) {
-    throw Error(
-      `Failed to updated residence when creating client ${firstName} ${lastName}. Error ${JSON.stringify(error)}`
-    );
-  }
+  await API.graphql(graphqlOperation(createClient, details));
 };
 
 /**
