@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { CLIENT } from 'utils/constants';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -11,7 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem, Button, Select, FormControlLabel, Switch } from '@material-ui/core';
+import { Button, FormControlLabel, Switch } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,17 +41,18 @@ export default function EditClient() {
   const [company, setCompany] = React.useState('');
   const [dateOfBirth, setDateOfBirth] = useState(null);
 
-  const { register, handleSubmit, control, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
   const classes = useStyles();
 
   const editOpen = useStoreState(state => state.managementModel.editOpen);
   const clients = useStoreState(state => state.clients);
   const companies = useStoreState(state => state.companies);
+  const residences = useStoreState(state => state.residences);
   const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
 
   const handleOnSubmit = data => {
-    const updateDetails = { id: client.id, ...data };
+    const updateDetails = { id: client.id, dateOfBirth, ...data };
     updateEntity({ type: CLIENT, data: updateDetails });
     setEditOpen({ open: false });
   };
@@ -61,15 +63,20 @@ export default function EditClient() {
   };
 
   useEffect(() => {
+    register({ name: 'clientCompanyId', required: true });
+    register({ name: 'clientResidenceId', required: true });
+  }, [register, setValue]);
+
+  useEffect(() => {
     const match = clients.find(client => client.id === editOpen.id);
     setClient(match);
     const companyMatch = companies.find(company => company.client.items.some(item => item.id === match.id));
     setCompany(companyMatch);
-  }, [editOpen.id, clients]);
+  }, [editOpen.id, clients, companies]);
 
   useEffect(() => {
     setDateOfBirth(client?.dateOfBirth);
-  }, [client?.dateOfBirth]);
+  }, [client, setDateOfBirth]);
 
   if (_.isEmpty(client)) return null;
 
@@ -93,22 +100,33 @@ export default function EditClient() {
           name='lastName'
           defaultValue={client.lastName}
         />
-        <FormControl variant='outlined'>
-          <Controller
-            as={
-              <Select className={classes.field}>
-                {companies.map(company => {
-                  return (
-                    <MenuItem key={company.id} value={company.id}>
-                      {company.name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            }
-            name='clientCompanyId'
-            control={control}
-            defaultValue={company ? company.id : ''}
+        <FormControl className={classes.field} variant='outlined'>
+          <Autocomplete
+            required
+            onChange={(e, data) => {
+              setValue('clientCompanyId', data?.id);
+            }}
+            className={classes.formControl}
+            options={companies}
+            defaultValue={company}
+            getOptionLabel={option => option.name ?? ''}
+            renderInput={params => <TextField {...params} name='clientCompanyId' label='Company' variant='outlined' />}
+          />
+        </FormControl>
+        <FormControl className={classes.field} variant='outlined'>
+          <Autocomplete
+            required
+            onChange={(e, data) => {
+              console.log(data)
+              setValue('clientResidenceId', data?.id);
+            }}
+            className={classes.formControl}
+            options={residences}
+            defaultValue={client?.residence}
+            getOptionLabel={option => option.name ?? ''}
+            renderInput={params => (
+              <TextField {...params} name='clientResidenceId' label='Residence' variant='outlined' />
+            )}
           />
         </FormControl>
         <FormControl className={classes.field}>

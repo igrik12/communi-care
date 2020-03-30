@@ -280,12 +280,8 @@ export const createClient = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -333,12 +329,8 @@ export const updateClient = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -386,12 +378,8 @@ export const deleteClient = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -415,25 +403,15 @@ export const createResidence = /* GraphQL */ `
           name
         }
       }
-      client {
-        id
-        firstName
-        lastName
-        dateOfBirth
-        isActive
-        clientRecords {
-          nextToken
-        }
-        company {
+      clients {
+        items {
           id
-          name
-          companyLogoUrl
+          firstName
+          lastName
+          dateOfBirth
           isActive
         }
-        residence {
-          id
-          name
-        }
+        nextToken
       }
     }
   }
@@ -456,25 +434,15 @@ export const updateResidence = /* GraphQL */ `
           name
         }
       }
-      client {
-        id
-        firstName
-        lastName
-        dateOfBirth
-        isActive
-        clientRecords {
-          nextToken
-        }
-        company {
+      clients {
+        items {
           id
-          name
-          companyLogoUrl
+          firstName
+          lastName
+          dateOfBirth
           isActive
         }
-        residence {
-          id
-          name
-        }
+        nextToken
       }
     }
   }
@@ -497,25 +465,15 @@ export const deleteResidence = /* GraphQL */ `
           name
         }
       }
-      client {
-        id
-        firstName
-        lastName
-        dateOfBirth
-        isActive
-        clientRecords {
-          nextToken
-        }
-        company {
+      clients {
+        items {
           id
-          name
-          companyLogoUrl
+          firstName
+          lastName
+          dateOfBirth
           isActive
         }
-        residence {
-          id
-          name
-        }
+        nextToken
       }
     }
   }
@@ -539,12 +497,8 @@ export const createAddress = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -569,12 +523,8 @@ export const updateAddress = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }
@@ -599,12 +549,8 @@ export const deleteAddress = /* GraphQL */ `
           county
           postCode
         }
-        client {
-          id
-          firstName
-          lastName
-          dateOfBirth
-          isActive
+        clients {
+          nextToken
         }
       }
     }

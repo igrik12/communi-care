@@ -62,6 +62,8 @@ const useStyles = makeStyles(theme => ({
   paper: {
     height: '100%'
   },
+  avatar: { color: '#fff', background: '#9187F2' },
+  itemText: { color: '#9187F2' },
   logoText: {
     margin: theme.spacing(1),
     display: 'inline-block',
@@ -169,9 +171,10 @@ const ClientList = ({ clients }) => {
               alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar />
+                <Avatar className={classes.avatar} />
               </ListItemAvatar>
               <ListItemText
+                className={classes.itemText}
                 primary={`${client.firstName} ${client.lastName}`}
                 secondary={
                   <>
@@ -182,7 +185,11 @@ const ClientList = ({ clients }) => {
                 }
               />
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: CLIENT, id: client.id })}>
+                <IconButton
+                  color='secondary'
+                  edge='end'
+                  onClick={() => setOpenDelete({ open: true, type: CLIENT, id: client.id })}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -207,13 +214,14 @@ const StaffList = ({ staff }) => {
             <ListItem
               onClick={() => setEditOpen({ open: true, type: STAFF, id: st.id })}
               button
-              key={st.username + index}
+              key={st.id}
               alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar />
+                <Avatar className={classes.avatar} />
               </ListItemAvatar>
               <ListItemText
+                className={classes.itemText}
                 primary={st.username}
                 secondary={
                   <>
@@ -226,7 +234,11 @@ const StaffList = ({ staff }) => {
                 }
               />
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: STAFF, id: st.id })}>
+                <IconButton
+                  color='secondary'
+                  edge='end'
+                  onClick={() => setOpenDelete({ open: true, type: STAFF, id: st.id })}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -252,15 +264,19 @@ const ResidenceList = ({ residences }) => {
             <ListItem
               onClick={() => setEditOpen({ open: true, type: RESIDENCE, id: residence.id })}
               button
-              key={residence.name + index}
+              key={residence.id}
               alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar />
+                <Avatar className={classes.avatar} />
               </ListItemAvatar>
-              <ListItemText primary={residence.name} />
+              <ListItemText className={classes.itemText} primary={residence.name} />
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: RESIDENCE, id: residence.id })}>
+                <IconButton
+                  color='secondary'
+                  edge='end'
+                  onClick={() => setOpenDelete({ open: true, type: RESIDENCE, id: residence.id })}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -289,10 +305,11 @@ const CompanyList = ({ companies }) => {
               alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar src={company.companyLogoUrl} />
+                <Avatar className={classes.avatar} src={company.companyLogoUrl} />
               </ListItemAvatar>
               <ListItemText
                 primary={company.name}
+                className={classes.itemText}
                 secondary={
                   <Tooltip title={company.companyLogoUrl}>
                     <Typography
@@ -307,7 +324,11 @@ const CompanyList = ({ companies }) => {
                 }
               />
               <ListItemSecondaryAction>
-                <IconButton edge='end' onClick={() => setOpenDelete({ open: true, type: COMPANY, id: company.id })}>
+                <IconButton
+                  color='secondary'
+                  edge='end'
+                  onClick={() => setOpenDelete({ open: true, type: COMPANY, id: company.id })}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>

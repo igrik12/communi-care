@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import { CLIENT } from 'utils/constants';
 
@@ -34,7 +34,7 @@ const AddClient = () => {
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const companies = useStoreState(state => state.companies);
   const residences = useStoreState(state => state.residences);
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, control } = useForm();
 
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const handleDateChange = date => {
@@ -42,13 +42,21 @@ const AddClient = () => {
     setDateOfBirth(date);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
-  }, [register]);
+    register({ name: 'clientCompanyId' });
+  }, [register, setValue]);
 
-  const onHandleSubmit = data => {
-    submitEntity({ type: CLIENT, data });
+  const onSubmit = data => {
+    console.log(data);
+    // submitEntity({ type: CLIENT, data });
     reset();
+    setValue('clientCompanyId', null);
+  };
+
+  const onReset = () => {
+    reset();
+    setValue('clientCompanyId', null);
   };
 
   return (
@@ -56,7 +64,7 @@ const AddClient = () => {
       <Typography gutterBottom variant='h5' component='h2'>
         Client
       </Typography>
-      <form onSubmit={handleSubmit(onHandleSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={1}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <FormControl fullWidth className={classes.formControl}>
@@ -99,7 +107,7 @@ const AddClient = () => {
             </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <FormControl className={classes.formControl}>
+            <FormControl fullWidth className={classes.formControl}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   required
@@ -114,37 +122,68 @@ const AddClient = () => {
             </FormControl>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <Autocomplete
-              required
-              className={classes.formControl}
-              options={residences}
-              getOptionLabel={option => option.name}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  inputRef={register({ required: true })}
-                  name='recidency'
-                  label='Recidency'
-                  variant='outlined'
+            <Controller
+              as={
+                <Autocomplete
+                  required
+                  className={classes.formControl}
+                  options={residences}
+                  autoHighlight
+                  renderOption={option => (
+                    <React.Fragment>
+                      {option.name} {option.address?.postCode}
+                    </React.Fragment>
+                  )}
+                  getOptionLabel={option => option.name || ''}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label='Residence'
+                      variant='outlined'
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'disabled'
+                      }}
+                    />
+                  )}
                 />
-              )}
+              }
+              onChange={([event, data]) => {
+                return data;
+              }}
+              name='clientResidenceId'
+              control={control}
+              defaultValue={residences[0] || ''}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
-            <Autocomplete
-              required
-              className={classes.textField}
-              options={companies}
-              getOptionLabel={option => option.name}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  inputRef={register({ required: true })}
-                  name='company'
-                  label='Company'
-                  variant='outlined'
+            <Controller
+              as={
+                <Autocomplete
+                  required
+                  className={classes.formControl}
+                  options={companies}
+                  autoHighlight
+                  getOptionLabel={option => option.name || ''}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label='Company'
+                      variant='outlined'
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'disabled'
+                      }}
+                    />
+                  )}
                 />
-              )}
+              }
+              onChange={([event, data]) => {
+                return data;
+              }}
+              name='clientCompanyId'
+              control={control}
+              defaultValue={companies[0] || {}}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -155,7 +194,9 @@ const AddClient = () => {
             />
           </Grid>
           <ButtonGroup fullWidth className={classes.buttonGroup}>
-            <Button color='primary'>Reset</Button>
+            <Button color='primary' onClick={onReset}>
+              Reset
+            </Button>
             <Button type='submit' color='primary'>
               Add
             </Button>

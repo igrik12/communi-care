@@ -47,7 +47,7 @@ export default function Summary() {
   const user = useStoreState(state => state.user);
 
   const fetchRecords = useCallback(async selectedRecord => {
-    const ret = await API.graphql(graphqlOperation(getPlainEntry, { id: selectedRecord?.entry?.id }));
+    const ret = await API.graphql(graphqlOperation(getPlainEntry, { id: _.get(selectedRecord, 'entry.id') }));
     const mappedEntries = [];
     _.forIn(ret.data.getEntry, (value, key) => {
       if (key === 'id') {
@@ -75,9 +75,9 @@ export default function Summary() {
   return (
     <div className={classes.root}>
       <DataPanel
-        name={selectedRecord?.client?.firstName}
-        createdAt={selectedRecord?.createdAt}
-        entryType={selectedRecord?.entryType}
+        name={_.get(selectedRecord, 'client.firstName')}
+        createdAt={_.get(selectedRecord, 'createdAt')}
+        entryType={_.get(selectedRecord, 'entryType')}
       >
         <Grid container spacing={2}>
           {entries
