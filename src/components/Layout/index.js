@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreActions, useStoreState, useStore } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 import ToastAlert from '../Shared/ToastAlert';
 import _ from 'lodash';
@@ -70,11 +70,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const signOut = ({ dispatch }) => {
+  dispatch.reset();
+  Auth.signOut();
+};
+
 function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const store = useStore();
   const { container, children } = props;
-  const [active, setActive] = useState('Management');
+  const [active, setActive] = useState('Records');
   const user = useStoreState(state => state.user);
   const companyData = useStoreState(state => state.companyData);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
@@ -157,7 +163,7 @@ function ResponsiveDrawer(props) {
             <Button onClick={setThemeColor} color='inherit'>
               Theme
             </Button>
-            <Button onClick={() => Auth.signOut()} color='inherit'>
+            <Button onClick={() => signOut(store)} color='inherit'>
               Logout
             </Button>
           </ButtonGroup>
