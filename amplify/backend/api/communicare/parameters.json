@@ -1,10 +1,10 @@
 {
-    "AppSyncApiName": "api",
+    "AppSyncApiName": "communicare",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": "false",
     "AuthCognitoUserPoolId": {
         "Fn::GetAtt": [
-            "authcommunicarec17db351",
+            "authcommunicare58b36989",
             "Outputs.UserPoolId"
         ]
     }

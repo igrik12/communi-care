@@ -44,19 +44,25 @@ const AddClient = () => {
 
   useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
-    register({ name: 'clientCompanyId' });
   }, [register, setValue]);
 
-  const onSubmit = data => {
-    console.log(data);
-    // submitEntity({ type: CLIENT, data });
+  const onSubmit = clientData => {
+    const data = {
+      firstName: clientData.firstName,
+      lastName: clientData.lastName,
+      dateOfBirth: clientData.dateOfBirth,
+      clientCompanyId: clientData.company.id,
+      clientResidenceId: clientData.residence.id,
+      isActive: clientData.isActive
+    };
+    submitEntity({ type: CLIENT, data });
     reset();
-    setValue('clientCompanyId', null);
+    setDateOfBirth(null);
   };
 
   const onReset = () => {
     reset();
-    setValue('clientCompanyId', null);
+    setDateOfBirth(null);
   };
 
   return (
@@ -129,12 +135,12 @@ const AddClient = () => {
                   className={classes.formControl}
                   options={residences}
                   autoHighlight
+                  getOptionLabel={option => option.name}
                   renderOption={option => (
                     <React.Fragment>
                       {option.name} {option.address?.postCode}
                     </React.Fragment>
                   )}
-                  getOptionLabel={option => option.name || ''}
                   renderInput={params => (
                     <TextField
                       {...params}
@@ -151,9 +157,9 @@ const AddClient = () => {
               onChange={([event, data]) => {
                 return data;
               }}
-              name='clientResidenceId'
+              defaultValue={residences[0]}
               control={control}
-              defaultValue={residences[0] || ''}
+              name='residence'
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -181,9 +187,9 @@ const AddClient = () => {
               onChange={([event, data]) => {
                 return data;
               }}
-              name='clientCompanyId'
+              name='company'
+              defaultValue={companies[0]}
               control={control}
-              defaultValue={companies[0] || {}}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
