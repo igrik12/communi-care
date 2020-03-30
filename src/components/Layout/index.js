@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreActions, useStoreState, useStore } from 'easy-peasy';
 import { Link } from 'react-router-dom';
 import ToastAlert from '../Shared/ToastAlert';
 import _ from 'lodash';
@@ -26,8 +26,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { Avatar } from '@material-ui/core';
+import { Avatar, Box } from '@material-ui/core';
 import UserIcon from '@material-ui/icons/SupervisedUserCircle';
+import { ReactComponent as Logo } from 'assets/logo.svg';
 
 const drawerWidth = 260;
 
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     title: {
       flexGrow: 1
     },
-    background: '#716CE2'
+    background: '#4354a0'
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -59,18 +60,27 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
+    padding: theme.spacing(1)
   },
+  icon: { color: '#fff' },
   content: {
     flexGrow: 1,
     padding: theme.spacing(1)
   }
 }));
 
+const signOut = ({ dispatch }) => {
+  dispatch.reset();
+  Auth.signOut();
+};
+
 function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const store = useStore();
   const { container, children } = props;
+  const [active, setActive] = useState('Records');
   const user = useStoreState(state => state.user);
   const companyData = useStoreState(state => state.companyData);
   const setThemeColor = useStoreActions(actions => actions.layoutModel.setThemeColor);
@@ -83,22 +93,29 @@ function ResponsiveDrawer(props) {
     <div>
       <ListItem>
         <ListItemIcon>
-          <Avatar src={companyData?.company?.companyLogoUrl} />
+          <Avatar src={_.get(companyData, 'company.companyLogoUrl')} />
         </ListItemIcon>
-        <Typography variant={'h6'}>{companyData?.company?.name ?? 'No Company'}</Typography>
+        <Typography variant={'h6'}>{_.get(companyData, 'company.name') || 'No Company'}</Typography>
       </ListItem>
       <Divider />
       <List>
         {[
           { title: 'Records', value: '/record', authorised: () => hasPermissions(user, 'recordsPage') },
-          { title: 'Reports', value: '/reports', authorised: () => hasPermissions(user, 'reportsPage') },
+          { title: 'Care Reports', value: '/reports', authorised: () => hasPermissions(user, 'reportsPage') },
           { title: 'Clients', value: '/clients', authorised: () => hasPermissions(user, 'clientsPage') },
           { title: 'Management', value: '/management', authorised: () => hasPermissions(user, 'managementPage') }
         ].map((item, index) => {
           return (
             item.authorised() && (
-              <ListItem component={Link} to={item.value} button key={item.title}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItem
+                style={active === item.title ? { background: '#FF9E43', borderRadius: 5 } : null}
+                component={Link}
+                onClick={() => setActive(item.title)}
+                to={item.value}
+                button
+                key={item.title}
+              >
+                <ListItemIcon className={classes.icon}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={item.title} />
               </ListItem>
             )
@@ -109,7 +126,7 @@ function ResponsiveDrawer(props) {
       <List>
         {['Support', 'About'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemIcon className={classes.icon}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
@@ -132,9 +149,12 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant='h5' noWrap>
-            @Communi-Care
-          </Typography>
+          <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Logo style={{ width: 50, height: 50 }} />
+            <Typography className={classes.title} variant='h5' noWrap>
+              Communi-Care
+            </Typography>
+          </Box>
 
           <ButtonGroup style={{ marginLeft: 'auto' }} variant='text' color='primary'>
             <Button disableRipple startIcon={<UserIcon />} color='inherit'>
@@ -143,7 +163,7 @@ function ResponsiveDrawer(props) {
             <Button onClick={setThemeColor} color='inherit'>
               Theme
             </Button>
-            <Button onClick={() => Auth.signOut()} color='inherit'>
+            <Button onClick={() => signOut(store)} color='inherit'>
               Logout
             </Button>
           </ButtonGroup>

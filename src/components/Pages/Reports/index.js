@@ -4,15 +4,13 @@ import { listClientRecordsWithClient } from 'graphql/customQueries';
 import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Grid, Paper, withWidth } from '@material-ui/core';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import Summary from './Summary';
-import _ from 'lodash';
 
 const convertRecords = records => {
-  console.log(records);
   return records.map(record => ({
     ...record,
-    fullName: `${record?.client?.firstName?.trim() ?? 'unknown'} ${record?.client?.lastName?.trim() ?? 'unknown'}`
+    fullName: `${record?.client?.firstName?.trim() || 'unknown'} ${record?.client?.lastName?.trim() || 'unknown'}`
   }));
 };
 
@@ -93,15 +91,50 @@ function CareReports() {
       <Grid item lg={12} md={12} sm={12} xs={12}>
         <Summary />
       </Grid>
-      <Grid item lg={12} md={12} sm={12} xs={12}>
+      <Grid item lg={6} md={12} sm={12} xs={12}>
         <Paper elevation={3} style={{ minHeight: '100%' }}>
-          <Bar height={400} data={dataBar(count)} options={barChartOptions} />
+          <Bar height={200} data={dataBar(count)} options={barChartOptions} />
+        </Paper>
+      </Grid>
+      <Grid item lg={6} md={12} sm={12} xs={12}>
+        <Paper elevation={3} style={{ minHeight: '100%' }}>
+          <Line height={200} data={lineData} />
         </Paper>
       </Grid>
     </Grid>
   );
 }
+var s1 = {
+  label: 's1',
+  borderColor: 'blue',
+  data: [
+    { x: '2017-01-06 18:39:30', y: 100 },
+    { x: '2017-01-07 18:39:28', y: 101 }
+  ]
+};
 
+var s2 = {
+  label: 's2',
+  borderColor: 'red',
+  data: [
+    { x: '2017-01-07 18:00:00', y: 90 },
+    { x: '2017-01-08 18:00:00', y: 105 }
+  ]
+};
+
+const lineData = {
+  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  datasets: [s1, s2],
+  options: {
+    scales: {
+      xAxes: [
+        {
+          type: 'date'
+        }
+      ]
+    }
+  }
+};
 const dataBar = ({ emergency, normal, warning }) => ({
   labels: ['Emergency', 'Normal', 'Warning'],
   datasets: [
