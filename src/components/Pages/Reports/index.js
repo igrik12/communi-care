@@ -22,7 +22,6 @@ function CareReports() {
   useEffect(() => {
     const query = async () => {
       const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
-      console.log(ret);
       setRecords(ret.data.listClientRecords.items);
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };

@@ -1,5 +1,5 @@
 import { action, thunk, computed } from 'easy-peasy';
-import { createClientRecord, createEntry, updateClientRecord } from '../graphql/mutations';
+import { createClientRecord, createEntry } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
 
@@ -42,51 +42,36 @@ const clientRecordModel = {
   setEntry: action((state, payload) => {
     state.record.entry[payload.fieldId] = payload.value;
   }),
-  saveRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
+  createRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
     const { clientId, shift, recordDate, entry } = getState().record;
     const setAlertOpen = getStoreActions().setAlertOpen;
-    const recordDetails = {
-      clientRecordStaffId: getStoreState().staff.id,
-      clientRecordClientId: clientId,
-      createdAt: recordDate,
-      shift: shift,
-      entryType: payload.entryType
-    };
-    let record;
-    try {
-      record = await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
-    } catch (error) {
-      setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
-      console.error(error);
-      return;
-    }
 
-    const entryDetails = {
-      entryClientRecordId: record.data.createClientRecord.id,
-      ...entry
-    };
     let retEntry;
-
     try {
-      retEntry = await API.graphql(graphqlOperation(createEntry, { input: entryDetails }));
+      retEntry = await API.graphql(graphqlOperation(createEntry, { input: entry }));
     } catch (error) {
       setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
       console.error(error);
       return;
     }
 
-    const recordUpdate = {
-      id: record.data.createClientRecord.id,
-      clientRecordEntryId: retEntry.data.createEntry.id
+    const recordDetails = {
+      clientRecordStaffId: getStoreState().staff.id,
+      clientRecordEntryId: retEntry.data.createEntry.id,
+      clientRecordClientId: clientId,
+      createdAt: recordDate,
+      shift: shift,
+      entryType: payload.entryType
     };
+
     try {
-      await API.graphql(graphqlOperation(updateClientRecord, { input: recordUpdate }));
-      actions.resetRecord();
+      await API.graphql(graphqlOperation(createClientRecord, { input: recordDetails }));
       setAlertOpen({ open: true, success: true, message: 'Successfully created record!' });
     } catch (error) {
-      setAlertOpen({ open: true, success: false, message: 'Failed to update client record' });
+      setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
       console.error(error);
-      return;
+    } finally {
+      actions.resetRecord();
     }
   }),
   clients: [],
