@@ -1,48 +1,19 @@
-import { action, thunk, computed } from 'easy-peasy';
-import { createClientRecord } from '../graphql/mutations';
+import { action, thunk } from 'easy-peasy';
+import { createClientRecord, updateClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
+import _ from 'lodash';
 
 const clientRecordModel = {
   records: [],
   setRecords: action((state, payload) => {
     state.records = payload;
   }),
-  saveRecordDisabled: computed(state => {
-    return (
-      !state.record.clientId ||
-      !state.record.shift ||
-      Object.keys(state.record.entry).length < 9 ||
-      Object.values(state.record.entry).some(entry => !entry)
-    );
-  }),
   selectedRecord: undefined,
   setSelectedRecord: action((state, payload) => {
     state.selectedRecord = payload;
   }),
-  entries: [],
-  setEntries: action((state, payload) => {
-    state.entries = payload;
-  }),
-  record: {
-    recordDate: new Date(),
-    clientId: '',
-    shift: '',
-    entry: {}
-  },
-  resetRecord: action((state, payload) => {
-    state.record.recordDate = new Date();
-    state.record.clientId = '';
-    state.record.shift = '';
-    state.record.entry = {};
-  }),
-  setRecord: action((state, payload) => {
-    state.record[payload.fieldId] = payload.value;
-  }),
-  setEntry: action((state, payload) => {
-    state.record.entry[payload.fieldId] = payload.value;
-  }),
-  createRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
+  createRecord: thunk(async (actions, payload, { getStoreState, getStoreActions }) => {
     const setAlertOpen = getStoreActions().setAlertOpen;
     const recordDetails = {
       clientRecordStaffId: getStoreState().user.id,
@@ -55,8 +26,20 @@ const clientRecordModel = {
     } catch (error) {
       setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
       console.error(error);
-    } finally {
-      actions.resetRecord();
+    }
+  }),
+  updateRecord: thunk(async (actions, payload, { getStoreState, getStoreActions }) => {
+    const setAlertOpen = getStoreActions().setAlertOpen;
+    const updateDetails = {
+      input: payload
+    };
+    try {
+      console.log(updateDetails);
+      await API.graphql(graphqlOperation(updateClientRecord, updateDetails));
+      setAlertOpen({ open: true, success: true, message: 'Successfully updated record!' });
+    } catch (error) {
+      setAlertOpen({ open: true, success: false, message: 'Failed to create client record' });
+      console.error(error);
     }
   }),
   clients: [],

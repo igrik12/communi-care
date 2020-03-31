@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
@@ -34,17 +34,7 @@ const AddClient = () => {
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const companies = useStoreState(state => state.companies);
   const residences = useStoreState(state => state.residences);
-  const { register, handleSubmit, reset, setValue, control } = useForm();
-
-  const [dateOfBirth, setDateOfBirth] = useState(null);
-  const handleDateChange = date => {
-    setValue('dateOfBirth', date);
-    setDateOfBirth(date);
-  };
-
-  useEffect(() => {
-    register({ name: 'dateOfBirth', required: true });
-  }, [register]);
+  const { register, handleSubmit, reset, control } = useForm();
 
   const onSubmit = clientData => {
     const data = {
@@ -57,12 +47,10 @@ const AddClient = () => {
     };
     submitEntity({ type: CLIENT, data });
     reset();
-    setDateOfBirth(null);
   };
 
   const onReset = () => {
     reset();
-    setDateOfBirth(null);
   };
 
   return (
@@ -118,11 +106,10 @@ const AddClient = () => {
                 <KeyboardDatePicker
                   required
                   inputVariant='outlined'
+                  inputRef={register}
                   name='dateOfBirth'
                   label='Date of Birth'
                   format='MM/dd/yyyy'
-                  value={dateOfBirth}
-                  onChange={handleDateChange}
                 />
               </MuiPickersUtilsProvider>
             </FormControl>
@@ -154,7 +141,7 @@ const AddClient = () => {
                   )}
                 />
               }
-              onChange={([event, data]) => {
+              onChange={([, data]) => {
                 return data;
               }}
               defaultValue={residences[0]}
@@ -184,7 +171,7 @@ const AddClient = () => {
                   )}
                 />
               }
-              onChange={([event, data]) => {
+              onChange={([, data]) => {
                 return data;
               }}
               name='company'

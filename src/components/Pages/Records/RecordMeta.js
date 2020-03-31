@@ -28,12 +28,6 @@ const RecordMeta = ({ control, setValue, register }) => {
   const clients = useStoreState(state => state.clients);
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
-  const [createdAt, setCreatedAt] = useState(null);
-
-  const handleDateChange = date => {
-    setValue('createdAt', date);
-    setCreatedAt(date);
-  };
 
   useEffect(() => {
     register({ name: 'createdAt', required: true });
@@ -61,14 +55,13 @@ const RecordMeta = ({ control, setValue, register }) => {
           <Grid item sm={6} xs={6} md={3} lg={3}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
+                required
                 style={{ marginBottom: 16 }}
                 margin='normal'
                 label='Date'
                 name='createdAt'
                 inputRef={register}
                 format='MM/dd/yyyy'
-                value={createdAt}
-                onChange={handleDateChange}
                 KeyboardButtonProps={{
                   'aria-label': 'change date'
                 }}

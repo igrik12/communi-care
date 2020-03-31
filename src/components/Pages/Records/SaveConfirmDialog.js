@@ -96,7 +96,6 @@ export default function ConfirmationDialog({ onSubmitCallback, disable }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('normal');
-  const saveRecordDisabled = useStoreState(state => state.clientRecordModel.saveRecordDisabled);
 
   const handleClick = () => {
     setOpen(true);
