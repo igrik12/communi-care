@@ -3,16 +3,24 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
   listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      status
+      entryType
       createdAt
       shift
-      entryType
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+      version
       client {
         id
         firstName
         lastName
-      }
-      entry {
-        id
       }
     }
     nextToken

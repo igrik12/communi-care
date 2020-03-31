@@ -360,22 +360,19 @@ export const createClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
     }
   }
@@ -406,22 +403,19 @@ export const updateClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
     }
   }
@@ -452,104 +446,20 @@ export const deleteClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
-    }
-  }
-`;
-export const createEntry = /* GraphQL */ `
-  mutation CreateEntry(
-    $input: CreateEntryInput!
-    $condition: ModelEntryConditionInput
-  ) {
-    createEntry(input: $input, condition: $condition) {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
-    }
-  }
-`;
-export const updateEntry = /* GraphQL */ `
-  mutation UpdateEntry(
-    $input: UpdateEntryInput!
-    $condition: ModelEntryConditionInput
-  ) {
-    updateEntry(input: $input, condition: $condition) {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
-    }
-  }
-`;
-export const deleteEntry = /* GraphQL */ `
-  mutation DeleteEntry(
-    $input: DeleteEntryInput!
-    $condition: ModelEntryConditionInput
-  ) {
-    deleteEntry(input: $input, condition: $condition) {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
     }
   }
 `;

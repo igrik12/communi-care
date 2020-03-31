@@ -312,22 +312,19 @@ export const onCreateClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
     }
   }
@@ -355,22 +352,19 @@ export const onUpdateClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
     }
   }
@@ -398,95 +392,20 @@ export const onDeleteClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
-    }
-  }
-`;
-export const onCreateEntry = /* GraphQL */ `
-  subscription OnCreateEntry {
-    onCreateEntry {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
-    }
-  }
-`;
-export const onUpdateEntry = /* GraphQL */ `
-  subscription OnUpdateEntry {
-    onUpdateEntry {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
-    }
-  }
-`;
-export const onDeleteEntry = /* GraphQL */ `
-  subscription OnDeleteEntry {
-    onDeleteEntry {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
-        createdAt
-        status
-        shift
-        entryType
-        version
-      }
     }
   }
 `;
