@@ -52,25 +52,19 @@ type ClientRecord @model @versioned {
   id: ID!
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
-  entry: Entry @connection(name: "ClientEntry")
-  createdAt: AWSDateTime!
   status: String
-  shift: ShiftType
-  entryType: EntryType
-}
-
-type Entry @model {
-  id: ID!
-  moodAndInteraction: String
-  selfCare: String
-  physicalHealth: String
-  medication: String
-  leave: String
-  dietAndFluids: String
-  livingSkills: String
-  finances: String
-  dailyActivityParticipation: String
-  clientRecord: ClientRecord @connection(name: "ClientEntry")
+  entryType: EntryType!
+  createdAt: AWSDateTime!
+  shift: ShiftType!
+  moodAndInteraction: String!
+  selfCare: String!
+  physicalHealth: String!
+  medication: String!
+  leave: String!
+  dietAndFluids: String!
+  livingSkills: String!
+  finances: String!
+  dailyActivityParticipation: String!
 }
 
 enum UserType {

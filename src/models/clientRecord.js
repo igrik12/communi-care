@@ -1,5 +1,5 @@
 import { action, thunk, computed } from 'easy-peasy';
-import { createClientRecord, createEntry } from '../graphql/mutations';
+import { createClientRecord } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients } from '../graphql/queries';
 
@@ -43,25 +43,10 @@ const clientRecordModel = {
     state.record.entry[payload.fieldId] = payload.value;
   }),
   createRecord: thunk(async (actions, payload, { getState, getStoreState, getStoreActions }) => {
-    const { clientId, shift, recordDate, entry } = getState().record;
     const setAlertOpen = getStoreActions().setAlertOpen;
-
-    let retEntry;
-    try {
-      retEntry = await API.graphql(graphqlOperation(createEntry, { input: entry }));
-    } catch (error) {
-      setAlertOpen({ open: true, success: false, message: 'Failed to create entry' });
-      console.error(error);
-      return;
-    }
-
     const recordDetails = {
-      clientRecordStaffId: getStoreState().staff.id,
-      clientRecordEntryId: retEntry.data.createEntry.id,
-      clientRecordClientId: clientId,
-      createdAt: recordDate,
-      shift: shift,
-      entryType: payload.entryType
+      clientRecordStaffId: getStoreState().user.id,
+      ...payload
     };
 
     try {

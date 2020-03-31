@@ -44,7 +44,7 @@ const AddClient = () => {
 
   useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
-  }, [register, setValue]);
+  }, [register]);
 
   const onSubmit = clientData => {
     const data = {

@@ -210,22 +210,19 @@ export const getClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
-      entry {
-        id
-        moodAndInteraction
-        selfCare
-        physicalHealth
-        medication
-        leave
-        dietAndFluids
-        livingSkills
-        finances
-        dailyActivityParticipation
-      }
-      createdAt
       status
-      shift
       entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
       version
     }
   }
@@ -239,49 +236,10 @@ export const listClientRecords = /* GraphQL */ `
     listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
         status
-        shift
         entryType
-        version
-      }
-      nextToken
-    }
-  }
-`;
-export const getEntry = /* GraphQL */ `
-  query GetEntry($id: ID!) {
-    getEntry(id: $id) {
-      id
-      moodAndInteraction
-      selfCare
-      physicalHealth
-      medication
-      leave
-      dietAndFluids
-      livingSkills
-      finances
-      dailyActivityParticipation
-      clientRecord {
-        id
         createdAt
-        status
         shift
-        entryType
-        version
-      }
-    }
-  }
-`;
-export const listEntrys = /* GraphQL */ `
-  query ListEntrys(
-    $filter: ModelEntryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
         moodAndInteraction
         selfCare
         physicalHealth
@@ -291,6 +249,7 @@ export const listEntrys = /* GraphQL */ `
         livingSkills
         finances
         dailyActivityParticipation
+        version
       }
       nextToken
     }

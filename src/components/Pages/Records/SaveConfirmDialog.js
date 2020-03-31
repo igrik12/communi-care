@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStoreState, useStoreActions } from 'easy-peasy';
+import { useStoreState } from 'easy-peasy';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -92,12 +92,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ConfirmationDialog() {
+export default function ConfirmationDialog({ onSubmitCallback, disable }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('normal');
   const saveRecordDisabled = useStoreState(state => state.clientRecordModel.saveRecordDisabled);
-  const createRecord = useStoreActions(actions => actions.clientRecordModel.createRecord);
 
   const handleClick = () => {
     setOpen(true);
@@ -105,16 +104,15 @@ export default function ConfirmationDialog() {
 
   const handleClose = newValue => {
     setOpen(false);
-
     if (newValue) {
       setValue(newValue);
-      createRecord({ entryType: newValue });
+      onSubmitCallback(newValue);
     }
   };
 
   return (
     <div className={classes.root}>
-      <Fab disabled={saveRecordDisabled} variant='round' color='primary' onClick={handleClick}>
+      <Fab disabled={disable} variant='round' color='primary' onClick={handleClick}>
         <Save />
       </Fab>
       <ConfirmationDialogRaw
