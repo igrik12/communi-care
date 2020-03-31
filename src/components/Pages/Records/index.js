@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'date-fns';
-import { useStoreActions, useStoreState } from 'easy-peasy';
+import { useStoreActions } from 'easy-peasy';
 import RecordMeta from './RecordMeta';
 import _ from 'lodash';
+import { useForm } from 'react-hook-form';
 
 import TextEntries from './TextEntries';
 import SaveConfirmDialog from './SaveConfirmDialog';
-import { useForm } from 'react-hook-form';
 
 // MUI Imports
 import Grid from '@material-ui/core/Grid';

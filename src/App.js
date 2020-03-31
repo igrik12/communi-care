@@ -114,7 +114,7 @@ function App() {
             <Management />
           </PrivateRoute>
           <Route path='/unauthorised' component={Unauthorised} />
-          <Redirect to='/record' />
+          <Redirect to='/reports' />
         </Layout>
       </Switch>
     </MuiThemeProvider>
