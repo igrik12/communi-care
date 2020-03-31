@@ -15,11 +15,13 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import InfoIcon from "@material-ui/icons/InfoOutlined";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import ManagementIcon from '@material-ui/icons/SupervisedUserCircle';
+import FolderIcon from '@material-ui/icons/FolderShared';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -100,10 +102,25 @@ function ResponsiveDrawer(props) {
       <Divider />
       <List>
         {[
-          { title: 'Records', value: '/record', authorised: () => hasPermissions(user, 'recordsPage') },
-          { title: 'Care Reports', value: '/reports', authorised: () => hasPermissions(user, 'reportsPage') },
+          {
+            title: 'Records',
+            value: '/records',
+            authorised: () => hasPermissions(user, 'recordsPage'),
+            Icon: <InboxIcon />
+          },
+          {
+            title: 'Care Reports',
+            value: '/reports',
+            authorised: () => hasPermissions(user, 'reportsPage'),
+            Icon: <FolderIcon />
+          },
           { title: 'Clients', value: '/clients', authorised: () => hasPermissions(user, 'clientsPage') },
-          { title: 'Management', value: '/management', authorised: () => hasPermissions(user, 'managementPage') }
+          {
+            title: 'Management',
+            value: '/management',
+            authorised: () => hasPermissions(user, 'managementPage'),
+            Icon: <ManagementIcon />
+          }
         ].map((item, index) => {
           return (
             item.authorised() && (
@@ -115,7 +132,7 @@ function ResponsiveDrawer(props) {
                 button
                 key={item.title}
               >
-                <ListItemIcon className={classes.icon}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon className={classes.icon}>{item.Icon}</ListItemIcon>
                 <ListItemText primary={item.title} />
               </ListItem>
             )
@@ -124,9 +141,9 @@ function ResponsiveDrawer(props) {
       </List>
       <Divider />
       <List>
-        {['Support', 'About'].map((text, index) => (
+        {['About'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon className={classes.icon}>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemIcon className={classes.icon}>{<InfoIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}

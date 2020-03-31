@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
@@ -18,6 +18,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles(theme => ({
   root: { marginTop: theme.spacing(1) },
@@ -34,7 +35,17 @@ const AddClient = () => {
   const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
   const companies = useStoreState(state => state.companies);
   const residences = useStoreState(state => state.residences);
-  const { register, handleSubmit, reset, control } = useForm();
+  const { register, handleSubmit, reset, control, setValue, watch } = useForm();
+
+  useEffect(() => {
+    register({ name: 'dateOfBirth', required: true });
+  }, [register]);
+
+  const handleDateChange = date => {
+    setValue('dateOfBirth', date);
+  };
+
+  const watching = watch(['dateOfBirth']);
 
   const onSubmit = clientData => {
     const data = {
@@ -105,11 +116,11 @@ const AddClient = () => {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   required
+                  onChange={handleDateChange}
                   inputVariant='outlined'
-                  inputRef={register}
-                  name='dateOfBirth'
                   label='Date of Birth'
                   format='MM/dd/yyyy'
+                  value={watching?.dateOfBirth}
                 />
               </MuiPickersUtilsProvider>
             </FormControl>

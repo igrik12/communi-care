@@ -28,7 +28,7 @@ export default function ClientRecord() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={1} direction='column'>
         <Grid item>
-          <RecordMeta control={control} setValue={setValue} register={register} />
+          <RecordMeta control={control} setValue={setValue} register={register} createdAt={watching.createdAt} />
         </Grid>
         <Grid item>
           <TextEntries register={register} />

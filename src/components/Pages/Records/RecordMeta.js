@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RecordMeta = ({ control, setValue, register }) => {
+const RecordMeta = ({ control, setValue, register, createdAt }) => {
   const classes = useStyles();
 
   const clients = useStoreState(state => state.clients);
@@ -33,6 +33,10 @@ const RecordMeta = ({ control, setValue, register }) => {
     register({ name: 'createdAt', required: true });
     setLabelWidth(inputLabel.current.offsetWidth);
   }, [register]);
+
+  const handleDateChange = date => {
+    setValue('createdAt', date);
+  };
 
   return (
     <>
@@ -59,12 +63,9 @@ const RecordMeta = ({ control, setValue, register }) => {
                 style={{ marginBottom: 16 }}
                 margin='normal'
                 label='Date'
-                name='createdAt'
-                inputRef={register}
                 format='MM/dd/yyyy'
-                KeyboardButtonProps={{
-                  'aria-label': 'change date'
-                }}
+                onChange={handleDateChange}
+                value={createdAt}
               />
             </MuiPickersUtilsProvider>
           </Grid>

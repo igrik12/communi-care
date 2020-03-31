@@ -104,7 +104,7 @@ function App() {
       <CssBaseLine />
       <Switch>
         <Layout>
-          <PrivateRoute path='/record' permission='recordsPage'>
+          <PrivateRoute path='/records' permission='recordsPage'>
             <Records />
           </PrivateRoute>
           <PrivateRoute path='/reports' permission='reportsPage'>
@@ -114,7 +114,7 @@ function App() {
             <Management />
           </PrivateRoute>
           <Route path='/unauthorised' component={Unauthorised} />
-          <Redirect to='/reports' />
+          <Redirect to='/records' />
         </Layout>
       </Switch>
     </MuiThemeProvider>
