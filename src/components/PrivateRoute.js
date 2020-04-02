@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router';
 import { useStoreState } from 'easy-peasy';
-import { hasPermissions } from '../../utils/permissions';
+import { hasPermissions } from '../utils/permissions';
 import _ from 'lodash';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';

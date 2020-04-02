@@ -15,7 +15,7 @@ import Poppers from '@material-ui/core/Popper';
 import Divider from '@material-ui/core/Divider';
 // @material-ui/icons
 import Person from '@material-ui/icons/Person';
-import Button from 'components/Shared/CustomButtons/Button.js';
+import Button from 'components/CustomButtons/Button.js';
 
 import styles from 'assets/jss/material-dashboard-react/components/headerLinksStyle.js';
 

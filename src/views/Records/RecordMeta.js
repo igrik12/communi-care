@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useStoreState } from 'easy-peasy';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import DateFnsUtils from '@date-io/date-fns';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import { Paper, Grid, FormControl, InputLabel, Input, InputAdornment, Select, MenuItem, Icon } from '@material-ui/core';
-import Warning from '@material-ui/icons/Warning';
+import { Grid, FormControl, InputLabel, Input, Select, MenuItem, Icon } from '@material-ui/core';
 
-// Creative-tim imports
-import Danger from 'components/Shared/Typography/Danger.js';
-import Card from 'components/Shared/Card/Card.js';
-import CardHeader from 'components/Shared/Card/CardHeader.js';
-import CardIcon from 'components/Shared/Card/CardIcon.js';
-import CardBody from 'components/Shared/Card/CardBody.js';
-import CardFooter from 'components/Shared/Card/CardFooter.js';
+import Card from 'components/Card/Card.js';
+import CardHeader from 'components/Card/CardHeader.js';
+import CardIcon from 'components/Card/CardIcon.js';
+import CardBody from 'components/Card/CardBody.js';
 
 const useStyles = makeStyles(theme => ({
   margin: {

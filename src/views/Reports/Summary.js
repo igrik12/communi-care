@@ -12,7 +12,6 @@ import { Grid, Typography, Button, Box, Paper, Switch, FormControlLabel } from '
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
     padding: theme.spacing(2)
   },
   heading: {

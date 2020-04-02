@@ -52,6 +52,7 @@ export default function EditResidence() {
     updateEntity({ type: RESIDENCE, data: updateDetails });
     setEditOpen({ open: false });
   };
+  console.log(residence)
   useEffect(() => {
     const match = residences.find(residence => residence.id === editOpen.id);
     setResidence(match);
