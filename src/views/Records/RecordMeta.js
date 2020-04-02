@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import DateFnsUtils from '@date-io/date-fns';
 
+
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Grid, FormControl, InputLabel, Input, Select, MenuItem, Icon } from '@material-ui/core';
@@ -70,7 +71,7 @@ const RecordMeta = ({ control, setValue, register, createdAt }) => {
                 <Icon style={{ fontSize: 25 }}>calendar_today</Icon>
               </CardIcon>
             </CardHeader>
-            <CardBody style={{ padding: "7px 20px" }}>
+            <CardBody style={{ padding: '7px 20px' }}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <InputLabel shrink ref={inputLabel} id='select-Staff-label'>
                   Date

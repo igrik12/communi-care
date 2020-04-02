@@ -8,6 +8,7 @@ import ChartistGraph from 'react-chartist';
 import Summary from './Summary';
 import Chartist from 'chartist';
 import _ from 'lodash';
+import DateFnsUtils from '@date-io/date-fns';
 
 // @material-ui/core
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,22 +26,18 @@ import CardFooter from 'components/Card/CardFooter.js';
 
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
+const DateUtil = new DateFnsUtils();
 const useStyles = makeStyles(styles);
 var delays = 80,
   durations = 500;
 
-const generateChartsData = typeData => {
-  const innerLabels = [];
-  const innerSeries = [];
-  typeData.forEach(datum => {
-    innerLabels.push(datum.createdAt);
-    innerSeries.push(datum.count);
-  });
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+const generateChartsData = typeData => {
   const returnValue = {
     data: {
-      labels: innerLabels,
-      series: [innerSeries]
+      labels: _.keys(typeData),
+      series: [_.values(typeData)]
     },
     options: {
       lineSmooth: Chartist.Interpolation.cardinal({
@@ -95,6 +92,32 @@ const convertRecords = records => {
   }));
 };
 
+const groupAll = data => {
+  let innerRes = {};
+  _.forEach(data, (value, key) => {
+    const groupped = _.reduce(
+      value,
+      function(result, item) {
+        const date = new Date(item.createdAt);
+        // if (DateUtil.getDiff(Date.now(), date) > 365) return result;
+        const month = monthNames[date.getMonth()];
+        var year = ('' + date.getFullYear()).slice(-2);
+        var group = month + "'" + year;
+        result[group] = result[group] ? ++result[group] : 1;
+        return result;
+      },
+      {}
+    );
+    innerRes[key] = groupped;
+  });
+  return innerRes;
+};
+const sortByDate = data => {
+  return data.sort(function compare(a, b) {
+    return new Date(a.createdAt) - new Date(b.createdAt);
+  });
+};
+
 function CareReports() {
   const records = useStoreState(state => state.clientRecordModel.records);
   const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
@@ -103,18 +126,9 @@ function CareReports() {
   const classes = useStyles();
 
   useEffect(() => {
-    const sortByDate = data => {
-      return data.sort(function compare(a, b) {
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      });
-    };
     const query = async () => {
       const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
-      const sortedByDate = sortByDate(ret.data.listClientRecords.items);
-      _.forEach(sortedByDate, item => {
-        item.createdAt = new Date(item.createdAt).toDateString();
-      });
-      setRecords(ret.data.listClientRecords.items);
+      setRecords(sortByDate(ret.data.listClientRecords.items));
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
     query();
@@ -124,6 +138,7 @@ function CareReports() {
 
   const options = {
     filter: true,
+    responsive: 'scrollMaxHeight',
     filterType: 'checkbox',
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 100],
@@ -134,20 +149,11 @@ function CareReports() {
   // This groups all records by type and produces charts data with labels
   // being as date, and values as count of entry types for that particular date.
   const data = useMemo(() => {
-    const createChartData = (value, key) => {
-      const groupedByCreatedAt = _.groupBy(value, 'createdAt');
-      const final = {
-        eventType: key,
-        data: _.map(groupedByCreatedAt, (innerValue, innerKey) => ({ createdAt: innerKey, count: innerValue.length }))
-      };
-      return final;
-    };
-
     const groupedByType = _.groupBy(records, 'entryType');
-    const mapped = _.map(groupedByType, createChartData);
-    const emergency = generateChartsData(mapped.find(type => type.eventType === 'emergency')?.data || []);
-    const warning = generateChartsData(mapped.find(type => type.eventType === 'warning')?.data || []);
-    const normal = generateChartsData(mapped.find(type => type.eventType === 'normal')?.data || []);
+    const grouped = groupAll(groupedByType);
+    const emergency = generateChartsData(_.get(grouped, 'emergency'));
+    const warning = generateChartsData(_.get(grouped, 'warning'));
+    const normal = generateChartsData(_.get(grouped, 'normal'));
     return { emergency, warning, normal };
   }, [records]);
 
@@ -232,7 +238,7 @@ function CareReports() {
                 options: {
                   filter: true,
                   sort: true,
-                  customBodyRender: value => value
+                  customBodyRender: value => new Date(value).toLocaleString()
                 }
               },
               {

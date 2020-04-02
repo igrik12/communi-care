@@ -48,15 +48,12 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 function Admin({ ...rest }) {
-  const setUserGroups = useStoreActions(actions => actions.setUserGroups);
   const getUser = useStoreActions(actions => actions.getUser);
   const fetchAll = useStoreActions(actions => actions.fetchAll);
 
   useEffect(() => {
-    const groups = Auth.user.signInUserSession.accessToken.payload['cognito:groups'];
-    setUserGroups(groups);
     fetchAll();
-  }, [setUserGroups, fetchAll]);
+  }, [ fetchAll]);
 
   useEffect(() => {
     const user = Auth.user;
