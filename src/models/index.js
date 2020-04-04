@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listClients, listResidences } from 'graphql/queries';
-import { listCompanysWithStaffAndClients } from 'graphql/customQueries';
+import { listStaffs, listClients } from 'graphql/queries';
+import { listCompanysWithStaffAndClients, listResidencesWithAddress } from 'graphql/customQueries';
 import { updateStaff } from 'graphql/mutations';
 
 const mainModel = {
@@ -124,7 +124,7 @@ const mainModel = {
     actions => actions.fetchAll,
     async actions => {
       try {
-        const ret = await API.graphql(graphqlOperation(listResidences));
+        const ret = await API.graphql(graphqlOperation(listResidencesWithAddress));
         actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
         console.error(`Failed to retrieve all clients. ${error}`);

@@ -131,3 +131,23 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
     }
   }
 `;
+
+export const listResidencesWithAddress = `
+query ListResidences(
+  $filter: ModelResidenceFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listResidences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      address {
+        county
+        firstLine
+        postCode
+      }
+    }
+    nextToken
+  }
+}`;
