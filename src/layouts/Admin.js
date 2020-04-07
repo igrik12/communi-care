@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useStoreActions } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {
   withAuthenticator,
@@ -9,9 +9,10 @@ import {
   ForgotPassword,
   RequireNewPassword,
   ConfirmSignUp,
-  Loading
+  Loading,
 } from 'aws-amplify-react';
 import { Auth } from 'aws-amplify';
+import { hasPermissions } from 'utils/helpers';
 
 // creates a beautiful scrollbar
 import PerfectScrollbar from 'perfect-scrollbar';
@@ -33,10 +34,10 @@ import logo from 'assets/img/reactlogo.png';
 
 let ps;
 
-const switchRoutes = (
+const switchRoutes = (user) => (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === '/admin') {
+      if (prop.layout === '/admin' ) {
         return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
       }
       return null;
@@ -48,12 +49,13 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 function Admin({ ...rest }) {
-  const getUser = useStoreActions(actions => actions.getUser);
-  const fetchAll = useStoreActions(actions => actions.fetchAll);
+  const getUser = useStoreActions((actions) => actions.getUser);
+  const fetchAll = useStoreActions((actions) => actions.fetchAll);
+  const user = useStoreState((state) => state.user);
 
   useEffect(() => {
     fetchAll();
-  }, [ fetchAll]);
+  }, [fetchAll]);
 
   useEffect(() => {
     const user = Auth.user;
@@ -83,7 +85,7 @@ function Admin({ ...rest }) {
     if (navigator.platform.indexOf('Win') > -1) {
       ps = new PerfectScrollbar(mainPanel.current, {
         suppressScrollX: true,
-        suppressScrollY: false
+        suppressScrollY: false,
       });
       document.body.style.overflow = 'hidden';
     }
@@ -99,7 +101,7 @@ function Admin({ ...rest }) {
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
+        routes={routes.filter((route) => hasPermissions(user, route.path))}
         logoText={'Communi-Care'}
         logo={logo}
         image={image}
@@ -111,7 +113,7 @@ function Admin({ ...rest }) {
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar routes={routes} handleDrawerToggle={handleDrawerToggle} {...rest} />
         <div className={classes.content}>
-          <div className={classes.container}>{switchRoutes}</div>
+          <div className={classes.container}>{switchRoutes(user)}</div>
         </div>
         <Footer />
       </div>
@@ -127,5 +129,5 @@ export default withAuthenticator(Admin, false, [
   <ForgotPassword />,
   <RequireNewPassword />,
   <ConfirmSignUp />,
-  <Loading />
+  <Loading />,
 ]);

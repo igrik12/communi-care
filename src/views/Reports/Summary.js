@@ -10,59 +10,66 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Grid, Typography, Button, Box, Paper, Switch, FormControlLabel } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   heading: {
     fontSize: theme.typography.pxToRem(18),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(18),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   details: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textField: { width: '100%' },
   summaryBox: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   column: {
     flexBasis: '33.33%',
-    marginLeft: 10
+    marginLeft: 10,
   },
   saveBtn: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
-const fields = textFields.map(field => field.fieldId);
-const toUpperKey = key =>
+const fields = textFields.map((field) => field.fieldId);
+
+const toUpperKey = (key) =>
   key
-    .replace(/^\w/, c => c.toUpperCase())
+    .replace(/^\w/, (c) => c.toUpperCase())
     .split(/(?=[A-Z])/)
     .join(' ');
 
 export default function Summary() {
   const classes = useStyles();
-  const selectedRecord = useStoreState(state => state.clientRecordModel.selectedRecord);
-  const updateRecord = useStoreActions(actions => actions.clientRecordModel.updateRecord);
-  const user = useStoreState(state => state.user);
+  const user = useStoreState((state) => state.user);
+  const selectedRecord = useStoreState((state) => state.clientRecordModel.selectedRecord);
+  const updateRecord = useStoreActions((actions) => actions.clientRecordModel.updateRecord);
   const hasPerm = hasPermissions(user, 'editRecordSummary');
   const { register, handleSubmit, setValue } = useForm();
-  const onSumbit = data => {
-    updateRecord({ ...data, id: selectedRecord.id, expectedVersion: selectedRecord.version });
+  const onSumbit = (data) => {
+    updateRecord({
+      ...data,
+      id: selectedRecord.id,
+      expectedVersion: selectedRecord.version,
+      createdAt: new Date(),
+      clientRecordStaffId: user.id,
+    });
   };
 
   const [editMode, setEditMode] = useState(false);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setEditMode(event.target.checked);
   };
 
@@ -111,7 +118,7 @@ export default function Summary() {
             </div>
             <div className={classes.column}>
               <Typography className={classes.secondaryHeading}>
-                {selectedRecord?.entryType.replace(/^\w/, c => c.toUpperCase())}
+                {selectedRecord?.entryType.replace(/^\w/, (c) => c.toUpperCase())}
               </Typography>
             </div>
             <FormControlLabel

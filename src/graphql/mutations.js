@@ -360,6 +360,9 @@ export const createClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
+      archived {
+        nextToken
+      }
       status
       entryType
       createdAt
@@ -402,6 +405,9 @@ export const updateClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+      }
+      archived {
+        nextToken
       }
       status
       entryType
@@ -446,6 +452,9 @@ export const deleteClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
+      archived {
+        nextToken
+      }
       status
       entryType
       createdAt
@@ -460,6 +469,183 @@ export const deleteClientRecord = /* GraphQL */ `
       finances
       dailyActivityParticipation
       version
+    }
+  }
+`;
+export const createClientRecordArchived = /* GraphQL */ `
+  mutation CreateClientRecordArchived(
+    $input: CreateClientRecordArchivedInput!
+    $condition: ModelClientRecordArchivedConditionInput
+  ) {
+    createClientRecordArchived(input: $input, condition: $condition) {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+    }
+  }
+`;
+export const updateClientRecordArchived = /* GraphQL */ `
+  mutation UpdateClientRecordArchived(
+    $input: UpdateClientRecordArchivedInput!
+    $condition: ModelClientRecordArchivedConditionInput
+  ) {
+    updateClientRecordArchived(input: $input, condition: $condition) {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+    }
+  }
+`;
+export const deleteClientRecordArchived = /* GraphQL */ `
+  mutation DeleteClientRecordArchived(
+    $input: DeleteClientRecordArchivedInput!
+    $condition: ModelClientRecordArchivedConditionInput
+  ) {
+    deleteClientRecordArchived(input: $input, condition: $condition) {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
     }
   }
 `;

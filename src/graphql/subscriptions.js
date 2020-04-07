@@ -312,6 +312,9 @@ export const onCreateClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
+      archived {
+        nextToken
+      }
       status
       entryType
       createdAt
@@ -351,6 +354,9 @@ export const onUpdateClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+      }
+      archived {
+        nextToken
       }
       status
       entryType
@@ -392,6 +398,9 @@ export const onDeleteClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
+      archived {
+        nextToken
+      }
       status
       entryType
       createdAt
@@ -406,6 +415,174 @@ export const onDeleteClientRecord = /* GraphQL */ `
       finances
       dailyActivityParticipation
       version
+    }
+  }
+`;
+export const onCreateClientRecordArchived = /* GraphQL */ `
+  subscription OnCreateClientRecordArchived {
+    onCreateClientRecordArchived {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+    }
+  }
+`;
+export const onUpdateClientRecordArchived = /* GraphQL */ `
+  subscription OnUpdateClientRecordArchived {
+    onUpdateClientRecordArchived {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+    }
+  }
+`;
+export const onDeleteClientRecordArchived = /* GraphQL */ `
+  subscription OnDeleteClientRecordArchived {
+    onDeleteClientRecordArchived {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
     }
   }
 `;
