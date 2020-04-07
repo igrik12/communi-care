@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import _ from 'lodash';
 import { useStoreState, useStoreActions } from 'easy-peasy';
-import { hasPermissions } from 'utils/permissions';
+import { hasPermissions } from 'utils/helpers';
 import { textFields } from '../Records/TextEntries';
 
 // MUI Imports

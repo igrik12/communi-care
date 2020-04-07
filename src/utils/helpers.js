@@ -16,3 +16,9 @@ export const hashPassword = async password => {
 export const comparePassword = async (hash, password) => {
   return await bcrypt.compare(hash, password);
 };
+
+export const hasPermissions = ({ permissions }, className) => {
+  if (!permissions || !permissions.length) return false;
+  return Array.isArray(permissions) && permissions.includes(className);
+};
+

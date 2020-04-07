@@ -8,7 +8,7 @@ import ChartistGraph from 'react-chartist';
 import Summary from './Summary';
 import Chartist from 'chartist';
 import _ from 'lodash';
-import DateFnsUtils from '@date-io/date-fns';
+import { addYears } from 'date-fns';
 
 // @material-ui/core
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,7 +26,6 @@ import CardFooter from 'components/Card/CardFooter.js';
 
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-const DateUtil = new DateFnsUtils();
 const useStyles = makeStyles(styles);
 var delays = 80,
   durations = 500;
@@ -99,7 +98,7 @@ const groupAll = data => {
       value,
       function(result, item) {
         const date = new Date(item.createdAt);
-        // if (DateUtil.getDiff(Date.now(), date) > 365) return result;
+        if (addYears(date, 1) < Date.now()) return;
         const month = monthNames[date.getMonth()];
         var year = ('' + date.getFullYear()).slice(-2);
         var group = month + "'" + year;
@@ -112,6 +111,7 @@ const groupAll = data => {
   });
   return innerRes;
 };
+
 const sortByDate = data => {
   return data.sort(function compare(a, b) {
     return new Date(a.createdAt) - new Date(b.createdAt);

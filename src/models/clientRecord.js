@@ -28,13 +28,12 @@ const clientRecordModel = {
       console.error(error);
     }
   }),
-  updateRecord: thunk(async (actions, payload, { getStoreState, getStoreActions }) => {
+  updateRecord: thunk(async (actions, payload, { getStoreActions }) => {
     const setAlertOpen = getStoreActions().setAlertOpen;
     const updateDetails = {
       input: payload
     };
     try {
-      console.log(updateDetails);
       await API.graphql(graphqlOperation(updateClientRecord, updateDetails));
       setAlertOpen({ open: true, success: true, message: 'Successfully updated record!' });
     } catch (error) {

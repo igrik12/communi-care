@@ -5,7 +5,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 const ToastAlert = () => {
-  console.log('Called');
   const alertOpen = useStoreState(state => state.alertOpen);
   const setAlertOpen = useStoreActions(actions => actions.setAlertOpen);
 
