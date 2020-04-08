@@ -72,9 +72,9 @@ const sortByDate = (data) => {
 };
 
 const query = async (setRecords, setSelectedRecord) => {
-  const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 5000 }));
+  const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 1000 }));
   setRecords(sortByDate(ret.data.listClientRecords.items));
-  setSelectedRecord(ret.data.listClientRecords.items[0]);
+  setSelectedRecord && setSelectedRecord(ret.data.listClientRecords.items[0]);
 };
 
 function CareReports() {
@@ -86,7 +86,7 @@ function CareReports() {
 
   useEffect(() => {
     query(setRecords, setSelectedRecord);
-    const sub = clientRecordUpdateSubscribe(() => query(setRecords, setSelectedRecord));
+    const sub = clientRecordUpdateSubscribe(() => query(setRecords));
     return () => {
       sub.unsubscribe();
     };
