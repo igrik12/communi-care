@@ -210,6 +210,9 @@ export const getClientRecord = /* GraphQL */ `
         dateOfBirth
         isActive
       }
+      archived {
+        nextToken
+      }
       status
       entryType
       createdAt
@@ -250,6 +253,93 @@ export const listClientRecords = /* GraphQL */ `
         finances
         dailyActivityParticipation
         version
+      }
+      nextToken
+    }
+  }
+`;
+export const getClientRecordArchived = /* GraphQL */ `
+  query GetClientRecordArchived($id: ID!) {
+    getClientRecordArchived(id: $id) {
+      id
+      staff {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+      }
+      client {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+      }
+      mainRecord {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
+        version
+      }
+      status
+      entryType
+      createdAt
+      shift
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+    }
+  }
+`;
+export const listClientRecordArchiveds = /* GraphQL */ `
+  query ListClientRecordArchiveds(
+    $filter: ModelClientRecordArchivedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClientRecordArchiveds(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        status
+        entryType
+        createdAt
+        shift
+        moodAndInteraction
+        selfCare
+        physicalHealth
+        medication
+        leave
+        dietAndFluids
+        livingSkills
+        finances
+        dailyActivityParticipation
       }
       nextToken
     }

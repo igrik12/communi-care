@@ -1,5 +1,5 @@
-export const listClientRecordsWithClient = `
-query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
+export const listClientRecords = `
+query listClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
   listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
@@ -19,6 +19,12 @@ query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit:
       version
       client {
         id
+        firstName
+        lastName
+      }
+      staff{
+        id
+        username
         firstName
         lastName
       }

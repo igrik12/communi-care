@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
-import { listClientRecordsWithClient } from 'graphql/customQueries';
-import MUIDataTable from 'mui-datatables';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { Grid, withWidth } from '@material-ui/core';
+import { API, graphqlOperation } from 'aws-amplify';
+import { listClientRecords } from 'graphql/customQueries';
+import { generateChartsData } from 'utils/helpers';
 import ChartistGraph from 'react-chartist';
-import Summary from './Summary';
-import Chartist from 'chartist';
 import _ from 'lodash';
-import DateFnsUtils from '@date-io/date-fns';
+import { addYears } from 'date-fns';
+
+// MUI components
+import MUIDataTable from 'mui-datatables';
+import Summary from './Summary';
 
 // @material-ui/core
+import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 // @material-ui/icons
@@ -24,82 +26,31 @@ import CardHeader from 'components/Card/CardHeader.js';
 import CardBody from 'components/Card/CardBody.js';
 import CardFooter from 'components/Card/CardFooter.js';
 
+// view components
+import ConfirmUpdate from './ConfirmUpdate';
+
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 
-const DateUtil = new DateFnsUtils();
 const useStyles = makeStyles(styles);
-var delays = 80,
-  durations = 500;
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const generateChartsData = typeData => {
-  const returnValue = {
-    data: {
-      labels: _.keys(typeData),
-      series: [_.values(typeData)]
-    },
-    options: {
-      lineSmooth: Chartist.Interpolation.cardinal({
-        tension: 0
-      }),
-      low: 0,
-      high: 20,
-      chartPadding: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-      }
-    },
-    animation: {
-      draw: function(data) {
-        if (data.type === 'line' || data.type === 'area') {
-          data.element.animate({
-            d: {
-              begin: 600,
-              dur: 700,
-              from: data.path
-                .clone()
-                .scale(1, 0)
-                .translate(0, data.chartRect.height())
-                .stringify(),
-              to: data.path.clone().stringify(),
-              easing: Chartist.Svg.Easing.easeOutQuint
-            }
-          });
-        } else if (data.type === 'point') {
-          data.element.animate({
-            opacity: {
-              begin: (data.index + 1) * delays,
-              dur: durations,
-              from: 0,
-              to: 1,
-              easing: 'ease'
-            }
-          });
-        }
-      }
-    }
-  };
-  return returnValue;
-};
-
-const convertRecords = records => {
-  return records.map(record => ({
+const convertRecords = (records) => {
+  return records.map((record) => ({
     ...record,
-    fullName: `${record?.client?.firstName?.trim() || 'unknown'} ${record?.client?.lastName?.trim() || 'unknown'}`
+    fullName: `${record?.client?.firstName?.trim() || 'unknown'} ${record?.client?.lastName?.trim() || 'unknown'}`,
+    staffName: `${record?.staff?.firstName?.trim() || 'unknown'} ${record?.staff?.lastName?.trim() || 'unknown'}`,
   }));
 };
 
-const groupAll = data => {
+const groupAll = (data) => {
   let innerRes = {};
   _.forEach(data, (value, key) => {
     const groupped = _.reduce(
       value,
-      function(result, item) {
+      function (result, item) {
         const date = new Date(item.createdAt);
-        // if (DateUtil.getDiff(Date.now(), date) > 365) return result;
+        if (addYears(date, 1) < Date.now()) return;
         const month = monthNames[date.getMonth()];
         var year = ('' + date.getFullYear()).slice(-2);
         var group = month + "'" + year;
@@ -112,22 +63,24 @@ const groupAll = data => {
   });
   return innerRes;
 };
-const sortByDate = data => {
+
+const sortByDate = (data) => {
   return data.sort(function compare(a, b) {
     return new Date(a.createdAt) - new Date(b.createdAt);
   });
 };
 
 function CareReports() {
-  const records = useStoreState(state => state.clientRecordModel.records);
-  const setRecords = useStoreActions(actions => actions.clientRecordModel.setRecords);
-  const setSelectedRecord = useStoreActions(actions => actions.clientRecordModel.setSelectedRecord);
+  const records = useStoreState((state) => state.clientRecordModel.records);
+  const setRecords = useStoreActions((actions) => actions.clientRecordModel.setRecords);
+  const setSelectedRecord = useStoreActions((actions) => actions.clientRecordModel.setSelectedRecord);
+  const mergeWindow = useStoreState((state) => state.clientRecordModel.mergeWindow);
 
   const classes = useStyles();
 
   useEffect(() => {
     const query = async () => {
-      const ret = await API.graphql(graphqlOperation(listClientRecordsWithClient, { limit: 5000 }));
+      const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 5000 }));
       setRecords(sortByDate(ret.data.listClientRecords.items));
       setSelectedRecord(ret.data.listClientRecords.items[0]);
     };
@@ -142,7 +95,7 @@ function CareReports() {
     filterType: 'checkbox',
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 100],
-    onRowClick: (rowData, cellMeta) => setSelectedRecord(records[cellMeta.dataIndex])
+    onRowClick: (rowData, cellMeta) => setSelectedRecord(records[cellMeta.dataIndex]),
   };
 
   // Memoize expensive computation of grouped values.
@@ -224,13 +177,14 @@ function CareReports() {
           </Card>
         </GridItem>
       </GridContainer>
+
       <Grid container spacing={1}>
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <MUIDataTable
             columns={[
               {
                 name: 'fullName',
-                label: 'Client Name'
+                label: 'Client Name',
               },
               {
                 name: 'createdAt',
@@ -238,8 +192,8 @@ function CareReports() {
                 options: {
                   filter: true,
                   sort: true,
-                  customBodyRender: value => new Date(value).toLocaleString()
-                }
+                  customBodyRender: (value) => new Date(value).toLocaleString(),
+                },
               },
               {
                 name: 'shift',
@@ -247,8 +201,8 @@ function CareReports() {
                 options: {
                   filter: true,
                   sort: true,
-                  customBodyRender: value => value.toUpperCase()
-                }
+                  customBodyRender: (value) => value.toUpperCase(),
+                },
               },
               {
                 name: 'entryType',
@@ -256,9 +210,13 @@ function CareReports() {
                 options: {
                   filter: true,
                   sort: true,
-                  customBodyRender: value => value || 'normal'
-                }
-              }
+                  customBodyRender: (value) => value || 'normal',
+                },
+              },
+              {
+                name: 'staffName',
+                label: 'Staff ',
+              },
             ]}
             data={converted}
             options={options}
@@ -268,9 +226,20 @@ function CareReports() {
         <Grid item lg={12} md={12} sm={12} xs={12}>
           <Summary />
         </Grid>
+        <Grid item lg={12} md={12} sm={12} xs={12}>
+          {mergeWindow.open && (
+            <ConfirmUpdate mergeData={mergeWindow.mergeData} originalData={mergeWindow.originalData} />
+          )}
+        </Grid>
+        {/* <Grid item lg={6} md={12} sm={12} xs={12}>
+          <MergeItemList version='original' />
+        </Grid>
+        <Grid item lg={6} md={12} sm={12} xs={12}>
+          <MergeItemList version='updated' />
+        </Grid> */}
       </Grid>
     </>
   );
 }
 
-export default withWidth()(CareReports);
+export default CareReports;

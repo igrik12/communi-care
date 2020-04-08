@@ -14,7 +14,7 @@ import {
   updateCompany,
   updateClient,
   updateResidence
-} from '../graphql/mutations';
+} from 'graphql/mutations';
 
 import {
   onDeleteStaff,
@@ -42,7 +42,7 @@ import {
   RESIDENCE
 } from 'utils/constants';
 
-import { hashPassword } from './helpers';
+import { hashPassword } from 'utils/helpers';
 
 /**
  *
@@ -135,7 +135,7 @@ export const staffCreateSubscribe = action => {
  *
  * @param {Object} subscriptions
  */
-export const subscribe = subscriptions => {
+export const subscribeManagement = subscriptions => {
   const subs = [];
   subscriptions.forEach(subscription => {
     const { type, action } = subscription;

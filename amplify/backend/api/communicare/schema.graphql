@@ -52,6 +52,27 @@ type ClientRecord @model @versioned {
   id: ID!
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
+  archived: [ClientRecordArchived] @connection(name: "ArchivedRecords")
+  status: String
+  entryType: EntryType!
+  createdAt: AWSDateTime!
+  shift: ShiftType!
+  moodAndInteraction: String!
+  selfCare: String!
+  physicalHealth: String!
+  medication: String!
+  leave: String!
+  dietAndFluids: String!
+  livingSkills: String!
+  finances: String!
+  dailyActivityParticipation: String!
+}
+
+type ClientRecordArchived @model {
+  id: ID!
+  staff: Staff @connection(name: "StaffClientRecords")
+  client: Client @connection(name: "ClientRecords")
+  mainRecord: ClientRecord @connection(name: "ArchivedRecords")
   status: String
   entryType: EntryType!
   createdAt: AWSDateTime!
