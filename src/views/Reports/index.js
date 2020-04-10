@@ -6,6 +6,7 @@ import { generateChartsData } from 'utils/helpers';
 import ChartistGraph from 'react-chartist';
 import _ from 'lodash';
 import { addYears } from 'date-fns';
+import { clientRecordUpdateSubscribe } from 'utils/modelHelpers/records';
 
 // MUI components
 import MUIDataTable from 'mui-datatables';
@@ -70,21 +71,25 @@ const sortByDate = (data) => {
   });
 };
 
+const query = async (setRecords, setSelectedRecord) => {
+  const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 1000 }));
+  setRecords(sortByDate(ret.data.listClientRecords.items));
+  setSelectedRecord && setSelectedRecord(ret.data.listClientRecords.items[0]);
+};
+
 function CareReports() {
   const records = useStoreState((state) => state.clientRecordModel.records);
   const setRecords = useStoreActions((actions) => actions.clientRecordModel.setRecords);
   const setSelectedRecord = useStoreActions((actions) => actions.clientRecordModel.setSelectedRecord);
   const mergeWindow = useStoreState((state) => state.clientRecordModel.mergeWindow);
-
   const classes = useStyles();
 
   useEffect(() => {
-    const query = async () => {
-      const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 5000 }));
-      setRecords(sortByDate(ret.data.listClientRecords.items));
-      setSelectedRecord(ret.data.listClientRecords.items[0]);
+    query(setRecords, setSelectedRecord);
+    const sub = clientRecordUpdateSubscribe(() => query(setRecords));
+    return () => {
+      sub.unsubscribe();
     };
-    query();
   }, [setRecords, setSelectedRecord]);
 
   const converted = convertRecords(records);
@@ -231,12 +236,6 @@ function CareReports() {
             <ConfirmUpdate mergeData={mergeWindow.mergeData} originalData={mergeWindow.originalData} />
           )}
         </Grid>
-        {/* <Grid item lg={6} md={12} sm={12} xs={12}>
-          <MergeItemList version='original' />
-        </Grid>
-        <Grid item lg={6} md={12} sm={12} xs={12}>
-          <MergeItemList version='updated' />
-        </Grid> */}
       </Grid>
     </>
   );

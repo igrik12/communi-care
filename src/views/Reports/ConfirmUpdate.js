@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
 import MergeItemList from './MergeItemList';
@@ -78,6 +78,12 @@ export default function ConfirmUpdate({ originalData, mergeData }) {
 
   const originalDiff = differenceObjects(originalDataPicked, mergeDataPicked);
   const mergeDiff = differenceObjects(mergeDataPicked, originalDataPicked);
+  const disabledMemo = useMemo(() => {
+    return (
+      Object.values(originalDiff).length !== Object.values(mergeItem).length ||
+      Object.values(mergeItem).some((item) => !item.checked)
+    );
+  }, [originalDiff, mergeItem]);
 
   return (
     <Dialog fullWidth={true} maxWidth={'lg'} open={mergeWindow.open} onClose={handleClose}>
@@ -113,7 +119,7 @@ export default function ConfirmUpdate({ originalData, mergeData }) {
           <Button onClick={handleClose} color='secondary'>
             Close
           </Button>
-          <Button onClick={handleSave} color='primary'>
+          <Button disabled={disabledMemo} onClick={handleSave} color='primary'>
             Save
           </Button>
         </ButtonGroup>

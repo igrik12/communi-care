@@ -34,6 +34,31 @@ query listClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nex
 }
 `;
 
+export const listClients = /* GraphQL */ `
+  query ListClients($filter: ModelClientFilterInput, $limit: Int, $nextToken: String) {
+    listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        residence {
+          name
+          id
+        }
+        company {
+          companyLogoUrl
+          id
+          isActive
+          name
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getPlainEntry = /* GraphQL */ `
   query GetEntry($id: ID!) {
     getEntry(id: $id) {
@@ -97,6 +122,32 @@ query GetCompany($id: ID!) {
     }
   }
 }`;
+
+export const listStaffs = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+        company {
+          companyLogoUrl
+          id
+          isActive
+          name
+        }
+      }
+      nextToken
+    }
+  }
+`;
 
 export const listCompanysWithStaffAndClients = /* GraphQL */ `
   query ListCompanys($filter: ModelCompanyFilterInput, $limit: Int, $nextToken: String) {

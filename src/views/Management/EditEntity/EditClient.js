@@ -14,50 +14,49 @@ import FormControl from '@material-ui/core/FormControl';
 import { Button, FormControlLabel, Switch } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 350
+    minWidth: 350,
   },
   form: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   title: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
   },
   field: {
     flexGrow: 1,
     margin: theme.spacing(1),
-    maxWidth: 350
+    maxWidth: 350,
   },
   btnGroup: {
     margin: theme.spacing(1),
-    marginLeft: 'auto'
-  }
+    marginLeft: 'auto',
+  },
 }));
 
 export default function EditClient() {
   const [client, setClient] = useState();
-  const [company, setCompany] = React.useState('');
   const [dateOfBirth, setDateOfBirth] = useState(null);
 
   const { register, handleSubmit, setValue } = useForm();
-  const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
+  const updateEntity = useStoreActions((actions) => actions.managementModel.updateEntity);
   const classes = useStyles();
 
-  const editOpen = useStoreState(state => state.managementModel.editOpen);
-  const clients = useStoreState(state => state.clients);
-  const companies = useStoreState(state => state.companies);
-  const residences = useStoreState(state => state.residences);
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const editOpen = useStoreState((state) => state.managementModel.editOpen);
+  const clients = useStoreState((state) => state.clients);
+  const companies = useStoreState((state) => state.companies);
+  const residences = useStoreState((state) => state.residences);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
 
-  const handleOnSubmit = data => {
+  const handleOnSubmit = (data) => {
     const updateDetails = { id: client.id, dateOfBirth, ...data };
     updateEntity({ type: CLIENT, data: updateDetails });
     setEditOpen({ open: false });
   };
 
-  const handleDateChange = date => {
+  const handleDateChange = (date) => {
     setValue('dateOfBirth', date);
     setDateOfBirth(date);
   };
@@ -68,10 +67,8 @@ export default function EditClient() {
   }, [register, setValue]);
 
   useEffect(() => {
-    const match = clients.find(client => client.id === editOpen.id);
+    const match = clients.find((client) => client.id === editOpen.id);
     setClient(match);
-    const companyMatch = companies.find(company => company.client.items.some(item => item.id === match.id));
-    setCompany(companyMatch);
   }, [editOpen.id, clients, companies]);
 
   useEffect(() => {
@@ -79,6 +76,8 @@ export default function EditClient() {
   }, [client, setDateOfBirth]);
 
   if (_.isEmpty(client)) return null;
+
+  console.log(client);
 
   return (
     <div className={classes.root}>
@@ -108,9 +107,11 @@ export default function EditClient() {
             }}
             className={classes.formControl}
             options={companies}
-            defaultValue={company}
-            getOptionLabel={option => option.name ?? ''}
-            renderInput={params => <TextField {...params} name='clientCompanyId' label='Company' variant='outlined' />}
+            defaultValue={client?.company}
+            getOptionLabel={(option) => option.name ?? ''}
+            renderInput={(params) => (
+              <TextField {...params} name='clientCompanyId' label='Company' variant='outlined' />
+            )}
           />
         </FormControl>
         <FormControl className={classes.field} variant='outlined'>
@@ -122,8 +123,8 @@ export default function EditClient() {
             className={classes.formControl}
             options={residences}
             defaultValue={client?.residence}
-            getOptionLabel={option => option.name ?? ''}
-            renderInput={params => (
+            getOptionLabel={(option) => option.name ?? ''}
+            renderInput={(params) => (
               <TextField {...params} name='clientResidenceId' label='Residence' variant='outlined' />
             )}
           />
