@@ -13,45 +13,42 @@ import FormControl from '@material-ui/core/FormControl';
 import { MenuItem, Button, Select, Grid, FormControlLabel, Switch } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 350
+    minWidth: 350,
   },
   form: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   title: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
   },
   field: {
     flexGrow: 1,
     margin: theme.spacing(1),
-    maxWidth: 500
+    maxWidth: 500,
   },
   btnGroup: {
     margin: theme.spacing(1),
-    marginLeft: 'auto'
-  }
+    marginLeft: 'auto',
+  },
 }));
 
 export default function EditStaff() {
   const classes = useStyles();
-  const [company, setCompany] = React.useState('');
   const [currentStaff, setCurrentStaff] = useState();
-  const editOpen = useStoreState(state => state.managementModel.editOpen);
-  const staff = useStoreState(state => state.staff);
+  const editOpen = useStoreState((state) => state.managementModel.editOpen);
+  const staff = useStoreState((state) => state.staff);
   const [allPermissions, setAllPermissions] = React.useState([]);
-  const companies = useStoreState(state => state.companies);
-  const updateEntity = useStoreActions(actions => actions.managementModel.updateEntity);
+  const companies = useStoreState((state) => state.companies);
+  const updateEntity = useStoreActions((actions) => actions.managementModel.updateEntity);
   const { register, handleSubmit, control, setValue } = useForm();
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
 
   useEffect(() => {
-    const match = staff.find(st => st.id === editOpen.id);
+    const match = staff.find((st) => st.id === editOpen.id);
     setCurrentStaff(match);
-    const companyMatch = companies.find(company => company.staff.items.some(item => item.id === match.id));
-    setCompany(companyMatch);
   }, [editOpen.id, companies, staff]);
 
   useEffect(() => {
@@ -61,9 +58,9 @@ export default function EditStaff() {
     }
   }, [currentStaff, setValue, setAllPermissions]);
 
-  const handleOnSubmit = data => {
+  const handleOnSubmit = (data) => {
     if (!data.staffCompanyId) return;
-    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map(perm => perm.value) };
+    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map((perm) => perm.value) };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
   };
@@ -83,7 +80,7 @@ export default function EditStaff() {
           name='username'
           defaultValue={currentStaff.username}
           InputProps={{
-            readOnly: true
+            readOnly: true,
           }}
         />
         <TextField
@@ -93,7 +90,7 @@ export default function EditStaff() {
           name='email'
           defaultValue={currentStaff.email}
           InputProps={{
-            readOnly: true
+            readOnly: true,
           }}
         />
         <TextField
@@ -103,32 +100,27 @@ export default function EditStaff() {
           name='phone_number'
           defaultValue={currentStaff.phone_number}
           InputProps={{
-            readOnly: true
+            readOnly: true,
           }}
         />
-        <FormControl variant='outlined'>
-          <Controller
-            as={
-              <Select className={classes.field}>
-                {companies.map(company => {
-                  return (
-                    <MenuItem key={company.id} value={company.id}>
-                      {company.name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            }
-            name='staffCompanyId'
-            control={control}
-            defaultValue={company ? company.id : ''}
+        <FormControl className={classes.field} variant='outlined'>
+          <Autocomplete
+            required
+            onChange={(e, data) => {
+              setValue('staffCompanyId', data?.id);
+            }}
+            className={classes.formControl}
+            options={companies}
+            defaultValue={currentStaff?.company}
+            getOptionLabel={(option) => option.name ?? ''}
+            renderInput={(params) => <TextField {...params} name='staffCompanyId' label='Company' variant='outlined' />}
           />
         </FormControl>
         <FormControl variant='outlined'>
           <Controller
             as={
               <Select className={classes.field}>
-                {['admin', 'developer', 'user'].map(type => {
+                {['admin', 'developer', 'user'].map((type) => {
                   return (
                     <MenuItem key={type} value={type}>
                       {type}
@@ -152,9 +144,9 @@ export default function EditStaff() {
                 setAllPermissions(data);
               }}
               value={allPermissions}
-              renderOption={option => <React.Fragment>{option.title}</React.Fragment>}
-              getOptionLabel={option => option.title}
-              renderInput={params => <TextField {...params} label='Permission' variant='outlined' />}
+              renderOption={(option) => <React.Fragment>{option.title}</React.Fragment>}
+              getOptionLabel={(option) => option.title}
+              renderInput={(params) => <TextField {...params} label='Permission' variant='outlined' />}
             />
           </Grid>
         </FormControl>

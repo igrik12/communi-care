@@ -53,7 +53,6 @@ export default function MergeItem({ fieldId, label, text, version }) {
 
   const versionType = mergeItem[fieldId]?.versionType;
   const checked = mergeItem[fieldId]?.checked ?? false;
-
   return (
     <div className={classes.root}>
       <ExpansionPanel defaultExpanded={true}>
