@@ -1,23 +1,62 @@
-export const listClientRecordsWithClient = `
-query listClientRecordsWithClient($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
+export const listClientRecords = `
+query listClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nextToken: String) {
   listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      status
+      entryType
       createdAt
       shift
-      entryType
+      moodAndInteraction
+      selfCare
+      physicalHealth
+      medication
+      leave
+      dietAndFluids
+      livingSkills
+      finances
+      dailyActivityParticipation
+      version
       client {
         id
         firstName
         lastName
       }
-      entry {
+      staff{
         id
+        username
+        firstName
+        lastName
       }
     }
     nextToken
   }
 }
+`;
+
+export const listClients = /* GraphQL */ `
+  query ListClients($filter: ModelClientFilterInput, $limit: Int, $nextToken: String) {
+    listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        firstName
+        lastName
+        dateOfBirth
+        isActive
+        residence {
+          name
+          id
+        }
+        company {
+          companyLogoUrl
+          id
+          isActive
+          name
+        }
+      }
+      nextToken
+    }
+  }
 `;
 
 export const getPlainEntry = /* GraphQL */ `
@@ -84,6 +123,32 @@ query GetCompany($id: ID!) {
   }
 }`;
 
+export const listStaffs = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        firstName
+        lastName
+        username
+        userType
+        email
+        password
+        phone_number
+        permissions
+        isActive
+        company {
+          companyLogoUrl
+          id
+          isActive
+          name
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listCompanysWithStaffAndClients = /* GraphQL */ `
   query ListCompanys($filter: ModelCompanyFilterInput, $limit: Int, $nextToken: String) {
     listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
@@ -123,3 +188,23 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
     }
   }
 `;
+
+export const listResidencesWithAddress = `
+query ListResidences(
+  $filter: ModelResidenceFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listResidences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      address {
+        county
+        firstLine
+        postCode
+      }
+    }
+    nextToken
+  }
+}`;

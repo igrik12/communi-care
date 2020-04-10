@@ -48,29 +48,44 @@ type Address @model {
   residence: Residence @connection(name: "ResidenceAddress")
 }
 
-type ClientRecord @model {
+type ClientRecord @model @versioned {
   id: ID!
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
-  entry: Entry @connection(name: "ClientEntry")
-  createdAt: AWSDateTime!
+  archived: [ClientRecordArchived] @connection(name: "ArchivedRecords")
   status: String
-  shift: ShiftType
-  entryType: EntryType
+  entryType: EntryType!
+  createdAt: AWSDateTime!
+  shift: ShiftType!
+  moodAndInteraction: String!
+  selfCare: String!
+  physicalHealth: String!
+  medication: String!
+  leave: String!
+  dietAndFluids: String!
+  livingSkills: String!
+  finances: String!
+  dailyActivityParticipation: String!
 }
 
-type Entry @model {
+type ClientRecordArchived @model {
   id: ID!
-  moodAndInteraction: String
-  selfCare: String
-  physicalHealth: String
-  medication: String
-  leave: String
-  dietAndFluids: String
-  livingSkills: String
-  finances: String
-  dailyActivityParticipation: String
-  clientRecord: ClientRecord @connection(name: "ClientEntry")
+  staff: Staff @connection(name: "StaffClientRecords")
+  client: Client @connection(name: "ClientRecords")
+  mainRecord: ClientRecord @connection(name: "ArchivedRecords")
+  status: String
+  entryType: EntryType!
+  createdAt: AWSDateTime!
+  shift: ShiftType!
+  moodAndInteraction: String!
+  selfCare: String!
+  physicalHealth: String!
+  medication: String!
+  leave: String!
+  dietAndFluids: String!
+  livingSkills: String!
+  finances: String!
+  dailyActivityParticipation: String!
 }
 
 enum UserType {

@@ -5,8 +5,7 @@ import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listStaffs, listClients, listResidences } from 'graphql/queries';
-import { listCompanysWithStaffAndClients } from 'graphql/customQueries';
+import { listCompanysWithStaffAndClients, listResidencesWithAddress, listClients, listStaffs } from 'graphql/customQueries';
 import { updateStaff } from 'graphql/mutations';
 
 const mainModel = {
@@ -28,12 +27,12 @@ const mainModel = {
       }
     }
   }),
-  companyData: computed(state => {
+  companyData: computed((state) => {
     const user = state.user;
     const companies = state.companies;
     const id = user?.company?.id;
     if (id) {
-      const company = companies.find(company => company.id === id);
+      const company = companies.find((company) => company.id === id);
       return { company };
     }
     return {};
@@ -54,11 +53,11 @@ const mainModel = {
     state.companies.push(payload);
   }),
   removeCompany: action((state, payload) => {
-    _.remove(state.companies, comp => comp.id === payload);
+    _.remove(state.companies, (comp) => comp.id === payload);
   }),
   fetchCompanies: thunkOn(
-    actions => actions.fetchAll,
-    async actions => {
+    (actions) => actions.fetchAll,
+    async (actions) => {
       try {
         const ret = await API.graphql(graphqlOperation(listCompanysWithStaffAndClients));
         actions.setCompanies(ret.data.listCompanys.items);
@@ -76,11 +75,11 @@ const mainModel = {
     state.staff.push(payload);
   }),
   removeStaff: action((state, payload) => {
-    _.remove(state.staff, staff => staff.id === payload);
+    _.remove(state.staff, (staff) => staff.id === payload);
   }),
   fetchStaff: thunkOn(
-    actions => actions.fetchAll,
-    async actions => {
+    (actions) => actions.fetchAll,
+    async (actions) => {
       try {
         const ret = await API.graphql(graphqlOperation(listStaffs));
         actions.setStaff(ret.data.listStaffs.items || []);
@@ -97,11 +96,11 @@ const mainModel = {
     state.clients.push(payload);
   }),
   removeClient: action((state, payload) => {
-    _.remove(state.clients, client => client.id === payload);
+    _.remove(state.clients, (client) => client.id === payload);
   }),
   fetchClients: thunkOn(
-    actions => actions.fetchAll,
-    async actions => {
+    (actions) => actions.fetchAll,
+    async (actions) => {
       try {
         const ret = await API.graphql(graphqlOperation(listClients));
         actions.setClients(ret.data.listClients.items || []);
@@ -118,13 +117,13 @@ const mainModel = {
     state.residences.push(payload);
   }),
   removeResidence: action((state, payload) => {
-    _.remove(state.residences, residence => residence.id === payload);
+    _.remove(state.residences, (residence) => residence.id === payload);
   }),
   fetchResidences: thunkOn(
-    actions => actions.fetchAll,
-    async actions => {
+    (actions) => actions.fetchAll,
+    async (actions) => {
       try {
-        const ret = await API.graphql(graphqlOperation(listResidences));
+        const ret = await API.graphql(graphqlOperation(listResidencesWithAddress));
         actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
         console.error(`Failed to retrieve all clients. ${error}`);
@@ -137,7 +136,7 @@ const mainModel = {
   }),
   clientRecordModel,
   layoutModel,
-  managementModel
+  managementModel,
 };
 
 export default mainModel;

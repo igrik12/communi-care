@@ -1,6 +1,6 @@
 projects:
-  api:
-    schemaPath: amplify/backend/api/api/build/schema.graphql
+  communicare:
+    schemaPath: amplify/backend/api/communicare/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:
@@ -12,6 +12,7 @@ projects:
         docsFilePath: src/graphql
         region: eu-west-1
         apiId: null
+        maxDepth: 2
 extensions:
   amplify:
     version: 3

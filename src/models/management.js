@@ -11,7 +11,7 @@ import {
   deleteStaffAsync,
   deleteClientAsync,
   deleteResidenceAsync,
-  subscribe,
+  subscribeManagement,
   updateEntityAsync
 } from 'utils/modelHelpers';
 
@@ -25,7 +25,7 @@ const managementModel = {
   subscriptions: [],
   setupSubscription: action((state, payload) => {
     const subs = memoisedSubscriptions(store.getActions());
-    state.subscriptions = subscribe(subs);
+    state.subscriptions = subscribeManagement(subs);
   }),
   unsubscribe: action((state, payload) => {
     state.subscriptions.forEach(subscription => subscription.unsubscribe());
