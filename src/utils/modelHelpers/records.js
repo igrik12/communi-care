@@ -1,4 +1,4 @@
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { onUpdateClientRecord } from 'graphql/subscriptions';
 
 /**

@@ -36,13 +36,15 @@ let ps;
 
 const switchRoutes = (user) => (
   <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === '/admin' ) {
-        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
-      }
-      return null;
-    })}
-    <Redirect from='/admin' to='/admin/records' />
+    {routes
+      .filter((route) => hasPermissions(user, route.path))
+      .map((prop, key) => {
+        if (prop.layout === '/user') {
+          return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
+        }
+        return null;
+      })}
+    <Redirect from='/user' to='/user/records' />
   </Switch>
 );
 

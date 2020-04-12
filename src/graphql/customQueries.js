@@ -21,6 +21,9 @@ query listClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nex
         id
         firstName
         lastName
+        company {
+          id
+        }
       }
       staff{
         id

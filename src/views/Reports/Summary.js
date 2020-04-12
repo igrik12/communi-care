@@ -57,6 +57,7 @@ export default function Summary() {
   const updateRecord = useStoreActions((actions) => actions.clientRecordModel.updateRecord);
   const hasPerm = hasPermissions(user, 'editRecordSummary');
   const { register, handleSubmit, setValue } = useForm();
+
   const onSumbit = (data) => {
     updateRecord({
       ...data,
@@ -100,6 +101,8 @@ export default function Summary() {
       )),
     [filtered, classes.textField, hasPerm, register, editMode]
   );
+  
+  if (!selectedRecord) return null;
 
   return (
     <Paper className={classes.root} elevation={3}>

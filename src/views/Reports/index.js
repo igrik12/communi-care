@@ -5,7 +5,7 @@ import { listClientRecords } from 'graphql/customQueries';
 import { generateChartsData } from 'utils/helpers';
 import ChartistGraph from 'react-chartist';
 import _ from 'lodash';
-import { addYears } from 'date-fns';
+import { addYears, subMonths, subYears } from 'date-fns';
 import { clientRecordUpdateSubscribe } from 'utils/modelHelpers/records';
 
 // MUI components
@@ -67,17 +67,28 @@ const groupAll = (data) => {
 
 const sortByDate = (data) => {
   return data.sort(function compare(a, b) {
-    return new Date(a.createdAt) - new Date(b.createdAt);
+    return new Date(b.createdAt) - new Date(a.createdAt);
   });
 };
 
-const query = async (setRecords, setSelectedRecord) => {
-  const ret = await API.graphql(graphqlOperation(listClientRecords, { limit: 1000 }));
-  setRecords(sortByDate(ret.data.listClientRecords.items));
-  setSelectedRecord && setSelectedRecord(ret.data.listClientRecords.items[0]);
+const query = async (setRecords, setSelectedRecord, companyId) => {
+  const ret = await API.graphql(
+    graphqlOperation(listClientRecords, {
+      limit: 3000,
+      filter: {
+        createdAt: { gt: subMonths(new Date(), 3) },
+      },
+    })
+  );
+  const filtered = sortByDate(
+    ret.data.listClientRecords.items.filter((record) => record.client.company.id === companyId)
+  );
+  setRecords(filtered);
+  setSelectedRecord && setSelectedRecord(filtered[0]);
 };
 
 function CareReports() {
+  const companyData = useStoreState((state) => state.companyData);
   const records = useStoreState((state) => state.clientRecordModel.records);
   const setRecords = useStoreActions((actions) => actions.clientRecordModel.setRecords);
   const setSelectedRecord = useStoreActions((actions) => actions.clientRecordModel.setSelectedRecord);
@@ -85,12 +96,13 @@ function CareReports() {
   const classes = useStyles();
 
   useEffect(() => {
-    query(setRecords, setSelectedRecord);
-    const sub = clientRecordUpdateSubscribe(() => query(setRecords));
+    if (!companyData) return;
+    query(setRecords, setSelectedRecord, companyData.id);
+    const sub = clientRecordUpdateSubscribe(() => query(setRecords, null, companyData.id));
     return () => {
       sub.unsubscribe();
     };
-  }, [setRecords, setSelectedRecord]);
+  }, [setRecords, setSelectedRecord, companyData]);
 
   const converted = convertRecords(records);
 
@@ -112,6 +124,7 @@ function CareReports() {
     const emergency = generateChartsData(_.get(grouped, 'emergency'));
     const warning = generateChartsData(_.get(grouped, 'warning'));
     const normal = generateChartsData(_.get(grouped, 'normal'));
+
     return { emergency, warning, normal };
   }, [records]);
 

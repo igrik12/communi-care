@@ -64,6 +64,7 @@ export default function EditClient() {
   useEffect(() => {
     register({ name: 'clientCompanyId', required: true });
     register({ name: 'clientResidenceId', required: true });
+    register({ name: 'dateOfBirth', required: true });
   }, [register, setValue]);
 
   useEffect(() => {
@@ -76,8 +77,6 @@ export default function EditClient() {
   }, [client, setDateOfBirth]);
 
   if (_.isEmpty(client)) return null;
-
-  console.log(client);
 
   return (
     <div className={classes.root}>
@@ -105,13 +104,11 @@ export default function EditClient() {
             onChange={(e, data) => {
               setValue('clientCompanyId', data?.id);
             }}
-            className={classes.formControl}
             options={companies}
             defaultValue={client?.company}
             getOptionLabel={(option) => option.name ?? ''}
-            renderInput={(params) => (
-              <TextField {...params} name='clientCompanyId' label='Company' variant='outlined' />
-            )}
+            getOptionSelected={(option) => option}
+            renderInput={(params) => <TextField {...params} label='Company' variant='outlined' />}
           />
         </FormControl>
         <FormControl className={classes.field} variant='outlined'>
@@ -120,13 +117,11 @@ export default function EditClient() {
             onChange={(e, data) => {
               setValue('clientResidenceId', data?.id);
             }}
-            className={classes.formControl}
             options={residences}
             defaultValue={client?.residence}
             getOptionLabel={(option) => option.name ?? ''}
-            renderInput={(params) => (
-              <TextField {...params} name='clientResidenceId' label='Residence' variant='outlined' />
-            )}
+            getOptionSelected={(option) => option}
+            renderInput={(params) => <TextField {...params} label='Residence' variant='outlined' />}
           />
         </FormControl>
         <FormControl className={classes.field}>
