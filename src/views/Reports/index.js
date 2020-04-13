@@ -5,7 +5,7 @@ import { listClientRecords } from 'graphql/customQueries';
 import { generateChartsData } from 'utils/helpers';
 import ChartistGraph from 'react-chartist';
 import _ from 'lodash';
-import { addYears, subMonths, subYears } from 'date-fns';
+import { addYears, subMonths } from 'date-fns';
 import { clientRecordUpdateSubscribe } from 'utils/modelHelpers/records';
 
 // MUI components
@@ -107,7 +107,9 @@ function CareReports() {
   const converted = convertRecords(records);
 
   const options = {
-    filter: true,
+    filter: false,
+    print: false,
+    download: false,
     responsive: 'scrollMaxHeight',
     filterType: 'checkbox',
     rowsPerPage: 5,

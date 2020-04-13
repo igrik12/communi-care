@@ -1,34 +1,30 @@
 import React from 'react';
 
 import TopBar from './TopBar';
+import Profile from './Profile';
+import Table from './Table';
 
-// core components
-import Container from 'components/Grid/GridContainer';
-import GridItem from 'components/Grid/GridItem';
+import Grid from '@material-ui/core/Grid';
 
 export default function Clients() {
   return (
-    <Container>
-      <GridItem xl={12} lg={12} md={12} sm={12} xs={12}>
+    <Grid container>
+      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
         <TopBar />
-      </GridItem>
-      <GridItem xl={6} lg={6} md={12} sm={12} xs={12}>
-        <Profile />
-      </GridItem>
-      <GridItem xl={6} lg={6} md={12} sm={12} xs={12}>
-        <Table />
-      </GridItem>
-      <GridItem xl={12} lg={12} md={12} sm={12} xs={12}>
-        <Profile />
-      </GridItem>
-    </Container>
+      </Grid>
+      <Grid item style={{ marginTop: '1rem' }} xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid container spacing={4}>
+          <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+            <Profile />
+          </Grid>
+          <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+            <Table />
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <></>
+      </Grid>
+    </Grid>
   );
 }
-
-const Profile = () => {
-  return <div>Profile</div>;
-};
-
-const Table = () => {
-  return <div>Table</div>;
-};

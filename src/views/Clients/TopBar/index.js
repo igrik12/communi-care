@@ -12,9 +12,12 @@ export default function TopBarContainer() {
     setSelectedClient(companyData?.clients[0]);
   }, [companyData, setSelectedClient]);
 
-  const handleSelect = (client) => {
-    setSelectedClient(client);
+  const handleSelect = (event) => {
+    const match = companyData.clients.find((client) => client.id === event.target.value);
+    setSelectedClient(match);
   };
+
+  if (!companyData?.clients || !selectedClient) return null;
 
   return <TopBar selectedClient={selectedClient} clients={companyData.clients} selectClient={handleSelect} />;
 }
