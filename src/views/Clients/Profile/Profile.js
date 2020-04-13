@@ -36,7 +36,7 @@ export default function Profile({ selectedClient, clients, clientInfo }) {
   const classes = useStyles();
 
   return (
-    <Card style={{ height: '100%' }}>
+    <Card style={{ height: '90%' }}>
       <CardHeader color='primary'>
         <h4 className={classes.cardTitleWhite}>Client Profile</h4>
         <p className={classes.cardCategoryWhite}>Detail overview of personal information</p>

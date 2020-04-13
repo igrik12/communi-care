@@ -55,8 +55,10 @@ const tableStyle = theme => ({
   },
   tableResponsive: {
     width: "100%",
-    marginTop: theme.spacing(3),
-    overflowX: "auto"
+    overflowX: "auto",
+  },
+  tableContainer:{
+    maxHeight: 300,
   },
   tableHeadRow: {
     height: "56px",
