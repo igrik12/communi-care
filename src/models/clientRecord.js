@@ -2,6 +2,7 @@ import { action, thunk } from 'easy-peasy';
 import { createClientRecord, updateClientRecord, createClientRecordArchived } from '../graphql/mutations';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listClients, getClientRecord } from '../graphql/queries';
+import { omit } from 'utils/helpers';
 import _ from 'lodash';
 
 const clientRecordModel = {
@@ -37,7 +38,7 @@ const clientRecordModel = {
 
     const archiveDetails = {
       input: {
-        ..._.omit(selectedRecord, ['version', 'client', 'staff', 'id']),
+        ...omit(selectedRecord, ['version', 'client', 'staff', 'id']),
         clientRecordArchivedClientId: selectedRecord.client.id,
         clientRecordArchivedStaffId: selectedRecord.staff.id,
         clientRecordArchivedMainRecordId: selectedRecord.id,

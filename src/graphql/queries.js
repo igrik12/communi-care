@@ -90,6 +90,7 @@ export const getClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -119,6 +120,7 @@ export const listClients = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       nextToken
     }
@@ -209,6 +211,7 @@ export const getClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
@@ -280,6 +283,7 @@ export const getClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id

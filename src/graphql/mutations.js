@@ -153,6 +153,7 @@ export const createClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -180,6 +181,7 @@ export const updateClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -207,6 +209,7 @@ export const deleteClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -359,6 +362,7 @@ export const createClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
@@ -405,6 +409,7 @@ export const updateClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
@@ -451,6 +456,7 @@ export const deleteClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
@@ -497,6 +503,7 @@ export const createClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
@@ -556,6 +563,7 @@ export const updateClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
@@ -615,6 +623,7 @@ export const deleteClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id

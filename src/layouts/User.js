@@ -30,7 +30,7 @@ import routes from 'routes.js';
 import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 
 import bgImage from 'assets/img/sidebar-2.jpg';
-import logo from 'assets/img/reactlogo.png';
+import logo from 'assets/img/smelogo.jpg';
 
 let ps;
 
@@ -44,7 +44,7 @@ const switchRoutes = (user) => (
         }
         return null;
       })}
-    <Redirect from='/user' to='/user/records' />
+    <Redirect from='/user' to='/user/management' />
   </Switch>
 );
 

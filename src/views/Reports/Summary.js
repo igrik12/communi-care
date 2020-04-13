@@ -52,6 +52,7 @@ const toUpperKey = (key) =>
 
 export default function Summary() {
   const classes = useStyles();
+  const [editMode, setEditMode] = useState(false);
   const user = useStoreState((state) => state.user);
   const selectedRecord = useStoreState((state) => state.clientRecordModel.selectedRecord);
   const updateRecord = useStoreActions((actions) => actions.clientRecordModel.updateRecord);
@@ -66,9 +67,8 @@ export default function Summary() {
       createdAt: new Date(),
       clientRecordStaffId: user.id,
     });
+    setEditMode(false);
   };
-
-  const [editMode, setEditMode] = useState(false);
 
   const handleChange = (event) => {
     setEditMode(event.target.checked);
@@ -101,7 +101,7 @@ export default function Summary() {
       )),
     [filtered, classes.textField, hasPerm, register, editMode]
   );
-  
+
   if (!selectedRecord) return null;
 
   return (

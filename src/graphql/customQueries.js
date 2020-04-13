@@ -46,6 +46,7 @@ export const listClients = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
         residence {
           name
           id
@@ -183,6 +184,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
             lastName
             dateOfBirth
             isActive
+            photoUrl
           }
           nextToken
         }

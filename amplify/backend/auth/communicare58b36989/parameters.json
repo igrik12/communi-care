@@ -1,6 +1,6 @@
 {
     "identityPoolName": "communicare58b36989_identitypool_58b36989",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "commun58b36989",
     "userPoolName": "communicare58b36989_userpool_58b36989",
     "autoVerifiedAttributes": [

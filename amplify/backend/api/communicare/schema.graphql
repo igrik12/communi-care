@@ -28,6 +28,7 @@ type Client @model {
   lastName: String!
   dateOfBirth: AWSDateTime!
   isActive: Boolean!
+  photoUrl: String
   clientRecords: [ClientRecord] @connection(name: "ClientRecords")
   company: Company @connection(name: "CompanyClients")
   residence: Residence @connection(name: "ClientResidence")
