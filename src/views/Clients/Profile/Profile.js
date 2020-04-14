@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';
 import CardBody from 'components/Card/CardBody.js';
+import CardFooter from 'components/Card/CardFooter.js';
 
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
@@ -36,7 +37,7 @@ export default function Profile({ selectedClient, clients, clientInfo }) {
   const classes = useStyles();
 
   return (
-    <Card style={{ height: '90%' }}>
+    <Card>
       <CardHeader color='primary'>
         <h4 className={classes.cardTitleWhite}>Client Profile</h4>
         <p className={classes.cardCategoryWhite}>Detail overview of personal information</p>
@@ -75,7 +76,7 @@ export default function Profile({ selectedClient, clients, clientInfo }) {
               value={clientInfo?.company?.name}
             />
           </Grid>
-          <Grid item className={classes.gridItem} xs={12} sm={12} md={4} lg={12}>
+          <Grid item className={classes.gridItem} xs={12} sm={12} md={4} lg={6}>
             <TextField
               fullWidth
               label='Date of Birth'
@@ -85,7 +86,7 @@ export default function Profile({ selectedClient, clients, clientInfo }) {
               value={new Date(clientInfo?.dateOfBirth).toLocaleDateString()}
             />
           </Grid>
-          <Grid item className={classes.gridItem} xs={12} sm={12} md={4} lg={12}>
+          <Grid item className={classes.gridItem} xs={12} sm={12} md={4} lg={6}>
             <TextField
               fullWidth
               label='Residence'
@@ -97,6 +98,9 @@ export default function Profile({ selectedClient, clients, clientInfo }) {
           </Grid>
         </Grid>
       </CardBody>
+      <CardFooter>
+       
+      </CardFooter>
     </Card>
   );
 }

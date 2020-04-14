@@ -15,11 +15,11 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
+  const { tableHead, tableData, tableHeaderColor, onClick } = props;
   return (
     <div className={classes.tableResponsive}>
       <TableContainer className={classes.tableContainer}>
-        <Table stickyHeader className={classes.table}>
+        <Table onCellClick={onClick} stickyHeader className={classes.table}>
           {tableHead !== undefined ? (
             <TableHead className={classes[tableHeaderColor + 'TableHeader']}>
               <TableRow className={classes.tableHeadRow}>
@@ -38,6 +38,7 @@ export default function CustomTable(props) {
               return (
                 <TableRow key={key} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
+                    if (key === 0) return null;
                     return (
                       <TableCell className={classes.tableCell} key={key}>
                         {prop}
