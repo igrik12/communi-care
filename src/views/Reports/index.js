@@ -84,7 +84,7 @@ const query = async (setRecords, setSelectedRecord, companyId) => {
     ret.data.listClientRecords.items.filter((record) => record.client.company.id === companyId)
   );
   setRecords(filtered);
-  setSelectedRecord && setSelectedRecord(filtered[0]);
+  // setSelectedRecord(filtered[0]);
 };
 
 function CareReports() {
@@ -98,11 +98,19 @@ function CareReports() {
   useEffect(() => {
     if (!companyData) return;
     query(setRecords, setSelectedRecord, companyData.id);
-    const sub = clientRecordUpdateSubscribe(() => query(setRecords, null, companyData.id));
+  }, [setRecords, setSelectedRecord, companyData]);
+
+  useEffect(() => {
+    const sub = clientRecordUpdateSubscribe((updated) => {
+      const updatedRecords = _.map(records, (a) => {
+        return a.id === updated.id ? updated : a;
+      });
+      setRecords(updatedRecords);
+    });
     return () => {
       sub.unsubscribe();
     };
-  }, [setRecords, setSelectedRecord, companyData]);
+  }, [records, setRecords]);
 
   const converted = convertRecords(records);
 

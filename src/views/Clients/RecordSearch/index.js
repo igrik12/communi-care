@@ -87,7 +87,7 @@ export default function RecordSearch() {
   React.useEffect(() => {
     setSelectedRecord(null);
     return () => {
-      setSelectedRecord(null);
+       setSelectedRecord(null);
     };
   }, [setSelectedRecord]);
 

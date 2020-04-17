@@ -7,7 +7,7 @@ import { onUpdateClientRecord } from 'graphql/subscriptions';
  */
 export const clientRecordUpdateSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onUpdateClientRecord)).subscribe({
-    next: async (companyData) => await action(companyData),
+    next: async (clientRecord) => await action(clientRecord.value.data.onUpdateClientRecord),
   });
   return subscription;
 };

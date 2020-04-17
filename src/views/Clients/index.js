@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useStoreActions, useStoreState } from 'easy-peasy';
+import { clientRecordUpdateSubscribe } from 'utils/modelHelpers/records';
 
 import TopBar from './TopBar';
 import Profile from './Profile';
@@ -8,6 +10,18 @@ import Summary from 'views/Reports/Summary';
 import Grid from '@material-ui/core/Grid';
 
 export default function Clients() {
+  const setSelectedRecord = useStoreActions((actions) => actions.clientRecordModel.setSelectedRecord);
+  const user = useStoreState((state) => state.user);
+
+  useEffect(() => {
+    clientRecordUpdateSubscribe((updated) => {
+      if (updated.updatedBy === user.id) {
+        console.log('Calling');
+        setSelectedRecord(updated);
+      }
+    });
+  }, [setSelectedRecord, user]);
+
   return (
     <Grid container>
       <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>

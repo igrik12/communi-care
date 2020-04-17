@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TextAvatar({ isActive, avatarUrl, text }) {
   const classes = useStyles();
-  console.log(avatarUrl);
   return (
     <div className={classes.root}>
       <Avatar src={avatarUrl} className={classes.large} />

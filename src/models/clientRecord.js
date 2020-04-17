@@ -18,6 +18,7 @@ const clientRecordModel = {
     const setAlertOpen = getStoreActions().setAlertOpen;
     const recordDetails = {
       clientRecordStaffId: getStoreState().user.id,
+      updatedBy: getStoreState().user.id,
       ...payload,
     };
 
@@ -39,6 +40,7 @@ const clientRecordModel = {
     const archiveDetails = {
       input: {
         ...omit(selectedRecord, ['version', 'client', 'staff', 'id']),
+        updatedBy: payload.updatedBy,
         clientRecordArchivedClientId: selectedRecord.client.id,
         clientRecordArchivedStaffId: selectedRecord.staff.id,
         clientRecordArchivedMainRecordId: selectedRecord.id,

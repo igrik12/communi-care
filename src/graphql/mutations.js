@@ -367,6 +367,7 @@ export const createClientRecord = /* GraphQL */ `
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -414,6 +415,7 @@ export const updateClientRecord = /* GraphQL */ `
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -461,6 +463,7 @@ export const deleteClientRecord = /* GraphQL */ `
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -507,6 +510,7 @@ export const createClientRecordArchived = /* GraphQL */ `
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -522,6 +526,7 @@ export const createClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -567,6 +572,7 @@ export const updateClientRecordArchived = /* GraphQL */ `
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -582,6 +588,7 @@ export const updateClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -627,6 +634,7 @@ export const deleteClientRecordArchived = /* GraphQL */ `
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -642,6 +650,7 @@ export const deleteClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt

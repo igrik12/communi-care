@@ -59,6 +59,7 @@ export default function ConfirmUpdate({ originalData, mergeData }) {
     const final = { ..._.omit(originalData, ['version', 'client', 'staff', 'archived']), ...extracted };
     const updateDetails = {
       id: originalData.id,
+      updatedBy: user.id,
       clientRecordClientId: originalData.client.id,
       clientRecordStaffId: originalData.staff.id,
       expectedVersion: originalData.version,

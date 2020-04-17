@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useStoreState } from 'easy-peasy';
+import React from 'react';
 
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';

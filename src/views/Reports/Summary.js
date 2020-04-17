@@ -13,7 +13,7 @@ import CardBody from 'components/Card/CardBody.js';
 // MUI Imports
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Grid, Typography, Button, Box, Paper, Switch, FormControlLabel } from '@material-ui/core';
+import { Grid, Typography, Button, Box, Switch, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   textField: { width: '100%' },
   summaryBox: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   column: {
     flexBasis: '33.33%',
@@ -67,6 +67,7 @@ export default function Summary() {
     updateRecord({
       ...data,
       id: selectedRecord.id,
+      updatedBy: user.id,
       expectedVersion: selectedRecord.version,
       createdAt: new Date(),
       clientRecordStaffId: user.id,
@@ -78,9 +79,10 @@ export default function Summary() {
     setEditMode(event.target.checked);
   };
 
-  const filtered = _.pick(selectedRecord, fields);
+  const filtered = useMemo(() => _.pick(selectedRecord, fields), [selectedRecord]);
 
   useEffect(() => {
+    console.log('Called');
     _.forIn(filtered, (value, key) => {
       setValue(key, value);
     });
