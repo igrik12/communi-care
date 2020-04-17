@@ -213,3 +213,37 @@ query ListResidences(
     nextToken
   }
 }`;
+
+export const getClientRecords = /* GraphQL */ `
+  query GetClient($id: ID!, $from: String, $to: String) {
+    getClient(id: $id) {
+      id
+      clientRecords(filter: { createdAt: { between: [$from, $to] } }) {
+        items {
+          id
+          status
+          entryType
+          createdAt
+          shift
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+          version
+          client {
+            id
+          }
+          staff {
+            id
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;

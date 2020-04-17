@@ -5,6 +5,11 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import { hasPermissions } from 'utils/helpers';
 import { textFields } from '../Records/TextEntries';
 
+// core components
+import Card from 'components/Card/Card.js';
+import CardHeader from 'components/Card/CardHeader.js';
+import CardBody from 'components/Card/CardBody.js';
+
 // MUI Imports
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -28,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
   textField: { width: '100%' },
   summaryBox: {
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(2),
+    alignItems: 'center'
   },
   column: {
     flexBasis: '33.33%',
@@ -105,43 +109,47 @@ export default function Summary() {
   if (!selectedRecord) return null;
 
   return (
-    <Paper className={classes.root} elevation={3}>
-      <Grid>
-        <form onSubmit={handleSubmit(onSumbit)}>
-          <Box className={classes.summaryBox}>
-            <div className={classes.column}>
-              <Typography className={classes.heading}>
-                {selectedRecord?.client?.firstName} {selectedRecord?.client?.lastName}
-              </Typography>
-            </div>
-            <div className={classes.column}>
-              <Typography className={classes.secondaryHeading}>
-                {new Date(selectedRecord?.createdAt).toDateString()}
-              </Typography>
-            </div>
-            <div className={classes.column}>
-              <Typography className={classes.secondaryHeading}>
-                {selectedRecord?.entryType.replace(/^\w/, (c) => c.toUpperCase())}
-              </Typography>
-            </div>
-            <FormControlLabel
-              className={classes.switch}
-              control={
-                <Switch disabled={!hasPerm} checked={editMode} onChange={handleChange} name='edit' color='primary' />
-              }
-              label='Edit'
-            />
-          </Box>
-          <Grid container spacing={2}>
-            {MemoizedFields}
-          </Grid>
-          <Box className={classes.saveBtn}>
-            <Button type='submit' disabled={!hasPerm || !editMode} variant='outlined' size='small' color='primary'>
-              Save
-            </Button>
-          </Box>
-        </form>
-      </Grid>
-    </Paper>
+    <Card>
+      <CardHeader color='primary'>
+        <Box className={classes.summaryBox}>
+          <div className={classes.column}>
+            <Typography className={classes.heading}>
+              {selectedRecord?.client?.firstName} {selectedRecord?.client?.lastName}
+            </Typography>
+          </div>
+          <div className={classes.column}>
+            <Typography className={classes.secondaryHeading}>
+              {new Date(selectedRecord?.createdAt).toDateString()}
+            </Typography>
+          </div>
+          <div className={classes.column}>
+            <Typography className={classes.secondaryHeading}>
+              {selectedRecord?.entryType.replace(/^\w/, (c) => c.toUpperCase())}
+            </Typography>
+          </div>
+          <FormControlLabel
+            className={classes.switch}
+            control={
+              <Switch disabled={!hasPerm} checked={editMode} onChange={handleChange} name='edit' color='secondary' />
+            }
+            label='Edit'
+          />
+        </Box>
+      </CardHeader>
+      <CardBody>
+        <Grid>
+          <form onSubmit={handleSubmit(onSumbit)}>
+            <Grid container spacing={2}>
+              {MemoizedFields}
+            </Grid>
+            <Box className={classes.saveBtn}>
+              <Button type='submit' disabled={!hasPerm || !editMode} variant='outlined' size='small' color='primary'>
+                Save
+              </Button>
+            </Box>
+          </form>
+        </Grid>
+      </CardBody>
+    </Card>
   );
 }

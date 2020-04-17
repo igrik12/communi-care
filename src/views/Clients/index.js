@@ -2,7 +2,8 @@ import React from 'react';
 
 import TopBar from './TopBar';
 import Profile from './Profile';
-import Table from './Table';
+import RecordSearch from './RecordSearch';
+import Summary from 'views/Reports/Summary';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -18,12 +19,12 @@ export default function Clients() {
             <Profile />
           </Grid>
           <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
-            <Table />
+            <RecordSearch />
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-        <></>
+      <Grid item lg={12} md={12} sm={12} xs={12}>
+        <Summary />
       </Grid>
     </Grid>
   );

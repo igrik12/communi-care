@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Storage } from 'aws-amplify';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -15,7 +13,7 @@ import TextIcon from './TextIcon';
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 175,
   },
 }));
 
@@ -36,26 +34,26 @@ export default function TopBar({ clients, selectedClient, selectClient }) {
   const classes = useStyles();
   const photo = usePhoto(selectedClient?.photoUrl);
   return (
-    <Box display='flex' alignItems='center'>
-      <Box p={1} flexGrow={1}>
+    <Grid container alignItems='center'>
+      <Grid item xl={4} lg={4} md={4} sm={12} xs={12}>
         <FormControl className={classes.formControl} variant='outlined'>
           <InputLabel id='client-lable'>Client</InputLabel>
-          <Select labelId='client-lable' value={selectedClient?.id} onChange={selectClient}>
+          <Select label='Client' labelId='client-lable' value={selectedClient?.id} onChange={selectClient}>
             {clients.map((client) => (
               <MenuItem key={client.id} value={client.id}>{`${client.firstName} ${client.lastName}`}</MenuItem>
             ))}
           </Select>
         </FormControl>
-      </Box>
-      <Box flexGrow={3} p={1}>
+      </Grid>
+      <Grid item xl={4} lg={4} md={4} sm={6} xs={6}>
         <TextAvatar text={`${selectedClient?.firstName} ${selectedClient?.lastName}`} avatarUrl={photo} />
-      </Box>
-      <Box p={1} flexGrow={1}>
+      </Grid>
+      <Grid item xl={4} lg={4} md={4} sm={6} xs={6}>
         <TextIcon
           text={selectedClient?.isActive ? 'Active' : 'Inactive'}
           color={selectedClient?.isActive ? 'primary' : 'secondary'}
         />
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 }
