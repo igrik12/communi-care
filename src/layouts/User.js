@@ -44,7 +44,7 @@ const switchRoutes = (user) => (
         }
         return null;
       })}
-    <Redirect from='/user' to='/user/clients' />
+    <Redirect from='/user' to='/user/management' />
   </Switch>
 );
 

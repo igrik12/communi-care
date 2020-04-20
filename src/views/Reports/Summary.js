@@ -82,7 +82,6 @@ export default function Summary() {
   const filtered = useMemo(() => _.pick(selectedRecord, fields), [selectedRecord]);
 
   useEffect(() => {
-    console.log('Called');
     _.forIn(filtered, (value, key) => {
       setValue(key, value);
     });

@@ -16,7 +16,6 @@ export default function Clients() {
   useEffect(() => {
     clientRecordUpdateSubscribe((updated) => {
       if (updated.updatedBy === user.id) {
-        console.log('Calling');
         setSelectedRecord(updated);
       }
     });
