@@ -1,5 +1,4 @@
 import React from 'react';
-import 'date-fns';
 import { useStoreActions } from 'easy-peasy';
 import RecordMeta from './RecordMeta';
 import _ from 'lodash';

@@ -52,6 +52,11 @@ export default function EditStaff() {
   }, [editOpen.id, companies, staff]);
 
   useEffect(() => {
+    register({ name: 'staffCompanyId', required: true });
+    register({ name: 'dateOfBirth', required: true });
+  }, [register, setValue]);
+
+  useEffect(() => {
     if (currentStaff) {
       const common = _.intersectionWith(permissions, currentStaff.permissions, (a, b) => a.value === b);
       setAllPermissions(common);
@@ -59,8 +64,11 @@ export default function EditStaff() {
   }, [currentStaff, setValue, setAllPermissions]);
 
   const handleOnSubmit = (data) => {
-    if (!data.staffCompanyId) return;
-    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map((perm) => perm.value) };
+    const updateDetails = {
+      id: currentStaff.id,
+      permissions: allPermissions.map((perm) => perm.value),
+      ...data,
+    };
     updateEntity({ type: STAFF, data: updateDetails });
     setEditOpen({ open: false });
   };
@@ -112,8 +120,9 @@ export default function EditStaff() {
             className={classes.formControl}
             options={companies}
             defaultValue={currentStaff?.company}
-            getOptionLabel={(option) => option.name ?? ''}
-            renderInput={(params) => <TextField {...params} name='staffCompanyId' label='Company' variant='outlined' />}
+            getOptionLabel={(option) => option.name}
+            getOptionSelected={(option) => option}
+            renderInput={(params) => <TextField {...params} label='Company' variant='outlined' />}
           />
         </FormControl>
         <FormControl variant='outlined'>

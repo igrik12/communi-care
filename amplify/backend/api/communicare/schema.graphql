@@ -28,6 +28,7 @@ type Client @model {
   lastName: String!
   dateOfBirth: AWSDateTime!
   isActive: Boolean!
+  photoUrl: String
   clientRecords: [ClientRecord] @connection(name: "ClientRecords")
   company: Company @connection(name: "CompanyClients")
   residence: Residence @connection(name: "ClientResidence")
@@ -53,6 +54,7 @@ type ClientRecord @model @versioned {
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
   archived: [ClientRecordArchived] @connection(name: "ArchivedRecords")
+  updatedBy: ID!
   status: String
   entryType: EntryType!
   createdAt: AWSDateTime!
@@ -73,6 +75,7 @@ type ClientRecordArchived @model {
   staff: Staff @connection(name: "StaffClientRecords")
   client: Client @connection(name: "ClientRecords")
   mainRecord: ClientRecord @connection(name: "ArchivedRecords")
+  updatedBy: ID!
   status: String
   entryType: EntryType!
   createdAt: AWSDateTime!

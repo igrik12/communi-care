@@ -153,6 +153,7 @@ export const createClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -180,6 +181,7 @@ export const updateClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -207,6 +209,7 @@ export const deleteClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -359,10 +362,12 @@ export const createClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -405,10 +410,12 @@ export const updateClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -451,10 +458,12 @@ export const deleteClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -497,9 +506,11 @@ export const createClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -515,6 +526,7 @@ export const createClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -556,9 +568,11 @@ export const updateClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -574,6 +588,7 @@ export const updateClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -615,9 +630,11 @@ export const deleteClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -633,6 +650,7 @@ export const deleteClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt

@@ -90,6 +90,7 @@ export const getClient = /* GraphQL */ `
       lastName
       dateOfBirth
       isActive
+      photoUrl
       clientRecords {
         nextToken
       }
@@ -119,6 +120,7 @@ export const listClients = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       nextToken
     }
@@ -209,10 +211,12 @@ export const getClientRecord = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       archived {
         nextToken
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -239,6 +243,7 @@ export const listClientRecords = /* GraphQL */ `
     listClientRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -280,9 +285,11 @@ export const getClientRecordArchived = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
       }
       mainRecord {
         id
+        updatedBy
         status
         entryType
         createdAt
@@ -298,6 +305,7 @@ export const getClientRecordArchived = /* GraphQL */ `
         dailyActivityParticipation
         version
       }
+      updatedBy
       status
       entryType
       createdAt
@@ -327,6 +335,7 @@ export const listClientRecordArchiveds = /* GraphQL */ `
     ) {
       items {
         id
+        updatedBy
         status
         entryType
         createdAt

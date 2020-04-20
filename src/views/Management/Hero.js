@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import EditEntity from './EditEntity';
 import { STAFF, COMPANY, CLIENT, RESIDENCE } from 'utils/constants';
-
+import { Storage } from 'aws-amplify';
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid } from '@material-ui/core';
@@ -24,40 +24,40 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular,
   },
   list: {
     width: '100%',
     maxHeight: 200,
     overflow: 'auto',
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   inline: {
-    display: 'inline'
+    display: 'inline',
   },
   title: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   listContent: {
     display: 'block',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   listItem: {
-    width: '100%'
+    width: '100%',
   },
   titleRoot: {
     marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   paper: {
     height: '100%',
-    padding: 5
+    padding: 5,
   },
   avatar: { color: '#fff', background: '#9187F2' },
   itemText: { color: '#9187F2' },
@@ -67,16 +67,16 @@ const useStyles = makeStyles(theme => ({
     width: 200,
     whiteSpace: 'nowrap',
     overflow: 'hidden !important',
-    textOverflow: 'ellipsis'
-  }
+    textOverflow: 'ellipsis',
+  },
 }));
 
 export default function Hero() {
   const classes = useStyles();
-  const staff = useStoreState(state => state.staff);
-  const clients = useStoreState(state => state.clients);
-  const companies = useStoreState(state => state.companies);
-  const residences = useStoreState(state => state.residences);
+  const staff = useStoreState((state) => state.staff);
+  const clients = useStoreState((state) => state.clients);
+  const companies = useStoreState((state) => state.companies);
+  const residences = useStoreState((state) => state.residences);
 
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [filteredStaff, setFilteredStaff] = useState([]);
@@ -143,14 +143,32 @@ export default function Hero() {
   );
 }
 
+const useFetchPhoto = (data) => {
+  const [photos, setPhotos] = useState([]);
+  useEffect(() => {
+    const fetchImages = async () => {
+      data.forEach(async (item) => {
+        const photo = await Storage.get(item.photoUrl);
+        const mapped = { id: item.id, photo };
+        setPhotos((prevArray) => [...prevArray, mapped]);
+      });
+    };
+    fetchImages();
+  }, [data]);
+  return photos;
+};
+
 const ClientList = ({ clients }) => {
   const classes = useStyles();
   const [openDelete, setOpenDelete] = useState({ open: false, type: CLIENT, id: '' });
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
+  const photos = useFetchPhoto(clients);
+
   return (
     <>
       <List className={classes.list}>
         {clients.map((client, index) => {
+          const image = photos?.find((pht) => pht.id === client.id);
           return (
             <ListItem
               onClick={() => setEditOpen({ open: true, type: CLIENT, id: client.id })}
@@ -159,7 +177,7 @@ const ClientList = ({ clients }) => {
               alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar className={classes.avatar} />
+                <Avatar className={classes.avatar} src={image?.photo} />
               </ListItemAvatar>
               <ListItemText
                 className={classes.itemText}
@@ -192,7 +210,7 @@ const ClientList = ({ clients }) => {
 
 const StaffList = ({ staff }) => {
   const classes = useStyles();
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const [openDelete, setOpenDelete] = useState({ open: false, type: STAFF, id: '' });
   return (
     <>
@@ -241,7 +259,7 @@ const StaffList = ({ staff }) => {
 
 const ResidenceList = ({ residences }) => {
   const classes = useStyles();
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const [openDelete, setOpenDelete] = useState({ open: false, type: RESIDENCE, id: '' });
 
   return (
@@ -279,7 +297,7 @@ const ResidenceList = ({ residences }) => {
 
 const CompanyList = ({ companies }) => {
   const classes = useStyles();
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const [openDelete, setOpenDelete] = useState({ open: false, type: COMPANY, id: '' });
   return (
     <>
@@ -330,7 +348,7 @@ const CompanyList = ({ companies }) => {
 };
 
 const ConfirmEntityDelete = ({ openDelete, setOpenDelete, entity }) => {
-  const deleteEntity = useStoreActions(actions => actions.managementModel.deleteEntity);
+  const deleteEntity = useStoreActions((actions) => actions.managementModel.deleteEntity);
 
   const handleClose = () => {
     setOpenDelete({ open: false });
@@ -357,8 +375,8 @@ const ConfirmEntityDelete = ({ openDelete, setOpenDelete, entity }) => {
 };
 
 const EditEntityDialog = () => {
-  const editOpen = useStoreState(state => state.managementModel.editOpen);
-  const setEditOpen = useStoreActions(actions => actions.managementModel.setEditOpen);
+  const editOpen = useStoreState((state) => state.managementModel.editOpen);
+  const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const handleClose = () => {
     setEditOpen({ open: false, type: '', id: '' });
   };
@@ -369,36 +387,38 @@ const EditEntityDialog = () => {
   );
 };
 
-const onCompanyChange = (companies, setFilteredCompanies) => event => {
+const onCompanyChange = (companies, setFilteredCompanies) => (event) => {
   if (!event.target.value) {
     setFilteredCompanies(companies);
   } else {
     setFilteredCompanies(
-      companies.filter(company => company.name.toLowerCase().includes(event.target.value.toLowerCase()))
+      companies.filter((company) => company.name.toLowerCase().includes(event.target.value.toLowerCase()))
     );
   }
 };
 
-const onClientChange = (clients, setFilteredClients) => event => {
+const onClientChange = (clients, setFilteredClients) => (event) => {
   if (!event.target.value) {
     setFilteredClients(clients);
   } else {
-    setFilteredClients(clients.filter(client => client.name.toLowerCase().includes(event.target.value.toLowerCase())));
+    setFilteredClients(
+      clients.filter((client) => client.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    );
   }
 };
 
-const onStaffChange = (staff, setFilteredStaff) => event => {
+const onStaffChange = (staff, setFilteredStaff) => (event) => {
   if (!event.target.value) {
     setFilteredStaff(staff);
   } else {
-    setFilteredStaff(staff.filter(stf => stf.username.toLowerCase().includes(event.target.value.toLowerCase())));
+    setFilteredStaff(staff.filter((stf) => stf.username.toLowerCase().includes(event.target.value.toLowerCase())));
   }
 };
 
-const onResidenceChange = (residence, setFilteredResidence) => event => {
+const onResidenceChange = (residence, setFilteredResidence) => (event) => {
   if (!event.target.value) {
     setFilteredResidence(residence);
   } else {
-    setFilteredResidence(residence.filter(stf => stf.name.toLowerCase().includes(event.target.value.toLowerCase())));
+    setFilteredResidence(residence.filter((stf) => stf.name.toLowerCase().includes(event.target.value.toLowerCase())));
   }
 };

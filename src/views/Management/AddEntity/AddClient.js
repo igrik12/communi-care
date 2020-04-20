@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
@@ -18,43 +18,41 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import LinkIcon from '@material-ui/icons/Link';
 import { useEffect } from 'react';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: { marginTop: theme.spacing(1) },
   formControl: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   buttonGroup: {
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 const AddClient = () => {
   const classes = useStyles();
-  const submitEntity = useStoreActions(actions => actions.managementModel.submitEntity);
-  const companies = useStoreState(state => state.companies);
-  const residences = useStoreState(state => state.residences);
+  const submitEntity = useStoreActions((actions) => actions.managementModel.submitEntity);
+  const companies = useStoreState((state) => state.companies);
+  const residences = useStoreState((state) => state.residences);
   const { register, handleSubmit, reset, control, setValue, watch } = useForm();
 
   useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
   }, [register]);
 
-  const handleDateChange = date => {
+  const handleDateChange = (date) => {
     setValue('dateOfBirth', date);
   };
 
   const watching = watch(['dateOfBirth']);
 
-  const onSubmit = clientData => {
+  const onSubmit = (clientData) => {
     const data = {
-      firstName: clientData.firstName,
-      lastName: clientData.lastName,
-      dateOfBirth: clientData.dateOfBirth,
       clientCompanyId: clientData.company.id,
       clientResidenceId: clientData.residence.id,
-      isActive: clientData.isActive
+      ...clientData,
     };
     submitEntity({ type: CLIENT, data });
     reset();
@@ -81,7 +79,7 @@ const AddClient = () => {
                     <InputAdornment position='start'>
                       <AccountCircle />
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 label='First Name'
                 name='firstName'
@@ -101,7 +99,7 @@ const AddClient = () => {
                     <InputAdornment position='start'>
                       <AccountCircle />
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 label='Last Name'
                 name='lastName'
@@ -133,20 +131,20 @@ const AddClient = () => {
                   className={classes.formControl}
                   options={residences}
                   autoHighlight
-                  getOptionLabel={option => option.name}
-                  renderOption={option => (
+                  getOptionLabel={(option) => option.name}
+                  renderOption={(option) => (
                     <React.Fragment>
                       {option.name} {option.address?.postCode}
                     </React.Fragment>
                   )}
-                  renderInput={params => (
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label='Residence'
                       variant='outlined'
                       inputProps={{
                         ...params.inputProps,
-                        autoComplete: 'disabled'
+                        autoComplete: 'disabled',
                       }}
                     />
                   )}
@@ -168,15 +166,15 @@ const AddClient = () => {
                   className={classes.formControl}
                   options={companies}
                   autoHighlight
-                  getOptionLabel={option => option.name || ''}
-                  renderInput={params => (
+                  getOptionLabel={(option) => option.name || ''}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       label='Company'
                       variant='outlined'
                       inputProps={{
                         ...params.inputProps,
-                        autoComplete: 'disabled'
+                        autoComplete: 'disabled',
                       }}
                     />
                   )}
@@ -189,6 +187,26 @@ const AddClient = () => {
               defaultValue={companies[0]}
               control={control}
             />
+          </Grid>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth className={classes.formControl}>
+              <TextField
+                required
+                inputRef={register}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <LinkIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                label='Photo URL'
+                name='photoUrl'
+                variant='outlined'
+                fullWidth
+                autoComplete='off'
+              />
+            </FormControl>
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <FormControlLabel

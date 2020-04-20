@@ -30,19 +30,21 @@ import routes from 'routes.js';
 import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 
 import bgImage from 'assets/img/sidebar-2.jpg';
-import logo from 'assets/img/reactlogo.png';
+import logo from 'assets/img/smelogo.jpg';
 
 let ps;
 
 const switchRoutes = (user) => (
   <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === '/admin' ) {
-        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
-      }
-      return null;
-    })}
-    <Redirect from='/admin' to='/admin/records' />
+    {routes
+      .filter((route) => hasPermissions(user, route.path))
+      .map((prop, key) => {
+        if (prop.layout === '/user') {
+          return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
+        }
+        return null;
+      })}
+    <Redirect from='/user' to='/user/clients' />
   </Switch>
 );
 
