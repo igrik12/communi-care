@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useStoreState } from 'easy-peasy';
-import EditEntity from './EditEntity';
 import AddCompany from './AddEntity/AddCompany';
 import AddResidence from './AddEntity/AddResidence';
 import AddStaff from './AddEntity/AddStaff';
+import AddClient from './AddEntity/AddClient';
 import CompanyList from './EntityLists/CompanyList';
 import StaffList from './EntityLists/StaffList';
+import ClientList from './EntityLists/ClientList';
 import ResidenceList from './EntityLists/ResidenceList';
 import EditEntityDialog from './EditEntity/EditEntityDialog';
 
 // MUI imports
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -57,6 +57,7 @@ export default function TabsPanel() {
   const companies = useStoreState((state) => state.companies);
   const residences = useStoreState((state) => state.residences);
   const staff = useStoreState((state) => state.staff);
+  const clients = useStoreState((state) => state.clients);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -103,7 +104,14 @@ export default function TabsPanel() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Staff
+        <Grid container spacing={1}>
+          <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+            <AddClient />
+          </Grid>
+          <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+            <ClientList clients={clients} />
+          </Grid>
+        </Grid>
       </TabPanel>
       <EditEntityDialog />
     </div>

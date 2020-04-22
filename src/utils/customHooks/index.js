@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Storage } from 'aws-amplify';
 
 export const useFetchPhoto = (data) => {
   const [photos, setPhotos] = useState([]);

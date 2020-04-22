@@ -124,15 +124,7 @@ export default function Hero() {
   );
 }
 
-const onClientChange = (clients, setFilteredClients) => (event) => {
-  if (!event.target.value) {
-    setFilteredClients(clients);
-  } else {
-    setFilteredClients(
-      clients.filter((client) => client.name.toLowerCase().includes(event.target.value.toLowerCase()))
-    );
-  }
-};
+
 
 
 

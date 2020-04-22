@@ -1,7 +1,7 @@
 type Company @model {
   id: ID!
   name: String!
-  companyLogoUrl: String!
+  companyLogoUrl: String
   staff: [Staff]! @connection(name: "CompanyStaff")
   client: [Client]! @connection(name: "CompanyClients")
   isActive: Boolean!
@@ -15,6 +15,7 @@ type Staff @model {
   userType: UserType
   email: AWSEmail!
   password: String!
+  photoUrl: String
   phone_number: AWSPhone!
   clientRecords: [ClientRecord] @connection(name: "StaffClientRecords")
   company: Company @connection(name: "CompanyStaff")
@@ -37,6 +38,7 @@ type Client @model {
 type Residence @model {
   id: ID!
   name: String!
+  photoUrl: String
   address: Address @connection(name: "ResidenceAddress")
   clients: [Client] @connection(name: "ClientResidence")
 }

@@ -137,6 +137,7 @@ export const listStaffs = /* GraphQL */ `
         username
         userType
         email
+        photoUrl
         password
         phone_number
         permissions
@@ -167,6 +168,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
             lastName
             username
             userType
+            photoUrl
             email
             phone_number
             password
@@ -204,6 +206,7 @@ query ListResidences(
     items {
       id
       name
+      photoUrl
       address {
         county
         firstLine

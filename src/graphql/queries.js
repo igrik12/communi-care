@@ -44,6 +44,7 @@ export const getStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -74,6 +75,7 @@ export const listStaffs = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -103,6 +105,7 @@ export const getClient = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -131,6 +134,7 @@ export const getResidence = /* GraphQL */ `
     getResidence(id: $id) {
       id
       name
+      photoUrl
       address {
         id
         firstLine
@@ -153,6 +157,7 @@ export const listResidences = /* GraphQL */ `
       items {
         id
         name
+        photoUrl
       }
       nextToken
     }
@@ -168,6 +173,7 @@ export const getAddress = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -201,6 +207,7 @@ export const getClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -275,6 +282,7 @@ export const getClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive

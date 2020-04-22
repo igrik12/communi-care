@@ -41,8 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const uploadPhoto = async (file) => {
-  await Storage.put(file.name, file);
+const uploadPhoto = async (newFile, oldFile) => {
+  try {
+    await Storage.remove(oldFile);
+  } catch (error) {
+    console.log(`Failed to remove photo ${oldFile}. Error: ${error}`);
+  }
+  try {
+    await Storage.put(newFile.name, newFile);
+  } catch (error) {
+    console.log(`Failed to add photo ${newFile.name}. Error: ${error}`);
+  }
 };
 
 export default function EditClient() {
@@ -63,7 +72,7 @@ export default function EditClient() {
   const handleOnSubmit = async (data) => {
     const updateDetails = { id: client.id, dateOfBirth, ...data };
     updateEntity({ type: CLIENT, data: updateDetails });
-    await uploadPhoto(file);
+    await uploadPhoto(file, client.photoUrl);
     setEditOpen({ open: false });
   };
 

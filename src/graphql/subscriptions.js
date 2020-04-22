@@ -59,6 +59,7 @@ export const onCreateStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -84,6 +85,7 @@ export const onUpdateStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -109,6 +111,7 @@ export const onDeleteStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -145,6 +148,7 @@ export const onCreateClient = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -170,6 +174,7 @@ export const onUpdateClient = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -195,6 +200,7 @@ export const onDeleteClient = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -204,6 +210,7 @@ export const onCreateResidence = /* GraphQL */ `
     onCreateResidence {
       id
       name
+      photoUrl
       address {
         id
         firstLine
@@ -221,6 +228,7 @@ export const onUpdateResidence = /* GraphQL */ `
     onUpdateResidence {
       id
       name
+      photoUrl
       address {
         id
         firstLine
@@ -238,6 +246,7 @@ export const onDeleteResidence = /* GraphQL */ `
     onDeleteResidence {
       id
       name
+      photoUrl
       address {
         id
         firstLine
@@ -260,6 +269,7 @@ export const onCreateAddress = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -274,6 +284,7 @@ export const onUpdateAddress = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -288,6 +299,7 @@ export const onDeleteAddress = /* GraphQL */ `
       residence {
         id
         name
+        photoUrl
       }
     }
   }
@@ -304,6 +316,7 @@ export const onCreateClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -349,6 +362,7 @@ export const onUpdateClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -394,6 +408,7 @@ export const onDeleteClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -439,6 +454,7 @@ export const onCreateClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -498,6 +514,7 @@ export const onUpdateClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -557,6 +574,7 @@ export const onDeleteClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive

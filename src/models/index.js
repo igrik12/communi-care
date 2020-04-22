@@ -41,7 +41,7 @@ const mainModel = {
         name: match.name,
         companyLogoUrl: match.companyLogoUrl,
         clients: match.client.items,
-        staff: match.client.staff,
+        staff: match.staff.items,
       };
     }
     return {

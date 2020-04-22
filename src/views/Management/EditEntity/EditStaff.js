@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { STAFF } from 'utils/constants';
 import permissions from 'utils/permissions.json';
+import { Storage } from 'aws-amplify';
+import { PhotoPicker } from 'aws-amplify-react';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditStaff() {
   const classes = useStyles();
   const [currentStaff, setCurrentStaff] = useState();
+  const [file, setFile] = useState(null);
   const editOpen = useStoreState((state) => state.managementModel.editOpen);
   const staff = useStoreState((state) => state.staff);
   const [allPermissions, setAllPermissions] = React.useState([]);
@@ -45,6 +48,11 @@ export default function EditStaff() {
   const updateEntity = useStoreActions((actions) => actions.managementModel.updateEntity);
   const { register, handleSubmit, control, setValue } = useForm();
   const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
+
+  const onPick = (data) => {
+    setValue('photoUrl', data.file.name);
+    setFile(data.file);
+  };
 
   useEffect(() => {
     const match = staff.find((st) => st.id === editOpen.id);
@@ -167,10 +175,22 @@ export default function EditStaff() {
           }
           label='Active'
         />
+        <FormControl fullWidth>
+          <TextField
+            className={classes.field}
+            inputRef={register}
+            InputProps={{
+              readOnly: true,
+            }}
+            label='Photo'
+            name='photoUrl'
+            variant='outlined'
+            defaultValue={currentStaff.photoUrl ?? 'Not Available'}
+          />
+        </FormControl>
+        <PhotoPicker preview onPick={onPick} />
         <div className={classes.btnGroup}>
-          <Button onClick={() => setEditOpen({ open: false })} autoFocus>
-            Cancel
-          </Button>
+          <Button onClick={() => setEditOpen({ open: false })}>Cancel</Button>
           <Button type='submit' color='primary'>
             Save
           </Button>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStoreActions } from 'easy-peasy';
+import { useFetchPhoto } from 'utils/customHooks';
 import { STAFF } from 'utils/constants';
 import ConfirmEntityDelete from '../ConfirmEntityDelete';
 
@@ -59,6 +60,7 @@ const StaffList = ({ staff }) => {
   }, [staff]);
 
   const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
+  const photos = useFetchPhoto(staff);
   const [openDelete, setOpenDelete] = useState({ open: false, type: STAFF, id: '' });
   return (
     <Box display='flex' flexDirection='column'>
@@ -68,6 +70,7 @@ const StaffList = ({ staff }) => {
       <Box>
         <List className={classes.list}>
           {filteredStaff.map((st) => {
+            const image = photos?.find((pht) => pht.id === st.id);
             return (
               <ListItem
                 onClick={() => setEditOpen({ open: true, type: STAFF, id: st.id })}
@@ -76,7 +79,7 @@ const StaffList = ({ staff }) => {
                 alignItems='flex-start'
               >
                 <ListItemAvatar>
-                  <Avatar className={classes.avatar} />
+                  <Avatar className={classes.avatar} src={image?.photo} />
                 </ListItemAvatar>
                 <ListItemText
                   className={classes.itemText}
