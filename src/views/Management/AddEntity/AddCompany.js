@@ -50,7 +50,7 @@ export default function AddCompany() {
     <Box display='flex' flexDirection='column'>
       <Box m={1}>
         <Typography gutterBottom variant='h5' component='h2'>
-          Create Company
+          Add Company
         </Typography>
         <Divider />
       </Box>

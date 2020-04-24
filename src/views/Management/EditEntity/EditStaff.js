@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { useForm, Controller } from 'react-hook-form';
 import { STAFF } from 'utils/constants';
 import permissions from 'utils/permissions.json';
-import { Storage } from 'aws-amplify';
+import { uploadPhoto } from 'utils/helpers';
 import { PhotoPicker } from 'aws-amplify-react';
 
 // MUI imports
@@ -71,13 +72,15 @@ export default function EditStaff() {
     }
   }, [currentStaff, setValue, setAllPermissions]);
 
-  const handleOnSubmit = (data) => {
+  const handleOnSubmit = async (data) => {
     const updateDetails = {
       id: currentStaff.id,
       permissions: allPermissions.map((perm) => perm.value),
       ...data,
     };
     updateEntity({ type: STAFF, data: updateDetails });
+
+    await uploadPhoto(file, currentStaff.photoUrl);
     setEditOpen({ open: false });
   };
 

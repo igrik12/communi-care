@@ -65,7 +65,7 @@ const AddClient = () => {
   return (
     <>
       <Typography gutterBottom variant='h5' component='h2'>
-        Client
+        Add Client
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={1}>

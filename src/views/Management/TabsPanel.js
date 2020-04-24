@@ -46,12 +46,6 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `tab-${index}`,
-  };
-}
-
 export default function TabsPanel() {
   const [value, setValue] = React.useState(0);
   const companies = useStoreState((state) => state.companies);
@@ -67,10 +61,10 @@ export default function TabsPanel() {
     <div>
       <AppBar color='primary' position='static'>
         <Tabs value={value} onChange={handleChange} variant='fullWidth'>
-          <Tab icon={<CompanyIcon />} label='Company' {...a11yProps(0)} />
-          <Tab icon={<ResidenceIcon />} label='Residence' {...a11yProps(1)} />
-          <Tab icon={<StaffIcon />} label='Staff' {...a11yProps(2)} />
-          <Tab icon={<ClientIcon />} label='Client' {...a11yProps(3)} />
+          <Tab icon={<CompanyIcon />} label='Company' />
+          <Tab icon={<ResidenceIcon />} label='Residence' />
+          <Tab icon={<StaffIcon />} label='Staff' />
+          <Tab icon={<ClientIcon />} label='Client' />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

@@ -5,8 +5,8 @@ import { CLIENT } from 'utils/constants';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import _ from 'lodash';
+import { uploadPhoto } from 'utils/helpers';
 import { PhotoPicker } from 'aws-amplify-react';
-import { Storage } from 'aws-amplify';
 
 //MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,19 +40,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
   },
 }));
-
-const uploadPhoto = async (newFile, oldFile) => {
-  try {
-    await Storage.remove(oldFile);
-  } catch (error) {
-    console.log(`Failed to remove photo ${oldFile}. Error: ${error}`);
-  }
-  try {
-    await Storage.put(newFile.name, newFile);
-  } catch (error) {
-    console.log(`Failed to add photo ${newFile.name}. Error: ${error}`);
-  }
-};
 
 export default function EditClient() {
   const [client, setClient] = useState();

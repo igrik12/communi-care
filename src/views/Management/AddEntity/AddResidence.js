@@ -50,7 +50,7 @@ export default function AddResidence() {
     <Box display='flex' flexDirection='column'>
       <Box m={1}>
         <Typography gutterBottom variant='h5' component='h2'>
-          Create Residence
+          Add Residence
         </Typography>
         <Divider />
       </Box>
