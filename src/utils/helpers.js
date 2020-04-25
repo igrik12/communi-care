@@ -89,13 +89,13 @@ export const differenceBetweenObjects = (left, right) => {
 };
 
 export const uploadPhoto = async (newFile, oldFile) => {
-  if (oldFile) {
-    try {
-      await Storage.remove(oldFile);
-    } catch (error) {
-      console.log(`Failed to remove photo ${oldFile}. Error: ${error}`);
-    }
-  }
+  // if (oldFile) {
+  //   try {
+  //     await Storage.remove(oldFile);
+  //   } catch (error) {
+  //     console.log(`Failed to remove photo ${oldFile}. Error: ${error}`);
+  //   }
+  // }
   try {
     await Storage.put(newFile.name, newFile);
   } catch (error) {

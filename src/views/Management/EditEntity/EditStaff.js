@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { useForm, Controller } from 'react-hook-form';
 import { STAFF } from 'utils/constants';
 import permissions from 'utils/permissions.json';
@@ -80,7 +79,7 @@ export default function EditStaff() {
     };
     updateEntity({ type: STAFF, data: updateDetails });
 
-    await uploadPhoto(file, currentStaff.photoUrl);
+    file && (await uploadPhoto(file, currentStaff.photoUrl));
     setEditOpen({ open: false });
   };
 
