@@ -39,7 +39,7 @@ const mainModel = {
       return {
         id: match.id,
         name: match.name,
-        companyLogoUrl: match.companyLogoUrl,
+        photoUrl: match.photoUrl,
         clients: match.client.items,
         staff: match.staff.items,
       };
@@ -47,7 +47,7 @@ const mainModel = {
     return {
       id: null,
       name: null,
-      companyLogoUrl: null,
+      photoUrl: null,
       clients: [],
       staff: [],
     };
@@ -142,7 +142,7 @@ const mainModel = {
         const ret = await API.graphql(graphqlOperation(listResidencesWithAddress));
         actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
-        console.error(`Failed to retrieve all clients. ${error}`);
+        console.error(`Failed to retrieve all residences. ${error}`);
       }
     }
   ),

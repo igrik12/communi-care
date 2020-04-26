@@ -15,3 +15,16 @@ export const useFetchPhoto = (data) => {
   }, [data]);
   return photos;
 };
+
+export const usePhoto = (photoUrl) => {
+  const [photo, setPhoto] = useState();
+  useEffect(() => {
+    const fetchImages = async () => {
+      const img = await Storage.get(photoUrl);
+      setPhoto(img);
+    };
+    fetchImages();
+  }, [photoUrl]);
+
+  return photo;
+};

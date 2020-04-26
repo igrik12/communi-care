@@ -52,7 +52,7 @@ export const listClients = /* GraphQL */ `
           id
         }
         company {
-          companyLogoUrl
+          photoUrl
           id
           isActive
           name
@@ -105,7 +105,7 @@ query GetCompany($id: ID!) {
   getCompany(id: $id) {
     id
     name
-    companyLogoUrl
+    photoUrl
     staff {
       items {
         id
@@ -143,7 +143,7 @@ export const listStaffs = /* GraphQL */ `
         permissions
         isActive
         company {
-          companyLogoUrl
+          photoUrl
           id
           isActive
           name
@@ -160,7 +160,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
       items {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
         staff {
           items {
@@ -206,6 +206,7 @@ query ListResidences(
     items {
       id
       name
+      isActive
       photoUrl
       address {
         county

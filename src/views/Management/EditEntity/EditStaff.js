@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem, Button, Select, Grid, FormControlLabel, Switch } from '@material-ui/core';
+import { MenuItem, Button, Select, Grid, FormControlLabel, Switch, Box } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
@@ -87,10 +87,19 @@ export default function EditStaff() {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.title} gutterBottom variant='h5' component='h2'>
-        EDIT
-      </Typography>
       <form className={classes.form} onSubmit={handleSubmit(handleOnSubmit)}>
+        <Box display='flex' justifyContent='space-between'>
+          <Typography className={classes.title} gutterBottom variant='h5' component='h2'>
+            Edit
+          </Typography>
+          <FormControlLabel
+            labelPlacement='start'
+            control={
+              <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
+            }
+            label='Active'
+          />
+        </Box>
         <TextField
           label='Username'
           className={classes.field}
@@ -169,14 +178,6 @@ export default function EditStaff() {
             />
           </Grid>
         </FormControl>
-        <FormControlLabel
-          className={classes.field}
-          labelPlacement='start'
-          control={
-            <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
-          }
-          label='Active'
-        />
         <FormControl fullWidth>
           <TextField
             className={classes.field}
@@ -193,7 +194,7 @@ export default function EditStaff() {
         <PhotoPicker preview onPick={onPick} />
         <div className={classes.btnGroup}>
           <Button onClick={() => setEditOpen({ open: false })}>Cancel</Button>
-          <Button type='submit' color='primary'>
+          <Button variant='outlined' type='submit' color='primary'>
             Save
           </Button>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStoreActions } from 'easy-peasy';
 import { RESIDENCE } from 'utils/constants';
+import { useFetchPhoto } from 'utils/customHooks';
 import ConfirmEntityDelete from '../ConfirmEntityDelete';
 import clsx from 'clsx';
 
@@ -14,7 +15,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -62,6 +62,8 @@ const ResidenceList = ({ residences }) => {
     setFilteredResidences(residences);
   }, [residences]);
 
+  const photos = useFetchPhoto(residences);
+
   const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const [openDelete, setOpenDelete] = useState({ open: false, type: RESIDENCE, id: '' });
 
@@ -73,6 +75,7 @@ const ResidenceList = ({ residences }) => {
       <Box>
         <List className={classes.list}>
           {filteredResidences.map((residence, index) => {
+            const image = photos?.find((pht) => pht.id === residence.id);
             return (
               <ListItem
                 onClick={() => setEditOpen({ open: true, type: RESIDENCE, id: residence.id })}
@@ -81,20 +84,20 @@ const ResidenceList = ({ residences }) => {
                 alignItems='flex-start'
               >
                 <ListItemAvatar>
-                  <Avatar className={classes.avatar} />
+                  <Avatar className={classes.avatar} src={image?.photo} />
                 </ListItemAvatar>
                 <ListItemText
                   className={classes.itemText}
                   primary={residence.name}
                   secondary={
-                    <Tooltip title={residence.address.firstLine}>
+                    <Tooltip title={residence.address?.firstLine}>
                       <Typography
                         component='span'
                         variant='body2'
                         className={clsx(classes.inline, classes.logoText)}
                         color='textPrimary'
                       >
-                        Address: {residence.address.firstLine}
+                        Address: {residence.address?.firstLine}
                       </Typography>
                     </Tooltip>
                   }

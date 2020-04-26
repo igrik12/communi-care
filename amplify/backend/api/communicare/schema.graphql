@@ -1,7 +1,7 @@
 type Company @model {
   id: ID!
   name: String!
-  companyLogoUrl: String
+  photoUrl: String
   staff: [Staff]! @connection(name: "CompanyStaff")
   client: [Client]! @connection(name: "CompanyClients")
   isActive: Boolean!
@@ -39,16 +39,15 @@ type Residence @model {
   id: ID!
   name: String!
   photoUrl: String
-  address: Address @connection(name: "ResidenceAddress")
+  isActive: Boolean!
+  address: Address!
   clients: [Client] @connection(name: "ClientResidence")
 }
 
-type Address @model {
-  id: ID!
+type Address {
   firstLine: String!
   county: String!
   postCode: String!
-  residence: Residence @connection(name: "ResidenceAddress")
 }
 
 type ClientRecord @model @versioned {

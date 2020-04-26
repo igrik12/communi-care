@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStoreActions } from 'easy-peasy';
 import { COMPANY } from 'utils/constants';
+import { useFetchPhoto } from 'utils/customHooks';
 import ConfirmEntityDelete from '../ConfirmEntityDelete';
-import clsx from 'clsx';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,10 +12,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
-import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -61,6 +59,7 @@ const CompanyList = ({ companies }) => {
   useEffect(() => {
     setFilteredCompanies(companies);
   }, [companies]);
+  const photos = useFetchPhoto(companies);
 
   const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
   const [openDelete, setOpenDelete] = useState({ open: false, type: COMPANY, id: '' });
@@ -72,6 +71,7 @@ const CompanyList = ({ companies }) => {
       <Box>
         <List className={classes.list}>
           {filteredCompanies.map((company, index) => {
+            const image = photos?.find((pht) => pht.id === company.id);
             return (
               <ListItem
                 onClick={() => setEditOpen({ open: true, type: COMPANY, id: company.id })}
@@ -80,24 +80,9 @@ const CompanyList = ({ companies }) => {
                 alignItems='flex-start'
               >
                 <ListItemAvatar>
-                  <Avatar className={classes.avatar} src={company.companyLogoUrl} />
+                  <Avatar className={classes.avatar} src={image?.photo} />
                 </ListItemAvatar>
-                <ListItemText
-                  primary={company.name}
-                  className={classes.itemText}
-                  secondary={
-                    <Tooltip title={company.companyLogoUrl}>
-                      <Typography
-                        component='span'
-                        variant='body2'
-                        className={clsx(classes.inline, classes.logoText)}
-                        color='textPrimary'
-                      >
-                        Company Logo URL: {company.companyLogoUrl}
-                      </Typography>
-                    </Tooltip>
-                  }
-                />
+                <ListItemText primary={company.name} className={classes.itemText} />
                 <ListItemSecondaryAction>
                   <IconButton
                     color='secondary'

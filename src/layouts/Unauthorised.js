@@ -1,6 +1,4 @@
 import React from 'react';
-import { useStoreState } from 'easy-peasy';
-import _ from 'lodash';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
@@ -13,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     height: '100vh',
     width: '100%',
-    padding: theme.spacing(2),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,7 +36,7 @@ function Unauthorised({ history }) {
         401
       </Typography>
       <Typography variant='h2'>Unauthorised</Typography>
-      <Typography variant='subtitle1'>User is not active. Please contact administrator for activation.</Typography>
+      <Typography align="center" variant='subtitle1'>User is not active. Please contact administrator for activation.</Typography>
       <Button
         onClick={() => logout(history)}
         size='large'
