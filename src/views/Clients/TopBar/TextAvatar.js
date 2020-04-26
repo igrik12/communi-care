@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TextAvatar({ isActive, avatarUrl, text }) {
+export default function TextAvatar({ avatarUrl, text }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>

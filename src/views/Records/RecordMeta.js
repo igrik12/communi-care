@@ -36,7 +36,7 @@ const RecordMeta = ({ control, setValue, register, createdAt }) => {
 
   useEffect(() => {
     register({ name: 'createdAt', required: true });
-    setValue('createdAt', null);
+    setValue('createdAt', new Date());
     setLabelWidth(inputLabel.current.offsetWidth);
   }, [register, setValue]);
 
@@ -81,7 +81,7 @@ const RecordMeta = ({ control, setValue, register, createdAt }) => {
                   margin='normal'
                   format='MM/dd/yyyy'
                   onChange={handleDateChange}
-                  value={createdAt || new Date()}
+                  value={createdAt}
                 />
               </MuiPickersUtilsProvider>
             </CardBody>

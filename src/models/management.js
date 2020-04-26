@@ -41,7 +41,7 @@ const managementModel = {
     const completeData = { company, staff, clients };
     return completeData;
   }),
-  company: { name: '', companyLogoUrl: '' },
+  company: { name: '', photoUrl: '' },
   setCompany: action((state, payload) => {
     state.company = payload;
   }),
@@ -68,7 +68,7 @@ const managementModel = {
     return { company, clients, staff };
   }),
   resetFormData: action((state, payload) => {
-    state.company = { name: '', companyLogoUrl: '' };
+    state.company = { name: '', photoUrl: '' };
     state.clients = [];
     state.staff = [];
   }),

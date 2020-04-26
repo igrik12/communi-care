@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
@@ -19,7 +19,6 @@ import Switch from '@material-ui/core/Switch';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import LinkIcon from '@material-ui/icons/Link';
-import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: { marginTop: theme.spacing(1) },
@@ -65,7 +64,7 @@ const AddClient = () => {
   return (
     <>
       <Typography gutterBottom variant='h5' component='h2'>
-        Client
+        Add Client
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={1}>
@@ -200,7 +199,7 @@ const AddClient = () => {
                     </InputAdornment>
                   ),
                 }}
-                label='Photo URL'
+                label='Photo'
                 name='photoUrl'
                 variant='outlined'
                 fullWidth

@@ -9,7 +9,7 @@ export const createCompany = /* GraphQL */ `
     createCompany(input: $input, condition: $condition) {
       id
       name
-      companyLogoUrl
+      photoUrl
       staff {
         nextToken
       }
@@ -28,7 +28,7 @@ export const updateCompany = /* GraphQL */ `
     updateCompany(input: $input, condition: $condition) {
       id
       name
-      companyLogoUrl
+      photoUrl
       staff {
         nextToken
       }
@@ -47,7 +47,7 @@ export const deleteCompany = /* GraphQL */ `
     deleteCompany(input: $input, condition: $condition) {
       id
       name
-      companyLogoUrl
+      photoUrl
       staff {
         nextToken
       }
@@ -71,6 +71,7 @@ export const createStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -78,7 +79,7 @@ export const createStaff = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       permissions
@@ -99,6 +100,7 @@ export const updateStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -106,7 +108,7 @@ export const updateStaff = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       permissions
@@ -127,6 +129,7 @@ export const deleteStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -134,7 +137,7 @@ export const deleteStaff = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       permissions
@@ -160,12 +163,14 @@ export const createClient = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       residence {
         id
         name
+        photoUrl
+        isActive
       }
     }
   }
@@ -188,12 +193,14 @@ export const updateClient = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       residence {
         id
         name
+        photoUrl
+        isActive
       }
     }
   }
@@ -216,12 +223,14 @@ export const deleteClient = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       residence {
         id
         name
+        photoUrl
+        isActive
       }
     }
   }
@@ -234,8 +243,9 @@ export const createResidence = /* GraphQL */ `
     createResidence(input: $input, condition: $condition) {
       id
       name
+      photoUrl
+      isActive
       address {
-        id
         firstLine
         county
         postCode
@@ -254,8 +264,9 @@ export const updateResidence = /* GraphQL */ `
     updateResidence(input: $input, condition: $condition) {
       id
       name
+      photoUrl
+      isActive
       address {
-        id
         firstLine
         county
         postCode
@@ -274,65 +285,15 @@ export const deleteResidence = /* GraphQL */ `
     deleteResidence(input: $input, condition: $condition) {
       id
       name
+      photoUrl
+      isActive
       address {
-        id
         firstLine
         county
         postCode
       }
       clients {
         nextToken
-      }
-    }
-  }
-`;
-export const createAddress = /* GraphQL */ `
-  mutation CreateAddress(
-    $input: CreateAddressInput!
-    $condition: ModelAddressConditionInput
-  ) {
-    createAddress(input: $input, condition: $condition) {
-      id
-      firstLine
-      county
-      postCode
-      residence {
-        id
-        name
-      }
-    }
-  }
-`;
-export const updateAddress = /* GraphQL */ `
-  mutation UpdateAddress(
-    $input: UpdateAddressInput!
-    $condition: ModelAddressConditionInput
-  ) {
-    updateAddress(input: $input, condition: $condition) {
-      id
-      firstLine
-      county
-      postCode
-      residence {
-        id
-        name
-      }
-    }
-  }
-`;
-export const deleteAddress = /* GraphQL */ `
-  mutation DeleteAddress(
-    $input: DeleteAddressInput!
-    $condition: ModelAddressConditionInput
-  ) {
-    deleteAddress(input: $input, condition: $condition) {
-      id
-      firstLine
-      county
-      postCode
-      residence {
-        id
-        name
       }
     }
   }
@@ -352,6 +313,7 @@ export const createClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -400,6 +362,7 @@ export const updateClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -448,6 +411,7 @@ export const deleteClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -496,6 +460,7 @@ export const createClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -558,6 +523,7 @@ export const updateClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -620,6 +586,7 @@ export const deleteClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive

@@ -71,7 +71,7 @@ const sortByDate = (data) => {
   });
 };
 
-const query = async (setRecords, setSelectedRecord, companyId) => {
+const query = async (setRecords, companyId) => {
   const ret = await API.graphql(
     graphqlOperation(listClientRecords, {
       limit: 3000,
@@ -81,10 +81,9 @@ const query = async (setRecords, setSelectedRecord, companyId) => {
     })
   );
   const filtered = sortByDate(
-    ret.data.listClientRecords.items.filter((record) => record.client.company.id === companyId)
+    ret.data.listClientRecords.items.filter((record) => record.client?.company?.id === companyId)
   );
   setRecords(filtered);
-  // setSelectedRecord(filtered[0]);
 };
 
 function CareReports() {
@@ -97,8 +96,8 @@ function CareReports() {
 
   useEffect(() => {
     if (!companyData) return;
-    query(setRecords, setSelectedRecord, companyData.id);
-  }, [setRecords, setSelectedRecord, companyData]);
+    query(setRecords, companyData.id);
+  }, [setRecords, companyData]);
 
   useEffect(() => {
     const sub = clientRecordUpdateSubscribe((updated) => {

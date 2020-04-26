@@ -6,7 +6,7 @@ export const getCompany = /* GraphQL */ `
     getCompany(id: $id) {
       id
       name
-      companyLogoUrl
+      photoUrl
       staff {
         nextToken
       }
@@ -27,7 +27,7 @@ export const listCompanys = /* GraphQL */ `
       items {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       nextToken
@@ -44,6 +44,7 @@ export const getStaff = /* GraphQL */ `
       userType
       email
       password
+      photoUrl
       phone_number
       clientRecords {
         nextToken
@@ -51,7 +52,7 @@ export const getStaff = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       permissions
@@ -74,6 +75,7 @@ export const listStaffs = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -97,12 +99,14 @@ export const getClient = /* GraphQL */ `
       company {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
       }
       residence {
         id
         name
+        photoUrl
+        isActive
       }
     }
   }
@@ -131,8 +135,9 @@ export const getResidence = /* GraphQL */ `
     getResidence(id: $id) {
       id
       name
+      photoUrl
+      isActive
       address {
-        id
         firstLine
         county
         postCode
@@ -153,37 +158,8 @@ export const listResidences = /* GraphQL */ `
       items {
         id
         name
-      }
-      nextToken
-    }
-  }
-`;
-export const getAddress = /* GraphQL */ `
-  query GetAddress($id: ID!) {
-    getAddress(id: $id) {
-      id
-      firstLine
-      county
-      postCode
-      residence {
-        id
-        name
-      }
-    }
-  }
-`;
-export const listAddresss = /* GraphQL */ `
-  query ListAddresss(
-    $filter: ModelAddressFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAddresss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        firstLine
-        county
-        postCode
+        photoUrl
+        isActive
       }
       nextToken
     }
@@ -201,6 +177,7 @@ export const getClientRecord = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive
@@ -275,6 +252,7 @@ export const getClientRecordArchived = /* GraphQL */ `
         userType
         email
         password
+        photoUrl
         phone_number
         permissions
         isActive

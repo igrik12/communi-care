@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Storage } from 'aws-amplify';
 import bcrypt from 'bcryptjs';
 import Chartist from 'chartist';
 
@@ -85,6 +86,21 @@ export const differenceBetweenObjects = (left, right) => {
   return _.omitBy(left, function (v, k) {
     return right[k] === v;
   });
+};
+
+export const uploadPhoto = async (newFile, oldFile) => {
+  // if (oldFile) {
+  //   try {
+  //     await Storage.remove(oldFile);
+  //   } catch (error) {
+  //     console.log(`Failed to remove photo ${oldFile}. Error: ${error}`);
+  //   }
+  // }
+  try {
+    await Storage.put(newFile.name, newFile);
+  } catch (error) {
+    console.log(`Failed to add photo ${newFile.name}. Error: ${error}`);
+  }
 };
 
 export const generateChartsData = (typeData) => {

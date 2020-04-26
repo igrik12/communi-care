@@ -5,7 +5,6 @@ import {
   createStaff,
   createClient,
   createResidence,
-  createAddress,
   deleteCompany,
   deleteClient,
   deleteStaff,
@@ -13,7 +12,7 @@ import {
   updateStaff,
   updateCompany,
   updateClient,
-  updateResidence
+  updateResidence,
 } from 'graphql/mutations';
 
 import {
@@ -24,7 +23,7 @@ import {
   onCreateClient,
   onCreateCompany,
   onCreateStaff,
-  onCreateResidence
+  onCreateResidence,
 } from 'graphql/subscriptions';
 
 import {
@@ -39,7 +38,7 @@ import {
   STAFF,
   COMPANY,
   CLIENT,
-  RESIDENCE
+  RESIDENCE,
 } from 'utils/constants';
 
 import { hashPassword } from 'utils/helpers';
@@ -48,9 +47,9 @@ import { hashPassword } from 'utils/helpers';
  *
  * @param {function} action called upon subsription trigger
  */
-export const clientDeleteSubscribe = action => {
+export const clientDeleteSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onDeleteClient)).subscribe({
-    next: clientData => action(clientData)
+    next: (clientData) => action(clientData),
   });
   return subscription;
 };
@@ -59,9 +58,9 @@ export const clientDeleteSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const staffDeleteSubscribe = action => {
+export const staffDeleteSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onDeleteStaff)).subscribe({
-    next: staffData => action(staffData)
+    next: (staffData) => action(staffData),
   });
   return subscription;
 };
@@ -70,9 +69,9 @@ export const staffDeleteSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const companyDeleteSubscribe = action => {
+export const companyDeleteSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onDeleteCompany)).subscribe({
-    next: companyData => action(companyData)
+    next: (companyData) => action(companyData),
   });
   return subscription;
 };
@@ -81,9 +80,9 @@ export const companyDeleteSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const residenceDeleteSubscribe = action => {
+export const residenceDeleteSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onDeleteResidence)).subscribe({
-    next: residenceData => action(residenceData)
+    next: (residenceData) => action(residenceData),
   });
   return subscription;
 };
@@ -92,9 +91,9 @@ export const residenceDeleteSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const companyCreateSubscribe = action => {
+export const companyCreateSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onCreateCompany)).subscribe({
-    next: companyData => action(companyData)
+    next: (companyData) => action(companyData),
   });
   return subscription;
 };
@@ -103,9 +102,9 @@ export const companyCreateSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const residenceCreateSubscribe = action => {
+export const residenceCreateSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onCreateResidence)).subscribe({
-    next: residenceData => action(residenceData)
+    next: (residenceData) => action(residenceData),
   });
   return subscription;
 };
@@ -114,9 +113,9 @@ export const residenceCreateSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const clientCreateSubscribe = action => {
+export const clientCreateSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onCreateClient)).subscribe({
-    next: clientData => action(clientData)
+    next: (clientData) => action(clientData),
   });
   return subscription;
 };
@@ -125,9 +124,9 @@ export const clientCreateSubscribe = action => {
  *
  * @param {function} action called upon subsription trigger
  */
-export const staffCreateSubscribe = action => {
+export const staffCreateSubscribe = (action) => {
   const subscription = API.graphql(graphqlOperation(onCreateStaff)).subscribe({
-    next: staffData => action(staffData)
+    next: (staffData) => action(staffData),
   });
   return subscription;
 };
@@ -135,9 +134,9 @@ export const staffCreateSubscribe = action => {
  *
  * @param {Object} subscriptions
  */
-export const subscribeManagement = subscriptions => {
+export const subscribeManagement = (subscriptions) => {
   const subs = [];
-  subscriptions.forEach(subscription => {
+  subscriptions.forEach((subscription) => {
     const { type, action } = subscription;
     switch (type) {
       case ON_DELETE_CLIENT:
@@ -173,11 +172,11 @@ export const subscribeManagement = subscriptions => {
 
 /**
  *
- * @param {Object} company. Company data comprised of name, companyLogoUrl, isActive
+ * @param {Object} company. Company data comprised of name, photoUrl, isActive
  */
-export const createNewCompany = async company => {
-  const { name, companyLogoUrl, isActive } = company;
-  const details = { input: { name, companyLogoUrl, isActive } };
+export const createNewCompany = async (company) => {
+  const { name, photoUrl, isActive } = company;
+  const details = { input: { name, photoUrl, isActive } };
   const result = await API.graphql(graphqlOperation(createCompany, details));
   return result.data.createCompany;
 };
@@ -186,7 +185,7 @@ export const createNewCompany = async company => {
  *
  * @param {Object} staffData
  */
-export const createNewStaff = async staffData => {
+export const createNewStaff = async (staffData) => {
   const {
     firstName,
     lastName,
@@ -197,7 +196,7 @@ export const createNewStaff = async staffData => {
     email,
     phone_number,
     companyId,
-    isActive
+    isActive,
   } = staffData;
   let hashedPassword;
 
@@ -218,8 +217,8 @@ export const createNewStaff = async staffData => {
       password: hashedPassword,
       phone_number,
       staffCompanyId: companyId,
-      permissions: permissions ? permissions.map(perm => perm.value) : []
-    }
+      permissions: permissions ? permissions.map((perm) => perm.value) : [],
+    },
   };
   await API.graphql(graphqlOperation(createStaff, details));
 };
@@ -228,7 +227,7 @@ export const createNewStaff = async staffData => {
  *
  * @param {Object} staff
  */
-export const signUpUser = async staff => {
+export const signUpUser = async (staff) => {
   const { username, password, email, phone_number } = staff;
   await Auth.signUp({ username, password, attributes: { email, phone_number } });
 };
@@ -237,10 +236,10 @@ export const signUpUser = async staff => {
  *
  * @param {Object} clientData
  */
-export const createNewClient = async clientData => {
+export const createNewClient = async (clientData) => {
   const { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId } = clientData;
   const details = {
-    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId }
+    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId },
   };
   await API.graphql(graphqlOperation(createClient, details));
 };
@@ -249,55 +248,38 @@ export const createNewClient = async clientData => {
  *
  * @param {Object} residence
  */
-export const createNewResidence = async residence => {
-  let result;
-  try {
-    result = await createNewAddress(residence.address);
-  } catch (error) {
-    console.error(`Failed to create address. Error: ${JSON.stringify(error)}`);
-    throw Error(error);
-  }
-  const details = { input: { name: residence.name, residenceAddressId: result.data.createAddress.id } };
+export const createNewResidence = async (residence) => {
+  const details = { input: { ...residence } };
   await API.graphql(graphqlOperation(createResidence, details));
 };
 
-/**
- *
- * @param {Object} address
- */
-export const createNewAddress = async address => {
-  const details = { input: address };
-  const result = await API.graphql(graphqlOperation(createAddress, details));
-  return result;
-};
-
-export const deleteCompanyAsync = async id => {
+export const deleteCompanyAsync = async (id) => {
   const details = { input: { id } };
   await API.graphql(graphqlOperation(deleteCompany, details));
 };
 
-export const deleteStaffAsync = async id => {
+export const deleteStaffAsync = async (id) => {
   const details = { input: { id } };
   await API.graphql(graphqlOperation(deleteStaff, details));
 };
 
-export const deleteClientAsync = async id => {
+export const deleteClientAsync = async (id) => {
   const details = { input: { id } };
   await API.graphql(graphqlOperation(deleteClient, details));
 };
 
-export const deleteResidenceAsync = async id => {
+export const deleteResidenceAsync = async (id) => {
   const details = { input: { id } };
   await API.graphql(graphqlOperation(deleteResidence, details));
 };
 
 export const deleteCompanyDependencies = (company, removeStaff, removeClient) => {
-  const clientIds = company.client.items.map(client => client.id);
-  const staffIds = company.staff.items.map(st => st.id);
+  const clientIds = company.client.items.map((client) => client.id);
+  const staffIds = company.staff.items.map((st) => st.id);
 
   async.each(
     staffIds,
-    function(id, callback) {
+    function (id, callback) {
       try {
         deleteStaffAsync(id);
         removeStaff(id);
@@ -306,7 +288,7 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
         callback(error);
       }
     },
-    function(err) {
+    function (err) {
       if (err) {
         console.error(`Failed to delete staff ${err}`);
       } else {
@@ -317,7 +299,7 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
 
   async.each(
     clientIds,
-    function(id, callback) {
+    function (id, callback) {
       try {
         deleteClientAsync(id);
         removeClient(id);
@@ -326,7 +308,7 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
         callback(error);
       }
     },
-    function(err) {
+    function (err) {
       if (err) {
         console.error(`Failed to delete client ${err}`);
       } else {
@@ -336,27 +318,27 @@ export const deleteCompanyDependencies = (company, removeStaff, removeClient) =>
   );
 };
 
-export const updateStaffAsync = async staff => {
+export const updateStaffAsync = async (staff) => {
   const details = { input: { ...staff } };
   return await API.graphql(graphqlOperation(updateStaff, details));
 };
 
-export const updateCompanyAsync = async company => {
+export const updateCompanyAsync = async (company) => {
   const details = { input: { ...company } };
   return await API.graphql(graphqlOperation(updateCompany, details));
 };
 
-export const updateResidenceAsync = async residence => {
+export const updateResidenceAsync = async (residence) => {
   const details = { input: { ...residence } };
   return await API.graphql(graphqlOperation(updateResidence, details));
 };
 
-export const updateClientAsync = async client => {
+export const updateClientAsync = async (client) => {
   const details = { input: { ...client } };
   return await API.graphql(graphqlOperation(updateClient, details));
 };
 
-export const updateEntityAsync = async entity => {
+export const updateEntityAsync = async (entity) => {
   const { type, data } = entity;
   switch (type) {
     case STAFF:

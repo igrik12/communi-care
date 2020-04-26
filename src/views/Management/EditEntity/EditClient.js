@@ -5,8 +5,8 @@ import { CLIENT } from 'utils/constants';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import _ from 'lodash';
+import { uploadPhoto } from 'utils/helpers';
 import { PhotoPicker } from 'aws-amplify-react';
-import { Storage } from 'aws-amplify';
 
 //MUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const uploadPhoto = async (file) => {
-  await Storage.put(file.name, file);
-};
-
 export default function EditClient() {
   const [client, setClient] = useState();
   const [dateOfBirth, setDateOfBirth] = useState(null);
@@ -63,7 +59,7 @@ export default function EditClient() {
   const handleOnSubmit = async (data) => {
     const updateDetails = { id: client.id, dateOfBirth, ...data };
     updateEntity({ type: CLIENT, data: updateDetails });
-    await uploadPhoto(file);
+    await uploadPhoto(file, client.photoUrl);
     setEditOpen({ open: false });
   };
 
