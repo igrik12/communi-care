@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 import _ from 'lodash';
+import { difference } from 'utils/helpers';
 import MergeItemList from './MergeItemList';
 import { textFields } from '../Records/TextEntries';
 
@@ -33,12 +34,6 @@ const useStyles = makeStyles((theme) => ({
 
 const fields = textFields.map((field) => field.fieldId);
 
-const differenceObjects = (left, right) => {
-  return _.omitBy(left, function (v, k) {
-    return right[k] === v;
-  });
-};
-
 export default function ConfirmUpdate({ originalData, mergeData }) {
   const mergeWindow = useStoreState((state) => state.clientRecordModel.mergeWindow);
   const user = useStoreState((state) => state.user);
@@ -64,6 +59,7 @@ export default function ConfirmUpdate({ originalData, mergeData }) {
     const final = { ..._.omit(originalData, ['version', 'client', 'staff', 'archived']), ...extracted };
     const updateDetails = {
       id: originalData.id,
+      updatedBy: user.id,
       clientRecordClientId: originalData.client.id,
       clientRecordStaffId: originalData.staff.id,
       expectedVersion: originalData.version,
@@ -76,8 +72,8 @@ export default function ConfirmUpdate({ originalData, mergeData }) {
   const originalDataPicked = _.pick(originalData, fields);
   const mergeDataPicked = _.pick(mergeData, fields);
 
-  const originalDiff = differenceObjects(originalDataPicked, mergeDataPicked);
-  const mergeDiff = differenceObjects(mergeDataPicked, originalDataPicked);
+  const originalDiff = difference(mergeDataPicked, originalDataPicked);
+  const mergeDiff = difference(originalDataPicked, mergeDataPicked);
   const disabledMemo = useMemo(() => {
     return (
       Object.values(originalDiff).length !== Object.values(mergeItem).length ||

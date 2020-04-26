@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { useStoreState } from 'easy-peasy';
-import { hasPermissions } from 'utils/helpers';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,7 +18,6 @@ import styles from 'assets/jss/material-dashboard-react/components/headerStyle.j
 const useStyles = makeStyles(styles);
 
 export default function Header(props) {
-  const user = useStoreState((state) => state.user);
   const classes = useStyles();
   function makeBrand() {
     let name;
@@ -41,7 +38,6 @@ export default function Header(props) {
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
-          {/* Here we create navbar brand, based on route name */}
           <Button color='transparent' href='#' className={classes.title}>
             {makeBrand()}
           </Button>

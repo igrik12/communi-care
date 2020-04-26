@@ -4,7 +4,6 @@ import { Controller } from 'react-hook-form';
 import { Auth } from 'aws-amplify';
 import DateFnsUtils from '@date-io/date-fns';
 
-
 import { makeStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { Grid, FormControl, InputLabel, Input, Select, MenuItem, Icon } from '@material-ui/core';
@@ -14,33 +13,34 @@ import CardHeader from 'components/Card/CardHeader.js';
 import CardIcon from 'components/Card/CardIcon.js';
 import CardBody from 'components/Card/CardBody.js';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   margin: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   menu: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: '80%'
-  }
+    minWidth: '80%',
+  },
 }));
 
 const RecordMeta = ({ control, setValue, register, createdAt }) => {
   const classes = useStyles();
 
-  const clients = useStoreState(state => state.clients);
+  const companyData = useStoreState((state) => state.companyData);
+  const clients = companyData?.clients || [];
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
 
   useEffect(() => {
     register({ name: 'createdAt', required: true });
-    setValue('createdAt', null);
+    setValue('createdAt', new Date());
     setLabelWidth(inputLabel.current.offsetWidth);
   }, [register, setValue]);
 
-  const handleDateChange = date => {
+  const handleDateChange = (date) => {
     setValue('createdAt', date);
   };
 
@@ -102,7 +102,7 @@ const RecordMeta = ({ control, setValue, register, createdAt }) => {
                 <Controller
                   as={
                     <Select labelId='select-client-label' id='select-client' displayEmpty labelWidth={labelWidth}>
-                      {clients.map(client => (
+                      {clients.map((client) => (
                         <MenuItem key={client.id} value={client.id}>
                           {`${client.firstName} ${client.lastName}`}
                         </MenuItem>

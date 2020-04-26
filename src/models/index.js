@@ -1,11 +1,17 @@
 import clientRecordModel from './clientRecord';
 import layoutModel from './layout';
 import managementModel from './management';
+import clientsModel from './clients';
 import _ from 'lodash';
 
 import { action, thunk, thunkOn, computed } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listCompanysWithStaffAndClients, listResidencesWithAddress, listClients, listStaffs } from 'graphql/customQueries';
+import {
+  listCompanysWithStaffAndClients,
+  listResidencesWithAddress,
+  listClients,
+  listStaffs,
+} from 'graphql/customQueries';
 import { updateStaff } from 'graphql/mutations';
 
 const mainModel = {
@@ -27,15 +33,24 @@ const mainModel = {
       }
     }
   }),
-  companyData: computed((state) => {
-    const user = state.user;
-    const companies = state.companies;
-    const id = user?.company?.id;
-    if (id) {
-      const company = companies.find((company) => company.id === id);
-      return { company };
+  companyData: computed([(state) => state.companies, (state) => state.user], (companies, user) => {
+    const match = companies.find((company) => company.id === user?.company?.id);
+    if (match) {
+      return {
+        id: match.id,
+        name: match.name,
+        photoUrl: match.photoUrl,
+        clients: match.client.items,
+        staff: match.staff.items,
+      };
     }
-    return {};
+    return {
+      id: null,
+      name: null,
+      photoUrl: null,
+      clients: [],
+      staff: [],
+    };
   }),
   userGroups: [],
   setUserGroups: action((state, payload) => {
@@ -57,10 +72,11 @@ const mainModel = {
   }),
   fetchCompanies: thunkOn(
     (actions) => actions.fetchAll,
-    async (actions) => {
+    async (actions, payload, { getState }) => {
       try {
         const ret = await API.graphql(graphqlOperation(listCompanysWithStaffAndClients));
-        actions.setCompanies(ret.data.listCompanys.items);
+        const companies = ret.data.listCompanys.items;
+        actions.setCompanies(companies);
       } catch (error) {
         console.log(error);
       }
@@ -126,7 +142,7 @@ const mainModel = {
         const ret = await API.graphql(graphqlOperation(listResidencesWithAddress));
         actions.setResidences(ret.data.listResidences.items || []);
       } catch (error) {
-        console.error(`Failed to retrieve all clients. ${error}`);
+        console.error(`Failed to retrieve all residences. ${error}`);
       }
     }
   ),
@@ -137,6 +153,7 @@ const mainModel = {
   clientRecordModel,
   layoutModel,
   managementModel,
+  clientsModel,
 };
 
 export default mainModel;

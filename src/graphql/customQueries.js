@@ -21,6 +21,9 @@ query listClientRecords($filter: ModelClientRecordFilterInput, $limit: Int, $nex
         id
         firstName
         lastName
+        company {
+          id
+        }
       }
       staff{
         id
@@ -43,12 +46,13 @@ export const listClients = /* GraphQL */ `
         lastName
         dateOfBirth
         isActive
+        photoUrl
         residence {
           name
           id
         }
         company {
-          companyLogoUrl
+          photoUrl
           id
           isActive
           name
@@ -101,7 +105,7 @@ query GetCompany($id: ID!) {
   getCompany(id: $id) {
     id
     name
-    companyLogoUrl
+    photoUrl
     staff {
       items {
         id
@@ -133,12 +137,13 @@ export const listStaffs = /* GraphQL */ `
         username
         userType
         email
+        photoUrl
         password
         phone_number
         permissions
         isActive
         company {
-          companyLogoUrl
+          photoUrl
           id
           isActive
           name
@@ -155,7 +160,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
       items {
         id
         name
-        companyLogoUrl
+        photoUrl
         isActive
         staff {
           items {
@@ -163,6 +168,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
             lastName
             username
             userType
+            photoUrl
             email
             phone_number
             password
@@ -180,6 +186,7 @@ export const listCompanysWithStaffAndClients = /* GraphQL */ `
             lastName
             dateOfBirth
             isActive
+            photoUrl
           }
           nextToken
         }
@@ -199,6 +206,8 @@ query ListResidences(
     items {
       id
       name
+      isActive
+      photoUrl
       address {
         county
         firstLine
@@ -208,3 +217,37 @@ query ListResidences(
     nextToken
   }
 }`;
+
+export const getClientRecords = /* GraphQL */ `
+  query GetClient($id: ID!, $from: String, $to: String) {
+    getClient(id: $id) {
+      id
+      clientRecords(filter: { createdAt: { between: [$from, $to] } }) {
+        items {
+          id
+          status
+          entryType
+          createdAt
+          shift
+          moodAndInteraction
+          selfCare
+          physicalHealth
+          medication
+          leave
+          dietAndFluids
+          livingSkills
+          finances
+          dailyActivityParticipation
+          version
+          client {
+            id
+          }
+          staff {
+            id
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;

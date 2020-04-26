@@ -7,7 +7,8 @@ import Amplify from 'aws-amplify';
 import config from './aws-exports';
 import store from './store';
 
-import Admin from 'layouts/Admin.js';
+import User from 'layouts/User.js';
+import Unauthorised from 'layouts/Unauthorised';
 
 import 'assets/css/material-dashboard-react.css?v=1.8.0';
 
@@ -19,11 +20,11 @@ ReactDOM.render(
   <Router history={hist}>
     <StoreProvider store={store}>
       <Switch>
-        <Route path='/admin' component={Admin} />
-        <Redirect from='/' to='/admin/records' />
+        <Route path='/user' component={User} />
+        <Route path='/unauthorised' component={Unauthorised} />
+        <Redirect from='/' to='/user/records' />
       </Switch>
     </StoreProvider>
   </Router>,
   document.getElementById('root')
 );
-

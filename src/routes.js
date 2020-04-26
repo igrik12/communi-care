@@ -22,6 +22,7 @@ import Person from '@material-ui/icons/Person';
 import Records from 'views/Records';
 import Reports from 'views/Reports';
 import Management from 'views/Management';
+import Clients from 'views/Clients';
 
 const routes = [
   {
@@ -29,22 +30,30 @@ const routes = [
     name: 'Records',
     icon: Dashboard,
     component: Records,
-    layout: '/admin'
+    layout: '/user',
   },
   {
     path: '/reports',
     name: 'Reports',
     icon: Person,
     component: Reports,
-    layout: '/admin'
+    layout: '/user',
+  },
+
+  {
+    path: '/clients',
+    name: 'Clients',
+    icon: Person,
+    component: Clients,
+    layout: '/user',
   },
   {
     path: '/management',
     name: 'Management',
     icon: 'content_paste',
     component: Management,
-    layout: '/admin'
-  }
+    layout: '/user',
+  },
 ];
 
 export default routes;

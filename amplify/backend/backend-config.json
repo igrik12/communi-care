@@ -28,5 +28,11 @@
 			"service": "S3AndCloudFront",
 			"providerPlugin": "awscloudformation"
 		}
+	},
+	"storage": {
+		"ccstorage": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

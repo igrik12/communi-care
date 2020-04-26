@@ -2,6 +2,7 @@
   { "title": "Records Page", "value": "/records" },
   { "title": "Reports Page", "value": "/reports" },
   { "title": "Management Page", "value": "/management" },
+  { "title": "Clients Page", "value": "/clients" },
   { "title": "Edit Record Summary", "value": "editRecordSummary" },
   { "title": "Save Record", "value": "saveRecord" },
   { "title": "Edit Record", "value": "editRecord" }

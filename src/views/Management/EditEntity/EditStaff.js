@@ -4,13 +4,15 @@ import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { STAFF } from 'utils/constants';
 import permissions from 'utils/permissions.json';
+import { uploadPhoto } from 'utils/helpers';
+import { PhotoPicker } from 'aws-amplify-react';
 
 // MUI imports
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import { MenuItem, Button, Select, Grid, FormControlLabel, Switch } from '@material-ui/core';
+import { MenuItem, Button, Select, Grid, FormControlLabel, Switch, Box } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditStaff() {
   const classes = useStyles();
   const [currentStaff, setCurrentStaff] = useState();
+  const [file, setFile] = useState(null);
   const editOpen = useStoreState((state) => state.managementModel.editOpen);
   const staff = useStoreState((state) => state.staff);
   const [allPermissions, setAllPermissions] = React.useState([]);
@@ -46,10 +49,20 @@ export default function EditStaff() {
   const { register, handleSubmit, control, setValue } = useForm();
   const setEditOpen = useStoreActions((actions) => actions.managementModel.setEditOpen);
 
+  const onPick = (data) => {
+    setValue('photoUrl', data.file.name);
+    setFile(data.file);
+  };
+
   useEffect(() => {
     const match = staff.find((st) => st.id === editOpen.id);
     setCurrentStaff(match);
   }, [editOpen.id, companies, staff]);
+
+  useEffect(() => {
+    register({ name: 'staffCompanyId', required: true });
+    register({ name: 'dateOfBirth', required: true });
+  }, [register, setValue]);
 
   useEffect(() => {
     if (currentStaff) {
@@ -58,10 +71,15 @@ export default function EditStaff() {
     }
   }, [currentStaff, setValue, setAllPermissions]);
 
-  const handleOnSubmit = (data) => {
-    if (!data.staffCompanyId) return;
-    const updateDetails = { id: currentStaff.id, ...data, permissions: allPermissions.map((perm) => perm.value) };
+  const handleOnSubmit = async (data) => {
+    const updateDetails = {
+      id: currentStaff.id,
+      permissions: allPermissions.map((perm) => perm.value),
+      ...data,
+    };
     updateEntity({ type: STAFF, data: updateDetails });
+
+    file && (await uploadPhoto(file, currentStaff.photoUrl));
     setEditOpen({ open: false });
   };
 
@@ -69,10 +87,19 @@ export default function EditStaff() {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.title} gutterBottom variant='h5' component='h2'>
-        EDIT
-      </Typography>
       <form className={classes.form} onSubmit={handleSubmit(handleOnSubmit)}>
+        <Box display='flex' justifyContent='space-between'>
+          <Typography className={classes.title} gutterBottom variant='h5' component='h2'>
+            Edit
+          </Typography>
+          <FormControlLabel
+            labelPlacement='start'
+            control={
+              <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
+            }
+            label='Active'
+          />
+        </Box>
         <TextField
           label='Username'
           className={classes.field}
@@ -112,8 +139,9 @@ export default function EditStaff() {
             className={classes.formControl}
             options={companies}
             defaultValue={currentStaff?.company}
-            getOptionLabel={(option) => option.name ?? ''}
-            renderInput={(params) => <TextField {...params} name='staffCompanyId' label='Company' variant='outlined' />}
+            getOptionLabel={(option) => option.name}
+            getOptionSelected={(option) => option}
+            renderInput={(params) => <TextField {...params} label='Company' variant='outlined' />}
           />
         </FormControl>
         <FormControl variant='outlined'>
@@ -150,19 +178,23 @@ export default function EditStaff() {
             />
           </Grid>
         </FormControl>
-        <FormControlLabel
-          className={classes.field}
-          labelPlacement='start'
-          control={
-            <Switch inputRef={register} name='isActive' color='primary' defaultChecked={currentStaff.isActive} />
-          }
-          label='Active'
-        />
+        <FormControl fullWidth>
+          <TextField
+            className={classes.field}
+            inputRef={register}
+            InputProps={{
+              readOnly: true,
+            }}
+            label='Photo'
+            name='photoUrl'
+            variant='outlined'
+            defaultValue={currentStaff.photoUrl ?? 'Not Available'}
+          />
+        </FormControl>
+        <PhotoPicker preview onPick={onPick} />
         <div className={classes.btnGroup}>
-          <Button onClick={() => setEditOpen({ open: false })} autoFocus>
-            Cancel
-          </Button>
-          <Button type='submit' color='primary'>
+          <Button onClick={() => setEditOpen({ open: false })}>Cancel</Button>
+          <Button variant='outlined' type='submit' color='primary'>
             Save
           </Button>
         </div>
