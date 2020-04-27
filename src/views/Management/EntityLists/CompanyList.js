@@ -20,7 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const useStyles = makeStyles((theme) => ({
   list: {
     width: '100%',
-    maxHeight: 200,
+    maxHeight: 450,
     overflow: 'auto',
   },
   inline: {

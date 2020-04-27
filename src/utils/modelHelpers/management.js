@@ -197,6 +197,7 @@ export const createNewStaff = async (staffData) => {
     phone_number,
     companyId,
     isActive,
+    photoUrl,
   } = staffData;
   let hashedPassword;
 
@@ -216,6 +217,7 @@ export const createNewStaff = async (staffData) => {
       email,
       password: hashedPassword,
       phone_number,
+      photoUrl,
       staffCompanyId: companyId,
       permissions: permissions ? permissions.map((perm) => perm.value) : [],
     },
@@ -237,9 +239,9 @@ export const signUpUser = async (staff) => {
  * @param {Object} clientData
  */
 export const createNewClient = async (clientData) => {
-  const { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId } = clientData;
+  const { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId, photoUrl } = clientData;
   const details = {
-    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId },
+    input: { firstName, lastName, dateOfBirth, isActive, clientCompanyId, clientResidenceId, photoUrl },
   };
   await API.graphql(graphqlOperation(createClient, details));
 };
