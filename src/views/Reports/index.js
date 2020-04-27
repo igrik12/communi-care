@@ -67,7 +67,7 @@ const groupAll = (data) => {
 
 const sortByDate = (data) => {
   return data.sort(function compare(a, b) {
-    return new Date(b.createdAt) - new Date(a.createdAt);
+    return new Date(a.createdAt) - new Date(b.createdAt);
   });
 };
 

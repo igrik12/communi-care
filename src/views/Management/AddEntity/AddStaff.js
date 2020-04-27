@@ -49,6 +49,10 @@ const AddStaff = () => {
   const companies = useStoreState((state) => state.companies);
   const staff = useStoreState((state) => state.staff);
 
+  useEffect(() => {
+    register({ name: 'photoUrl' });
+  }, [register, setValue]);
+
   const onSubmit = async (data) => {
     submitEntity({ type: STAFF, data });
     await uploadPhoto(file);
@@ -266,7 +270,7 @@ const AddStaff = () => {
               )}
             />
           </Grid>
-          <Grid style={{margin:'5px 0'}} item lg={12} md={12} sm={12} xs={12}>
+          <Grid style={{ margin: '5px 0' }} item lg={12} md={12} sm={12} xs={12}>
             <Box display='flex' alignItems='center'>
               <Button onClick={() => setOpen(true)} variant='outlined' color='primary' startIcon={<PhotoCamera />}>
                 Upload photo

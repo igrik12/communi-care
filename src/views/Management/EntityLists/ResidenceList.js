@@ -23,7 +23,7 @@ import TextField from '@material-ui/core/TextField';
 const useStyles = makeStyles((theme) => ({
   list: {
     width: '100%',
-    maxHeight: 200,
+    maxHeight: 450,
     overflow: 'auto',
   },
   inline: {
