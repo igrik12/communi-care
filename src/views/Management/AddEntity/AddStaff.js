@@ -268,7 +268,7 @@ const AddStaff = () => {
           </Grid>
           <Grid style={{margin:'5px 0'}} item lg={12} md={12} sm={12} xs={12}>
             <Box display='flex' alignItems='center'>
-              <Button onClick={() => setOpen(true)} variant='outlined' color='primary' startIcon={<PhotoCamera />}smeasme>
+              <Button onClick={() => setOpen(true)} variant='outlined' color='primary' startIcon={<PhotoCamera />}>
                 Upload photo
               </Button>
               <FormControlLabel
