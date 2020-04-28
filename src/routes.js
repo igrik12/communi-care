@@ -17,10 +17,11 @@
 */
 // @material-ui/icons
 import Dashboard from '@material-ui/icons/Dashboard';
-import Person from '@material-ui/icons/Person';
+import ReportIcon from '@material-ui/icons/ListAlt';
 // core components/views for Admin layout
 import Records from 'views/Records';
 import Reports from 'views/Reports';
+import PeopleIcon from '@material-ui/icons/People';
 import Management from 'views/Management';
 import Clients from 'views/Clients';
 
@@ -35,7 +36,7 @@ const routes = [
   {
     path: '/reports',
     name: 'Reports',
-    icon: Person,
+    icon: ReportIcon,
     component: Reports,
     layout: '/user',
   },
@@ -43,7 +44,7 @@ const routes = [
   {
     path: '/clients',
     name: 'Clients',
-    icon: Person,
+    icon: PeopleIcon,
     component: Clients,
     layout: '/user',
   },

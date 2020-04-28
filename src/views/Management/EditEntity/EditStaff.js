@@ -102,8 +102,9 @@ export default function EditStaff() {
         </Box>
         <TextField
           label='Username'
+          required={true}
           className={classes.field}
-          inputRef={register({ required: true, minLength: 6 })}
+          inputRef={register({ required: true, minLength: 3 })}
           name='username'
           defaultValue={currentStaff.username}
           InputProps={{
