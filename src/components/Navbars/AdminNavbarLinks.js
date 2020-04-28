@@ -47,7 +47,7 @@ export default function AdminNavbarLinks() {
     setOpenProfile(null);
   };
 
-  const photo = usePhoto(user.photoUrl);
+  const photo = usePhoto(user.id, user.photoUrl);
 
   return (
     <div>

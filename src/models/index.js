@@ -70,6 +70,10 @@ const mainModel = {
   removeCompany: action((state, payload) => {
     _.remove(state.companies, (comp) => comp.id === payload);
   }),
+  updateCompany: action((state, payload) => {
+    const updated = state.companies.map((item) => (item.id === payload.id ? payload : item));
+    state.companies = updated;
+  }),
   fetchCompanies: thunkOn(
     (actions) => actions.fetchAll,
     async (actions, payload, { getState }) => {
@@ -93,6 +97,10 @@ const mainModel = {
   removeStaff: action((state, payload) => {
     _.remove(state.staff, (staff) => staff.id === payload);
   }),
+  updateStaff: action((state, payload) => {
+    const updated = state.staff.map((item) => (item.id === payload.id ? payload : item));
+    state.staff = updated;
+  }),
   fetchStaff: thunkOn(
     (actions) => actions.fetchAll,
     async (actions) => {
@@ -114,6 +122,10 @@ const mainModel = {
   removeClient: action((state, payload) => {
     _.remove(state.clients, (client) => client.id === payload);
   }),
+  updateClient: action((state, payload) => {
+    const updated = state.clients.map((item) => (item.id === payload.id ? payload : item));
+    state.clients = updated;
+  }),
   fetchClients: thunkOn(
     (actions) => actions.fetchAll,
     async (actions) => {
@@ -134,6 +146,10 @@ const mainModel = {
   }),
   removeResidence: action((state, payload) => {
     _.remove(state.residences, (residence) => residence.id === payload);
+  }),
+  updateResidence: action((state, payload) => {
+    const updated = state.residences.map((item) => (item.id === payload.id ? payload : item));
+    state.residences = updated;
   }),
   fetchResidences: thunkOn(
     (actions) => actions.fetchAll,
