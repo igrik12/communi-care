@@ -3,6 +3,8 @@ import { useStoreState, useStoreActions } from 'easy-peasy';
 import { useForm, Controller } from 'react-hook-form';
 import DateFnsUtils from '@date-io/date-fns';
 import { uploadPhoto } from 'utils/helpers';
+import { DevTool } from 'react-hook-form-devtools';
+
 import { CLIENT } from 'utils/constants';
 
 // Material-UI imports
@@ -41,7 +43,7 @@ const AddClient = () => {
   const submitEntity = useStoreActions((actions) => actions.managementModel.submitEntity);
   const companies = useStoreState((state) => state.companies);
   const residences = useStoreState((state) => state.residences);
-  const { register, handleSubmit, reset, control, setValue, watch } = useForm();
+  const { register, handleSubmit, reset, control, setValue, watch } = useForm({ mode: 'onChange' });
 
   useEffect(() => {
     register({ name: 'dateOfBirth', required: true });
@@ -107,7 +109,7 @@ const AddClient = () => {
             <FormControl fullWidth className={classes.formControl}>
               <TextField
                 required
-                inputRef={register({ required: true })}
+                inputRef={register({ required: true  })}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
@@ -226,6 +228,7 @@ const AddClient = () => {
         </Grid>
         <AddPhotoDialog open={open} setOpen={setOpen} onPick={onPick} />
       </form>
+      <DevTool control={control} />
     </>
   );
 };

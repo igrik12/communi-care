@@ -4,7 +4,7 @@ import managementModel from './management';
 import clientsModel from './clients';
 import _ from 'lodash';
 
-import { action, thunk, thunkOn, computed } from 'easy-peasy';
+import { action, thunk, thunkOn, computed, actionOn } from 'easy-peasy';
 import { API, graphqlOperation } from 'aws-amplify';
 import {
   listCompanysWithStaffAndClients,
@@ -101,6 +101,14 @@ const mainModel = {
     const updated = state.staff.map((item) => (item.id === payload.id ? payload : item));
     state.staff = updated;
   }),
+  updateStaffListener: actionOn(
+    (actions) => actions.updateStaff,
+    (state, target) => {
+      if (state.user.id === target.payload.id) {
+        state.user.permissions = target.payload.permissions;
+      }
+    }
+  ),
   fetchStaff: thunkOn(
     (actions) => actions.fetchAll,
     async (actions) => {

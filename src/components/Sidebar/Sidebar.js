@@ -18,6 +18,7 @@ import styles from 'assets/jss/material-dashboard-react/components/sidebarStyle.
 
 const useStyles = makeStyles(styles);
 
+
 export default function Sidebar(props) {
   const classes = useStyles();
   // verifies if routeName is the one active (in browser input)
@@ -120,3 +121,5 @@ Sidebar.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object),
   open: PropTypes.bool,
 };
+
+

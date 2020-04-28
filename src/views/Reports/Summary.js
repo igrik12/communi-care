@@ -60,7 +60,7 @@ export default function Summary() {
   const user = useStoreState((state) => state.user);
   const selectedRecord = useStoreState((state) => state.clientRecordModel.selectedRecord);
   const updateRecord = useStoreActions((actions) => actions.clientRecordModel.updateRecord);
-  const hasPerm = hasPermissions(user, 'editRecordSummary');
+  const hasPerm = hasPermissions(user, 'editRecord');
   const { register, handleSubmit, setValue } = useForm();
 
   const onSumbit = (data) => {
