@@ -56,7 +56,8 @@ function Admin(props, { ...rest }) {
   const { history } = props;
   const getUser = useStoreActions((actions) => actions.getUser);
   const fetchAll = useStoreActions((actions) => actions.fetchAll);
-  const user = useStoreState((state) => state.user);
+  const user = useStoreState((state) => state.user)
+  ;
 
   useEffect(() => {
     if (!_.isEmpty(user) && !user.isActive) {

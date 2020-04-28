@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Storage } from 'aws-amplify';
+import { Storage, Cache } from 'aws-amplify';
 import bcrypt from 'bcryptjs';
 import Chartist from 'chartist';
 
@@ -97,7 +98,7 @@ export const uploadPhoto = async (newFile, oldFile) => {
   //   }
   // }
   try {
-    await Storage.put(newFile.name, newFile);
+    newFile && (await Storage.put(newFile.name, newFile));
   } catch (error) {
     console.log(`Failed to add photo ${newFile.name}. Error: ${error}`);
   }

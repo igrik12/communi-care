@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Storage } from 'aws-amplify';
+import { Storage, Cache } from 'aws-amplify';
 
 export const useFetchPhoto = (data) => {
   const [photos, setPhotos] = useState([]);
   useEffect(() => {
     const fetchImages = async () => {
       data.forEach(async (item) => {
-        const photo = await Storage.get(item.photoUrl);
-        const mapped = { id: item.id, photo };
+        const ret = Cache.getItem(item.id);
+        let mapped;
+        if (ret) {
+          mapped = { id: item.id, photo: ret };
+        } else {
+          const photo = await Storage.get(item.photoUrl);
+          Cache.setItem(item.id, photo);
+          mapped = { id: item.id, photo };
+        }
         setPhotos((prevArray) => [...prevArray, mapped]);
       });
     };
@@ -16,15 +23,26 @@ export const useFetchPhoto = (data) => {
   return photos;
 };
 
-export const usePhoto = (photoUrl) => {
+/**
+ * Fetches an item URL and stores that in the session cache
+ * @param {String} id Identifier for the cache key
+ * @param {*} photoUrl img file name to be used to retrieve the item
+ */
+export const usePhoto = (id, photoUrl) => {
   const [photo, setPhoto] = useState();
   useEffect(() => {
-    const fetchImages = async () => {
-      const img = await Storage.get(photoUrl);
-      setPhoto(img);
+    const fetchImage = async () => {
+      const item = Cache.getItem(id);
+      if (item) {
+        setPhoto(item);
+      } else {
+        const img = await Storage.get(photoUrl);
+        setPhoto(img);
+        Cache.setItem(id, img);
+      }
     };
-    fetchImages();
-  }, [photoUrl]);
+    fetchImage();
+  }, [id, photoUrl]);
 
   return photo;
 };
