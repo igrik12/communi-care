@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { StoreProvider } from 'easy-peasy';
 import { createBrowserHistory } from 'history';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
-import Amplify from 'aws-amplify';
+import Amplify, { Cache } from 'aws-amplify';
 import config from './aws-exports';
 import store from './store';
 
@@ -14,7 +14,13 @@ import 'assets/css/material-dashboard-react.css?v=1.8.0';
 
 const hist = createBrowserHistory();
 
+const cacheConfig = {
+  storage: window.sessionStorage,
+  capacityInBytes: 5e6,
+};
+
 Amplify.configure(config);
+Cache.configure(cacheConfig);
 
 ReactDOM.render(
   <Router history={hist}>

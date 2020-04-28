@@ -24,6 +24,10 @@ import {
   onCreateCompany,
   onCreateStaff,
   onCreateResidence,
+  onUpdateStaff,
+  onUpdateClient,
+  onUpdateCompany,
+  onUpdateResidence,
 } from 'graphql/subscriptions';
 
 import {
@@ -35,6 +39,10 @@ import {
   ON_CREATE_STAFF,
   ON_CREATE_COMPANY,
   ON_CREATE_RESIDENCE,
+  ON_UPDATE_STAFF,
+  ON_UPDATE_CLIENT,
+  ON_UPDATE_COMPANY,
+  ON_UPDATE_RESIDENCE,
   STAFF,
   COMPANY,
   CLIENT,
@@ -130,6 +138,50 @@ export const staffCreateSubscribe = (action) => {
   });
   return subscription;
 };
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const staffUpdateSubscribe = (action) => {
+  const subscription = API.graphql(graphqlOperation(onUpdateStaff)).subscribe({
+    next: (staffData) => action(staffData),
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const clientUpdateSubscribe = (action) => {
+  const subscription = API.graphql(graphqlOperation(onUpdateClient)).subscribe({
+    next: (clientData) => action(clientData),
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const companyUpdateSubscribe = (action) => {
+  const subscription = API.graphql(graphqlOperation(onUpdateCompany)).subscribe({
+    next: (companyData) => action(companyData),
+  });
+  return subscription;
+};
+
+/**
+ *
+ * @param {function} action called upon subsription trigger
+ */
+export const residenceUpdateSubscribe = (action) => {
+  const subscription = API.graphql(graphqlOperation(onUpdateResidence)).subscribe({
+    next: (residenceData) => action(residenceData),
+  });
+  return subscription;
+};
 /**
  *
  * @param {Object} subscriptions
@@ -162,6 +214,18 @@ export const subscribeManagement = (subscriptions) => {
         break;
       case ON_CREATE_STAFF:
         subs.push(staffCreateSubscribe(action));
+        break;
+      case ON_UPDATE_STAFF:
+        subs.push(staffUpdateSubscribe(action));
+        break;
+      case ON_UPDATE_CLIENT:
+        subs.push(clientUpdateSubscribe(action));
+        break;
+      case ON_UPDATE_RESIDENCE:
+        subs.push(residenceUpdateSubscribe(action));
+        break;
+      case ON_UPDATE_COMPANY:
+        subs.push(companyUpdateSubscribe(action));
         break;
       default:
         break;
