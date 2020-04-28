@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Storage, Cache } from 'aws-amplify';
+import { Storage } from 'aws-amplify';
 import bcrypt from 'bcryptjs';
 import Chartist from 'chartist';
 
